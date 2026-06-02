@@ -14,6 +14,13 @@ export function CommsSection() {
     const alias = String(data.get("alias") ?? "")
     const origin = String(data.get("origin") ?? "")
     const frequency = String(data.get("frequency") ?? "")
+
+    const MAX_FREQUENCY_CHARS = 1200
+    if (frequency.length > MAX_FREQUENCY_CHARS) {
+      window.alert(`Message too long. Please keep it under ${MAX_FREQUENCY_CHARS} characters.`)
+      return
+    }
+
     const subject = encodeURIComponent(`MOKORO transmission from ${alias}`)
     const body = encodeURIComponent(
       `ALIAS: ${alias}\nORIGIN COORDINATES: ${origin}\n\n${frequency}`
@@ -92,6 +99,7 @@ export function CommsSection() {
                 <Textarea
                   id="frequency"
                   name="frequency"
+                  maxLength={1200}
                   className="min-h-36 resize-none border-white/10 bg-transparent p-4 text-foreground placeholder:text-white/20 focus-visible:border-primary focus-visible:ring-0"
                   placeholder="[ ENTER MESSAGE LOG ]"
                   required
@@ -107,7 +115,10 @@ export function CommsSection() {
                 >
                   [ Execute_Transmission ]
                 </Button>
-                <span className="ml-1 inline-block h-5 w-2.5 animate-pulse bg-primary" />
+                <span
+                  aria-hidden="true"
+                  className="ml-1 inline-block h-5 w-2.5 animate-pulse bg-primary"
+                />
               </div>
             </form>
           </div>

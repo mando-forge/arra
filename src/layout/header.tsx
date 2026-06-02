@@ -32,11 +32,18 @@ export function Header() {
 
   useEffect(() => {
     const sectionIds = navLinks.map((l) => l.href.slice(1))
+    const intersectingMap = new Map<string, boolean>()
+
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id)
+          intersectingMap.set(entry.target.id, entry.isIntersecting)
+        }
+
+        for (const id of sectionIds) {
+          if (intersectingMap.get(id)) {
+            setActiveSection(id)
+            break
           }
         }
       },

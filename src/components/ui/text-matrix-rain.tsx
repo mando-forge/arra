@@ -28,6 +28,11 @@ export default function TextMatrixRain({
       const container = containerRef.current;
       if (!container) return;
 
+      // Respect prefers-reduced-motion
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return;
+      }
+
       const matrixChars =
         "ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
       const intervals: ReturnType<typeof setInterval>[] = [];
@@ -127,7 +132,7 @@ export default function TextMatrixRain({
         intervals.forEach(clearInterval);
       };
     },
-    { scope: containerRef, dependencies: [children, duration, repeat, charClassName] }
+    { scope: containerRef, dependencies: [children, duration, repeat, charClassName, accentColor] }
   );
 
   return (
