@@ -84,6 +84,12 @@ export function CounterNumber({
     const end = value
     const diff = end - start
 
+    if (duration <= 0) {
+      setDisplayValue(end)
+      displayValRef.current = end
+      return
+    }
+
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp
       const progress = Math.min((timestamp - startTime) / duration, 1)
