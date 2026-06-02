@@ -4,7 +4,7 @@ import { GlobalWrapper } from "@/components/layout/global-wrapper"
 
 export function NavComputerSection() {
   return (
-    <section className="flex min-h-screen w-full items-center justify-center p-6 md:p-10 py-32">
+    <section id="nav-computer" className="flex min-h-screen w-full items-center justify-center p-6 py-32 md:p-10">
       <GlobalWrapper>
         <div className="mb-16 text-center">
             <h2 className="text-4xl md:text-6xl font-bold tracking-[0.2em] uppercase text-white mb-4">THE NAV-COMPUTER</h2>

@@ -3,14 +3,14 @@ import { Button } from "@/components/ui/button"
 
 export function MarqueeSection() {
   return (
-    <section className="relative container flex h-[80vh] w-full flex-col items-center justify-center overflow-hidden border-y border-white/10">
+    <section id="guild" className="relative flex min-h-[80vh] w-full flex-col items-center justify-center overflow-hidden border-y border-white/10">
       
       {/* CTA-01 Gradient Background Effect */}
       <div
         className="absolute inset-0 z-0"
         style={{
           background:
-            "radial-gradient(ellipse at 50% 100%, rgba(0,255,255,0.15) 0%, #050505 75%)",
+            "radial-gradient(ellipse at 50% 100%, color-mix(in oklch, var(--primary) 15%, transparent) 0%, var(--background) 75%)",
           opacity: 1,
         }}
       >
@@ -19,7 +19,7 @@ export function MarqueeSection() {
             WebkitMaskImage:
               "linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,1) 100%)",
             backgroundImage:
-              "repeating-radial-gradient(circle at 50% 100%, transparent 0px, transparent 20px, rgba(0,255,255,0.1) 20px, rgba(0,255,255,0.1) 21px)",
+              "repeating-radial-gradient(circle at 50% 100%, transparent 0px, transparent 20px, color-mix(in oklch, var(--primary) 12%, transparent) 20px, color-mix(in oklch, var(--primary) 12%, transparent) 21px)",
             height: "100%",
             left: "0",
             maskImage:
@@ -50,17 +50,17 @@ export function MarqueeSection() {
       {/* Foreground Brutalist CTA Block */}
       <div className="relative z-20 overflow-hidden bg-black border border-white/10 p-12 md:p-20 shadow-2xl max-w-4xl text-center">
         <div className="space-y-6">
-          <h1 className="text-3xl font-bold tracking-[0.2em] uppercase md:text-5xl lg:text-6xl text-white">
+          <h2 className="text-3xl font-bold tracking-[0.2em] uppercase md:text-5xl lg:text-6xl text-white">
             WE ARE SEARCHING FOR ARTISANS IN THE VOID.
-          </h1>
+          </h2>
           <p className="text-white/60 text-sm md:text-base font-mono tracking-widest uppercase">
             Join the Covert.
           </p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 pt-12">
-          <Button size="lg" className="rounded-none bg-primary text-black hover:bg-white hover:text-black uppercase tracking-[0.2em] font-bold px-12 shadow-[0_0_15px_var(--color-primary)]">
-            Apply to the Guild
+          <Button asChild size="lg" className="border-primary bg-transparent px-12 font-bold tracking-[0.2em] text-primary uppercase shadow-[0_0_15px_var(--color-primary)] hover:bg-primary/10 hover:text-primary">
+            <a href="#resonance">Apply to the Guild</a>
           </Button>
         </div>
       </div>

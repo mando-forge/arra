@@ -35,15 +35,16 @@ export function MethodologySection() {
   ]
 
   return (
-    <section className="relative w-full flex-col items-center justify-center py-32">
+    <section id="protocol" className="relative w-full flex-col items-center justify-center py-32">
       <GlobalWrapper>
-          <div className="mb-16">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">■ PHASE II ACTIVE</p>
-            <h2 className="text-5xl md:text-7xl font-bold tracking-[0.2em] uppercase text-white leading-tight">THE<br/>VERGENCE<br/>PROTOCOL</h2>
-            <p className="mt-8 text-sm tracking-[0.2em] text-white/50 uppercase border-l border-primary/50 pl-4 font-mono">HOW WE WIELD EMERGING TECH AS RAW ENERGY TO TRANSFORM SOCIETY.</p>
+        <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
+          <div className="w-full lg:w-1/3 lg:sticky lg:top-32 lg:h-fit">
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ PHASE II ACTIVE</p>
+            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight uppercase text-white leading-[0.95]">THE<br/>VERGENCE<br/>PROTOCOL</h2>
+            <p className="mt-8 text-xs tracking-[0.2em] text-white/50 uppercase border-l border-primary/50 pl-4 font-mono leading-relaxed">HOW WE WIELD EMERGING TECH AS RAW ENERGY TO TRANSFORM SOCIETY.</p>
           </div>
 
-          <div className="w-full lg:w-3/4 mx-auto border-t border-white/10 pt-10">
+          <div className="w-full lg:w-2/3 border-t border-white/10 lg:border-t-0">
             <Accordion
               type="single"
               collapsible
@@ -56,14 +57,14 @@ export function MethodologySection() {
                   value={item.id}
                   className="space-y-1 border-white/10"
                 >
-                  <AccordionTrigger className="group flex w-full justify-between py-6 hover:no-underline hover:text-primary transition-colors">
-                    <div className="text-white max-w-[80%] cursor-pointer text-left text-xl md:text-2xl tracking-[0.2em] font-bold uppercase transition">
+                  <AccordionTrigger className="group flex w-full justify-between py-6 lg:py-8 hover:no-underline hover:text-primary transition-colors">
+                    <div className="text-white max-w-[80%] cursor-pointer text-left text-lg md:text-xl lg:text-2xl font-black tracking-tight uppercase transition">
                       {item.question}
                     </div>
                   </AccordionTrigger>
 
                   <AccordionContent className="flex justify-start pb-8">
-                    <div className="text-white/60 max-w-[90%] text-base md:text-lg font-mono">
+                    <div className="text-white/60 max-w-[90%] text-sm md:text-base lg:text-lg font-mono leading-relaxed">
                       {item.answer}
                     </div>
                   </AccordionContent>
@@ -71,6 +72,7 @@ export function MethodologySection() {
               ))}
             </Accordion>
           </div>
+        </div>
       </GlobalWrapper>
     </section>
   )

@@ -1,12 +1,13 @@
-import { GlobalWrapper } from "./layout/global-wrapper"
-import { Hexagon, Database, ShieldAlert, Cpu } from "lucide-react"
+import { Cpu, Database, Hexagon, ShieldAlert } from "lucide-react"
+
+import { GlobalWrapper } from "@/components/layout/global-wrapper"
 import { ShineBorder } from "@/components/shine-border"
 
 const ASSETS = [
-  { id: "01", name: "ASSET: OMEGA-PROTOCOL", icon: <Database className="w-12 h-12" /> },
-  { id: "02", name: "ASSET: KINETIC-ENGINE", icon: <Hexagon className="w-12 h-12" /> },
-  { id: "03", name: "ASSET: NEURO-LINK", icon: <Cpu className="w-12 h-12" /> },
-  { id: "04", name: "ASSET: AEGIS-SHIELD", icon: <ShieldAlert className="w-12 h-12" /> },
+  { id: "01", name: "ASSET: OMEGA-PROTOCOL", image: "/ai-logo.png", icon: <Database className="size-12" /> },
+  { id: "02", name: "ASSET: KINETIC-ENGINE", image: "/templates/ai-icons.jpg", icon: <Hexagon className="size-12" /> },
+  { id: "03", name: "ASSET: NEURO-LINK", image: "/templates/ai-logos.jpg", icon: <Cpu className="size-12" /> },
+  { id: "04", name: "ASSET: AEGIS-SHIELD", image: "/templates/ai-hero-black.jpg", icon: <ShieldAlert className="size-12" /> },
 ]
 
 export function VaultSection() {
@@ -26,7 +27,7 @@ export function VaultSection() {
               key={asset.id}
               borderRadius={0}
               borderWidth={1}
-              color={["hsl(var(--primary))", "transparent", "transparent"]}
+              color={["var(--color-primary)", "transparent", "transparent"]}
               className="group aspect-square w-full bg-black border border-white/10 cursor-crosshair transition-all duration-300 hover:border-primary hover:shadow-[0_0_20px_var(--color-primary)]"
             >
               {/* Redacted State (Default) */}
@@ -43,9 +44,17 @@ export function VaultSection() {
               </div>
 
               {/* Revealed State (Hover) */}
-              <div className="absolute inset-0 z-0 bg-[#001a2c] flex flex-col items-center justify-center p-6 text-center text-primary opacity-0 scale-95 transition-all duration-300 group-hover:opacity-100 group-hover:scale-100">
+              <div className="absolute inset-0 z-0 flex scale-95 flex-col items-center justify-center bg-vault-revealed p-6 text-center text-primary opacity-0 transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
+                <img
+                  src={asset.image}
+                  alt=""
+                  className="absolute inset-0 h-full w-full object-cover opacity-25 mix-blend-screen"
+                  decoding="async"
+                  loading="lazy"
+                />
+                <div className="absolute inset-0 bg-vault-revealed/70" />
                 {/* Glowing Wireframe Background */}
-                <div className="absolute inset-0 opacity-20 bg-[linear-gradient(rgba(0,255,255,0.1)_1px,transparent_1px),linear-gradient(90deg,rgba(0,255,255,0.1)_1px,transparent_1px)] bg-[size:20px_20px]" />
+                <div className="absolute inset-0 bg-[linear-gradient(color-mix(in_oklch,var(--color-primary)_15%,transparent)_1px,transparent_1px),linear-gradient(90deg,color-mix(in_oklch,var(--color-primary)_15%,transparent)_1px,transparent_1px)] bg-[size:20px_20px] opacity-30" />
                 
                 <div className="relative z-10 animate-pulse drop-shadow-[0_0_15px_var(--color-primary)] mb-6">
                   {asset.icon}

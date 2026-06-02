@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-/* eslint-disable react/no-unknown-property */
 "use client"
 
 import type React from "react"

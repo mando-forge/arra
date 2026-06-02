@@ -90,7 +90,6 @@ export default function TextMatrixRain({
       lockTimers.forEach(clearTimeout);
       clearInterval(repeatTimer);
     };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [children, duration, repeat, accentColor]);
 
   return (

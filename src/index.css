@@ -50,6 +50,7 @@
     --shadow-neon: 0 0 15px var(--color-primary);
     --shadow-neon-lg: 0 0 30px var(--color-primary);
     --color-code: var(--code);
+    --color-vault-revealed: var(--vault-revealed);
 }
 
 :root {
@@ -86,6 +87,7 @@
     --sidebar-border: oklch(0.923 0.003 48.717);
     --sidebar-ring: oklch(0.709 0.01 56.259);
     --code: oklch(0.923 0.003 48.717);
+    --vault-revealed: oklch(0.16 0.04 220);
 }
 
 .dark {
@@ -121,6 +123,7 @@
     --sidebar-border: oklch(1 0 0 / 10%);
     --sidebar-ring: oklch(0.553 0.013 58.071);
     --code: oklch(0.12 0.005 200);
+    --vault-revealed: oklch(0.12 0.04 220);
 }
 
 @layer base {
@@ -176,4 +179,16 @@
 @theme {
   --animate-marquee: marquee var(--duration, 40s) linear infinite;
   --animate-marquee-vertical: marquee-vertical var(--duration, 40s) linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  video {
+    display: none;
+  }
+
+  .animate-marquee,
+  .animate-marquee-vertical,
+  .animate-pulse {
+    animation: none !important;
+  }
 }

@@ -71,7 +71,7 @@ export function CounterNumber({
 
   useEffect(() => {
     let startTime: number | null = null
-    const start = displayValue
+    const start = startValue
     const end = value
     const diff = end - start
 
@@ -84,8 +84,9 @@ export function CounterNumber({
       }
     }
 
-    requestAnimationFrame(step)
-  }, [value, duration]) // animate whenever value or duration changes
+    const frame = requestAnimationFrame(step)
+    return () => cancelAnimationFrame(frame)
+  }, [value, duration, startValue]) // animate whenever the numeric range changes
 
   const formatNumber = (numValue: number): string => {
     let formattedValue: string
