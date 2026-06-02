@@ -68,24 +68,47 @@ export function CounterNumber({
 }: CounterNumberProps) {
   const ref = useRef<HTMLSpanElement>(null)
   const [displayValue, setDisplayValue] = useState(startValue)
+  const displayValRef = useRef(startValue)
+  const lastStartValueRef = useRef(startValue)
 
   useEffect(() => {
     let startTime: number | null = null
-    const start = displayValue
+    let frameId = 0
+
+    let start = displayValRef.current
+    if (lastStartValueRef.current !== startValue) {
+      start = startValue
+      lastStartValueRef.current = startValue
+    }
+
     const end = value
     const diff = end - start
+
+    if (duration <= 0) {
+      setDisplayValue(end)
+      displayValRef.current = end
+      return
+    }
 
     const step = (timestamp: number) => {
       if (!startTime) startTime = timestamp
       const progress = Math.min((timestamp - startTime) / duration, 1)
-      setDisplayValue(start + diff * progress)
+      const nextVal = start + diff * progress
+      setDisplayValue(nextVal)
+      displayValRef.current = nextVal
+
       if (progress < 1) {
-        requestAnimationFrame(step)
+        frameId = requestAnimationFrame(step)
       }
     }
 
-    requestAnimationFrame(step)
-  }, [value, duration]) // animate whenever value or duration changes
+    frameId = requestAnimationFrame(step)
+    return () => {
+      if (frameId) {
+        cancelAnimationFrame(frameId)
+      }
+    }
+  }, [value, duration, startValue]) // animate whenever the numeric range changes
 
   const formatNumber = (numValue: number): string => {
     let formattedValue: string

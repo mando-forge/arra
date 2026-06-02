@@ -1,5 +1,3 @@
-"use client"
-
 import { useEffect, useState, type CSSProperties, type ReactNode } from "react"
 
 import { cn } from "@/lib/utils"
@@ -346,6 +344,7 @@ export function BentoGrid({
   const style = useResponsiveRowHeight(rowHeight)
   return (
     <div
+      role="list"
       style={style}
       className={cn(
         "mx-auto grid h-full w-full",
@@ -384,6 +383,7 @@ export function BentoGridItem({
 }: BentoGridItemProps) {
   return (
     <div
+      role="listitem"
       className={cn(
         "bg-background rounded-md border p-4 transition-transform",
         getResponsiveClasses(

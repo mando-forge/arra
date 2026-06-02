@@ -1,9 +1,13 @@
-"use client"
-
 import type { ReactNode } from "react"
-import * as LucideIcons from "lucide-react"
+import { Flame, Lock, Network } from "lucide-react"
 
 import { cn } from "@/lib/utils"
+
+const icons = {
+  Flame,
+  Lock,
+  Network,
+}
 
 export function TimelineContainer({ children }: { children: ReactNode }) {
   return (
@@ -19,9 +23,7 @@ export function TimelineEvent({
   icon,
   isLast = false,
 }: Event & { isLast?: boolean }) {
-  const Icon = LucideIcons[
-    icon.name as keyof typeof LucideIcons
-  ] as LucideIcons.LucideIcon
+  const Icon = icons[icon.name]
 
   return (
     <div className="group relative -m-2 flex gap-8 border border-transparent p-2">
@@ -68,7 +70,7 @@ interface Event {
   label: string
   message: string
   icon: {
-    name: keyof typeof LucideIcons
+    name: keyof typeof icons
     textColor: string
     borderColor: string
   }

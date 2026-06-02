@@ -1,110 +1,93 @@
 import { ArrowDownRight } from "lucide-react"
 
+import { GlobalWrapper } from "@/components/layout/global-wrapper"
 import { Button } from "@/components/ui/button"
+import TextMatrixRain from "@/components/ui/text-matrix-rain"
+
+const stats = [
+  ["ORIGIN", "MANIPUR, EARTH"],
+  ["STATUS", "OPERATING FROM THE COVERT"],
+  ["PROTOCOL", "STEP BY STEP // LINE BY LINE"],
+]
 
 export function HeroSection() {
   return (
-    <section className="relative min-h-screen overflow-hidden py-20 pt-32">
-      <div className="relative z-20 mx-auto max-w-7xl px-6">
-        <div className="relative">
-          <p className="absolute -top-4 left-20 text-sm font-medium tracking-[0.2em] uppercase text-primary">
-            Initialize Sequence
-          </p>
-          <h1
-            className="text-primary relative z-20 text-center text-7xl font-bold tracking-[-7px] md:text-9xl md:tracking-[-14px] xl:text-[10rem] xl:tracking-[-1rem] font-sans"
-          >
-            THE PATHWAY
-          </h1>
-          <p className="absolute right-24 -bottom-12 hidden text-4xl font-thin tracking-[6px] xl:block opacity-20">
-            MOKORO
-          </p>
-          <p className="absolute -bottom-12 left-24 text-4xl font-thin tracking-[6px] xl:hidden opacity-20">
-            MOKORO
-          </p>
-        </div>
-
-        <div className="relative grid">
-          <div className="flex justify-center gap-6 space-y-8 pt-20">
-            <div className="bg-secondary/10 border border-white/5 flex h-fit w-full max-w-xl items-end gap-6 space-y-2 p-10 text-xl font-bold md:text-2xl lg:text-3xl backdrop-blur-md">
-              <div className="text-xl font-semibold tracking-widest text-white/80">
-                <div className="mb-2">/ STEALTH MODE</div>
-                <div className="mb-2">/ O & OMEGA.N ARCHITECTURE</div>
-                <div>/ MANIPUR SECTOR</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="mt-10 md:mt-40">
-          <p className="mx-auto max-w-2xl text-center font-mono text-sm font-medium tracking-widest md:text-base text-white/70">
-            THE PATHWAY BETWEEN WHAT IS,
-            <br />
-            AND WHAT CAN BE.
-            <br />
-            A GATEWAY INTO THE VOID.
-          </p>
-        </div>
-        <div className="flex justify-center pt-6">
-          <Button size={"lg"} className="rounded-none border border-primary bg-transparent text-primary hover:bg-primary hover:text-black uppercase tracking-[0.2em] shadow-[0_0_15px_var(--color-primary)]">Initialize Sequence</Button>
-        </div>
-
-        <div className="mt-20 items-end justify-between md:flex">
-          <div className="relative">
-             {/* Empty for brutalist layout balance */}
-          </div>
-          <div>
-            <div className="flex items-center gap-2 md:justify-end text-primary">
-              <span className="text-lg font-medium tracking-wider">
-                PORTAL LOCKED
-              </span>
-              <ArrowDownRight className="size-6" />
-            </div>
-
-            <div className="mt-3 md:text-right">
-              <h2
-                className="text-5xl tracking-[-4px] uppercase text-white font-sans"
-              >
-                Enter the Void
-              </h2>
-            </div>
-          </div>
-        </div>
+    <section
+      id="nexus-gateway"
+      className="relative flex min-h-screen flex-col overflow-hidden border-b border-white/10 pt-24"
+    >
+      <div className="absolute inset-0">
+        <img
+          src="/images/hero-sci-fi.jpg"
+          alt=""
+          className="h-full w-full object-cover object-center"
+          decoding="async"
+          fetchPriority="high"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,var(--background)_0%,color-mix(in_oklch,var(--background)_88%,transparent)_30%,color-mix(in_oklch,var(--background)_28%,transparent)_72%,color-mix(in_oklch,var(--background)_70%,transparent)_100%)]" />
+        <div className="absolute inset-0 bg-[linear-gradient(0deg,var(--background)_0%,transparent_42%,color-mix(in_oklch,var(--background)_40%,transparent)_100%)]" />
       </div>
-      
-      {/* Brutalist Grid Background */}
-      <div
-        className="absolute inset-0 z-0 block"
-        style={{
-          backgroundImage: `
-        linear-gradient(to right, rgba(255,255,255,0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255,255,255,0.05) 1px, transparent 1px)
-      `,
-          backgroundSize: "40px 40px",
-          backgroundPosition: "0 0, 0 0",
-          maskImage: `
-        repeating-linear-gradient(
-              to right,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            repeating-linear-gradient(
-              to bottom,
-              black 0px,
-              black 3px,
-              transparent 3px,
-              transparent 8px
-            ),
-            radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)
-      `,
-          WebkitMaskImage: `
-            radial-gradient(ellipse 70% 60% at 50% 30%, #000 60%, transparent 100%)
-      `,
-          maskComposite: "intersect",
-          WebkitMaskComposite: "source-in",
-        }}
-      />
+
+      <p className="pointer-events-none absolute top-1/4 left-0 w-full px-[5vw] text-center text-[18vw] leading-none font-black tracking-[-0.03em] text-white/[0.05] uppercase">
+        Mokoro
+      </p>
+
+      <GlobalWrapper className="relative z-10 flex flex-1 flex-col justify-center pb-12">
+        <div className="max-w-5xl">
+          <p className="mb-6 text-xs font-bold tracking-[0.3em] text-primary uppercase md:text-sm">
+            / Gateway 01 / Manipur Sector
+          </p>
+          <h1 className="max-w-5xl text-5xl leading-[0.95] font-black tracking-tight text-white uppercase sm:text-6xl md:text-7xl lg:text-[5.5rem] xl:text-[6.25rem]">
+            <TextMatrixRain duration={2} accentColor="#00f0ff" className="block">
+              WHERE INNOVATION
+            </TextMatrixRain>
+            <TextMatrixRain 
+              duration={2.5} 
+              accentColor="#00f0ff" 
+              className="block"
+              charClassName="bg-gradient-to-b from-white to-white/35 bg-clip-text text-transparent"
+            >
+              SHAPES TOMORROW
+            </TextMatrixRain>
+          </h1>
+          <p className="mt-8 max-w-xl border-l border-primary/60 pl-4 font-mono text-sm leading-6 tracking-[0.18em] text-white/[0.85] uppercase md:text-base">
+            Exploring new frontiers of technology, creativity, and human potential.
+          </p>
+          <div className="mt-6 flex flex-wrap items-center gap-4">
+            <Button
+              asChild
+              size="lg"
+              className="border-primary bg-transparent px-6 font-bold tracking-[0.2em] text-primary uppercase shadow-[0_0_15px_var(--color-primary)] hover:bg-primary/10 hover:text-primary"
+            >
+              <a href="#constellation">Initialize Sequence</a>
+            </Button>
+            <a
+              href="#pathfinders"
+              className="flex items-center gap-2 font-mono text-xs tracking-[0.2em] text-white/60 uppercase transition-colors hover:text-primary"
+            >
+              Portal locked <ArrowDownRight className="size-4" />
+            </a>
+          </div>
+        </div>
+      </GlobalWrapper>
+
+      <GlobalWrapper className="relative z-10 pb-6 md:pb-8">
+        <div className="grid border border-white/15 bg-black/45 backdrop-blur-md md:grid-cols-3">
+          {stats.map(([label, value]) => (
+            <div
+              key={label}
+              className="border-white/10 p-4 not-last:border-b md:not-last:border-r md:not-last:border-b-0"
+            >
+              <p className="font-mono text-[10px] tracking-[0.2em] text-primary uppercase">
+                {label}
+              </p>
+              <p className="mt-2 font-mono text-xs tracking-[0.14em] text-white/75 uppercase">
+                {value}
+              </p>
+            </div>
+          ))}
+        </div>
+      </GlobalWrapper>
     </section>
   )
 }
