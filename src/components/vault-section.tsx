@@ -12,13 +12,12 @@ const ASSETS = [
 
 export function VaultSection() {
   return (
-    <section id="act-iv" className="w-full py-24 md:py-32 bg-background border-t border-white/5">
+    <section id="vault" className="w-full py-32 bg-background border-t border-white/5">
       <GlobalWrapper>
         <div className="mb-12">
-          <h2 className="text-3xl md:text-5xl font-black tracking-[0.2em] uppercase text-foreground">The Vault</h2>
-          <p className="text-muted-foreground text-xs uppercase font-mono tracking-widest mt-4">
-            Classified technology architecture. Access heavily restricted.
-          </p>
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ ASSETS</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase text-white leading-[0.95]">THE VAULT</h2>
+            <p className="mt-8 text-sm tracking-[0.2em] text-white/50 uppercase font-mono max-w-sm">CLASSIFIED TECHNOLOGY ARCHITECTURE. ACCESS HEAVILY RESTRICTED.</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
