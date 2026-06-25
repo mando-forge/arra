@@ -17,7 +17,7 @@ jobs:
     steps:
       - name: Qodo PR-Agent
         id: pragent
-        uses: Codium-ai/pr-agent@main
+        uses: the-pr-agent/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           QODO_API_KEY: ${{ secrets.QODO_API_KEY }}
