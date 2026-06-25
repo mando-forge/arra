@@ -39,9 +39,9 @@ export function MethodologySection() {
       <GlobalWrapper>
         <div className="flex flex-col lg:flex-row gap-16 lg:gap-24">
           <div className="w-full lg:w-1/3 lg:sticky lg:top-32 lg:h-fit">
-            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ PHASE II ACTIVE</p>
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tight uppercase text-white leading-[0.95]">THE<br/>VERGENCE<br/>PROTOCOL</h2>
-            <p className="mt-8 text-xs tracking-[0.2em] text-white/50 uppercase border-l border-primary/50 pl-4 font-mono leading-relaxed">HOW WE WIELD EMERGING TECH AS RAW ENERGY TO TRANSFORM SOCIETY.</p>
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ PROTOCOL</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase text-white leading-[0.95]">THE<br/>VERGENCE<br/>PROTOCOL</h2>
+            <p className="mt-8 text-sm tracking-[0.2em] text-white/50 uppercase font-mono max-w-sm">HOW WE WIELD EMERGING TECH AS RAW ENERGY TO TRANSFORM SOCIETY.</p>
           </div>
 
           <div className="w-full lg:w-2/3 border-t border-white/10 lg:border-t-0">

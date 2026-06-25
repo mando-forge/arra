@@ -26,3 +26,6 @@ dist-ssr
 # Generated reports
 lighthouse-report.json
 
+
+*storybook.log
+storybook-static

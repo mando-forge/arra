@@ -29,7 +29,7 @@ export function HeroSection() {
       </div>
 
       <p className="pointer-events-none absolute top-1/4 left-0 w-full px-[5vw] text-center text-[18vw] leading-none font-black tracking-[-0.03em] text-white/[0.05] uppercase">
-        Mokoro
+        Arra
       </p>
 
       <GlobalWrapper className="relative z-10 flex flex-1 flex-col justify-center pb-12">
