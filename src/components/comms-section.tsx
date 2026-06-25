@@ -4,7 +4,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 
-const transmissionAddress = "transmission@mokoro.tech"
+const transmissionAddress = "transmission@arra.tech"
 
 export function CommsSection() {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -21,7 +21,7 @@ export function CommsSection() {
       return
     }
 
-    const subject = encodeURIComponent(`MOKORO transmission from ${alias}`)
+    const subject = encodeURIComponent(`ARRA transmission from ${alias}`)
     const body = encodeURIComponent(
       `ALIAS: ${alias}\nORIGIN COORDINATES: ${origin}\n\n${frequency}`
     )
@@ -35,6 +35,10 @@ export function CommsSection() {
       className="relative flex w-full flex-col justify-between overflow-hidden bg-background pt-32"
     >
       <GlobalWrapper className="relative z-10 mb-32 flex flex-col items-center justify-center">
+        <div className="w-full max-w-4xl mb-12">
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ RESONANCE</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase text-white leading-[0.95]">COMMUNICATIONS</h2>
+        </div>
         <div className="relative w-full max-w-4xl border border-white/20 bg-black font-mono text-sm shadow-[0_0_30px_rgba(0,0,0,0.8)]">
           <div className="flex items-center justify-between border-b border-white/20 bg-white/5 px-4 py-2">
             <div className="flex gap-2" aria-hidden="true">
@@ -129,7 +133,7 @@ export function CommsSection() {
         <GlobalWrapper>
           <div className="grid grid-cols-1 gap-8 font-mono text-xs tracking-widest text-muted-foreground uppercase md:grid-cols-4 md:gap-4">
             <div className="flex flex-col gap-4">
-              <span className="font-bold text-foreground">MOKORO NEXUS</span>
+              <span className="font-bold text-foreground">ARRA NEXUS</span>
               <span>&copy; {new Date().getFullYear()} ALL RIGHTS RESERVED</span>
             </div>
             <div className="flex flex-col gap-4">

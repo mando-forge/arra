@@ -3,6 +3,7 @@ packages: []
 allowBuilds:
   esbuild: true
   msw: false
+  puppeteer: true
 
 allowedDeprecatedVersions:
   node-domexception: "*"

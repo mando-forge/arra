@@ -68,7 +68,7 @@ export function Header() {
             <div className="size-3 bg-primary" />
             <div className="size-3 bg-primary/20" />
           </div>
-          <span className="font-semibold text-lg tracking-tight ml-2 uppercase">MOKORO</span>
+          <span className="font-semibold text-lg tracking-tight ml-2 uppercase">ARRA</span>
         </div>
 
         {/* Center: Desktop Nav */}
