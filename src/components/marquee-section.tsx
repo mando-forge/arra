@@ -49,13 +49,10 @@ export function MarqueeSection() {
 
       {/* Foreground Brutalist CTA Block */}
       <div className="relative z-20 overflow-hidden bg-black border border-white/10 p-12 md:p-20 shadow-2xl max-w-4xl text-center">
-        <div className="space-y-6">
-          <h2 className="text-3xl font-bold tracking-[0.2em] uppercase md:text-5xl lg:text-6xl text-white">
-            WE ARE SEARCHING FOR ARTISANS IN THE VOID.
-          </h2>
-          <p className="text-white/60 text-sm md:text-base font-mono tracking-widest uppercase">
-            Join the Covert.
-          </p>
+        <div className="mb-12">
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ THE GUILD</p>
+            <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase text-white leading-[0.95]">ARTISANS OF THE VOID</h2>
+            <p className="mt-8 text-sm tracking-[0.2em] text-white/50 uppercase font-mono max-w-sm mx-auto">JOIN THE COVERT AND BUILD THE BRIDGE.</p>
         </div>
 
         <div className="flex flex-wrap justify-center gap-6 pt-12">

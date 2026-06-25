@@ -61,9 +61,10 @@ export function EthosSection() {
 
           {/* Animated Text Content */}
           <div className="relative z-20 flex flex-col items-center text-center">
-            <p className="text-primary font-mono text-xs tracking-[0.2em] uppercase mb-8 md:text-sm">
-              Mokoro Manifesto
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">
+              / CONSTELLATION
             </p>
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase text-white mb-8 md:mb-12">ARRA MANIFESTO</h2>
             
             <div className="flex flex-wrap justify-center text-2xl font-black uppercase tracking-tight md:text-3xl lg:text-4xl xl:text-5xl leading-[1.1] md:leading-[1.1]">
               {words.map((word, i) => {

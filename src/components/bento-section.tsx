@@ -8,8 +8,9 @@ export function BentoSection() {
     <section id="pathfinders" className="py-24">
       <GlobalWrapper>
         <div className="mb-12">
-            <h2 className="text-3xl md:text-5xl font-bold tracking-[0.2em] uppercase text-white">THE PATHFINDERS</h2>
-            <p className="mt-4 text-sm tracking-[0.2em] text-white/50 uppercase">OLIVER. O AND OMEGA. N ARE NOT JUST ARMORERS; THEY ARE NAVIGATORS MAPPING THE UNKNOWN.</p>
+            <p className="text-primary text-sm tracking-[0.2em] uppercase font-bold mb-4">/ THE NAVIGATORS</p>
+            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight uppercase text-white">PATHFINDERS</h2>
+            <p className="mt-4 text-sm tracking-[0.2em] text-white/50 uppercase font-mono max-w-3xl">OLIVER. O AND OMEGA. N ARE NOT JUST ARMORERS; THEY ARE NAVIGATORS MAPPING THE UNKNOWN.</p>
         </div>
         <BentoGrid
             cols={{ base: 2, md: 3, lg: 4 }}
