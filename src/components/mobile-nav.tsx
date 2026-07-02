@@ -56,7 +56,7 @@ export function MobileNav() {
 								variant="star"
 								theme={resolvedTheme} 
 								onThemeChange={(newTheme) => setTheme(newTheme)}
-								className="h-9 w-9 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+								className="h-9 w-9 inline-flex items-center justify-center rounded-none hover:bg-accent hover:text-accent-foreground"
 							/>
 						</div>
 						<div className="mt-6 flex flex-col gap-2">

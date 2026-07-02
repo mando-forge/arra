@@ -35,7 +35,7 @@ export function Header() {
 		>
 			<nav className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
 				<a
-					className="rounded-md p-2 hover:bg-muted dark:hover:bg-muted/50"
+					className="rounded-none p-2 hover:bg-muted dark:hover:bg-muted/50"
 					href="#"
 				>
 					<Logo className="h-4" />
@@ -50,7 +50,7 @@ export function Header() {
 						variant="star"
 						theme={resolvedTheme} 
 						onThemeChange={(newTheme) => setTheme(newTheme)}
-						className="h-9 w-9 inline-flex items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+						className="h-9 w-9 inline-flex items-center justify-center rounded-none hover:bg-accent hover:text-accent-foreground"
 					/>
 					<Button size="sm" variant="outline">
 						Sign In
