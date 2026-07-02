@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { Logo } from "@/components/logo";
-import { useScroll } from "@/hooks/use-scroll";
+import { useScrollThreshold } from "@/hooks/use-scroll";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/mobile-nav";
 import { useTheme } from "@/components/theme-provider";
@@ -23,7 +23,7 @@ export const navLinks = [
 ];
 
 export function Header() {
-	const scrolled = useScroll(10);
+	const scrolled = useScrollThreshold(10);
 	const { resolvedTheme, setTheme } = useTheme();
 
 	return (

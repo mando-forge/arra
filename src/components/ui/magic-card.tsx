@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
 import {
   motion,
   useMotionTemplate,
@@ -9,6 +9,7 @@ import {
 } from "motion/react"
 
 import { cn } from "@/lib/utils"
+import { useTheme } from "@/components/theme-provider"
 
 interface MagicCardBaseProps {
   children?: React.ReactNode
@@ -73,12 +74,10 @@ export function MagicCard(props: MagicCardProps) {
   const glowOpacity = isOrbMode(props) ? (props.glowOpacity ?? 0.9) : 0.9
   const [mounted, setMounted] = useState(false)
 
-  useEffect(() => setMounted(true), [])
+  const { resolvedTheme } = useTheme()
+  const isDarkTheme = mounted && resolvedTheme === "dark"
 
-  const isDarkTheme = useMemo(() => {
-    if (!mounted) return false
-    return document.documentElement.classList.contains("dark")
-  }, [mounted])
+  useEffect(() => setMounted(true), [])
 
   const mouseX = useMotionValue(-gradientSize)
   const mouseY = useMotionValue(-gradientSize)
@@ -153,6 +152,23 @@ export function MagicCard(props: MagicCardProps) {
     }
   }, [reset])
 
+  // Hoist all useMotionTemplate calls to top-level (Rules of Hooks)
+  const borderBg = useMotionTemplate`
+    linear-gradient(var(--color-background) 0 0) padding-box,
+    radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
+      ${gradientFrom},
+      ${gradientTo},
+      var(--color-border) 100%
+    ) border-box
+  `
+
+  const gradientBg = useMotionTemplate`
+    radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
+      ${gradientColor},
+      transparent 100%
+    )
+  `
+
   return (
     <motion.div
       className={cn(
@@ -163,14 +179,7 @@ export function MagicCard(props: MagicCardProps) {
       onPointerLeave={() => reset("leave")}
       onPointerEnter={() => reset("enter")}
       style={{
-        background: useMotionTemplate`
-          linear-gradient(var(--color-background) 0 0) padding-box,
-          radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
-            ${gradientFrom},
-            ${gradientTo},
-            var(--color-border) 100%
-          ) border-box
-        `,
+        background: borderBg,
       }}
     >
       <div className="bg-background absolute inset-px z-20 rounded-[inherit]" />
@@ -180,12 +189,7 @@ export function MagicCard(props: MagicCardProps) {
           suppressHydrationWarning
           className="pointer-events-none absolute inset-px z-30 rounded-[inherit] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
           style={{
-            background: useMotionTemplate`
-              radial-gradient(${gradientSize}px circle at ${mouseX}px ${mouseY}px,
-                ${gradientColor},
-                transparent 100%
-              )
-            `,
+            background: gradientBg,
             opacity: gradientOpacity,
           }}
         />
@@ -217,3 +221,4 @@ export function MagicCard(props: MagicCardProps) {
     </motion.div>
   )
 }
+
