@@ -177,7 +177,14 @@ export function MagicCard(props: MagicCardProps) {
       )}
       onPointerMove={handlePointerMove}
       onPointerLeave={() => reset("leave")}
-      onPointerEnter={() => reset("enter")}
+      onPointerEnter={(e) => {
+        if (modeRef.current === "orb") {
+          const rect = e.currentTarget.getBoundingClientRect();
+          mouseX.set(e.clientX - rect.left);
+          mouseY.set(e.clientY - rect.top);
+        }
+        reset("enter");
+      }}
       style={{
         background: borderBg,
       }}

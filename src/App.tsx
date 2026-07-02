@@ -49,7 +49,7 @@ import { cn } from "@/lib/utils"
 
 export default function App() {
   useEffect(() => {
-    const lenis = new Lenis()
+    const lenis = new Lenis({ anchors: true })
     let rafId: number
     function raf(time: number) {
       lenis.raf(time)

@@ -46,7 +46,7 @@ export function MobileNav() {
 									key={link.label}
 									variant="ghost"
 								>
-									<a href={link.href}>{link.label}</a>
+									<a href={link.href} onClick={() => setOpen(false)}>{link.label}</a>
 								</Button>
 							))}
 						</div>

@@ -36,7 +36,7 @@ export function InteractiveHoverButton({
 
   if (href) {
     return (
-      <a href={href} className={classes}>
+      <a href={href} className={classes} {...(props as any)}>
         {inner}
       </a>
     )

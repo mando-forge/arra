@@ -144,6 +144,7 @@
 
   body {
     @apply bg-background text-foreground;
+    z-index: 0;
     text-rendering: optimizeLegibility;
     overflow-x: hidden;
   }
