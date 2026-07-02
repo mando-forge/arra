@@ -38,6 +38,10 @@ export default defineConfig([globalIgnores([
         ],
       },
     ],
+  },
+}, {
+  files: ['src/components/ui/carousel.tsx'],
+  rules: {
     'react-hooks/set-state-in-effect': 'off',
   },
 }, ...storybook.configs["flat/recommended"], {

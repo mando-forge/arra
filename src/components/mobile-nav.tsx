@@ -9,10 +9,7 @@ import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler";
 
 export function MobileNav() {
 	const [open, setOpen] = React.useState(false);
-	const { theme, setTheme } = useTheme();
-	const resolvedTheme = theme === "system" 
-		? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") 
-		: (theme as "light" | "dark");
+	const { resolvedTheme, setTheme } = useTheme();
 
 	return (
 		<div className="md:hidden">

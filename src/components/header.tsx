@@ -24,10 +24,7 @@ export const navLinks = [
 
 export function Header() {
 	const scrolled = useScroll(10);
-	const { theme, setTheme } = useTheme();
-	const resolvedTheme = theme === "system" 
-		? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") 
-		: (theme as "light" | "dark");
+	const { resolvedTheme, setTheme } = useTheme();
 
 	return (
 		<header
