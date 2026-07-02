@@ -34,7 +34,7 @@ export function MobileNav() {
 					<div
 						className={cn(
 							"data-[slot=open]:zoom-in-97 ease-out data-[slot=open]:animate-in",
-							"size-full p-4"
+							"size-full overflow-y-auto p-4"
 						)}
 						data-slot={open ? "open" : "closed"}
 					>

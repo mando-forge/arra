@@ -71,7 +71,7 @@ export default function App() {
         Skip to content
       </a>
       <Header />
-      <main id="main-content" className="relative z-10">
+      <main id="main-content" tabIndex={-1} className="relative z-10">
         <Hero />
         <Vision />
         <Philosophy />
