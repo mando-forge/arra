@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: Qodo PR-Agent
         id: pragent
-        uses: the-pr-agent/pr-agent@v0.37.0
+        uses: the-pr-agent/pr-agent@main
         env:
           OPENAI_KEY: ${{ secrets.OPENAI_KEY }}
           QODO_API_KEY: ${{ secrets.QODO_API_KEY }}
