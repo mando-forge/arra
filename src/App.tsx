@@ -50,12 +50,16 @@ import { cn } from "@/lib/utils"
 export default function App() {
   useEffect(() => {
     const lenis = new Lenis()
+    let rafId: number
     function raf(time: number) {
       lenis.raf(time)
-      requestAnimationFrame(raf)
+      rafId = requestAnimationFrame(raf)
     }
-    requestAnimationFrame(raf)
-    return () => lenis.destroy()
+    rafId = requestAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(rafId)
+      lenis.destroy()
+    }
   }, [])
 
   return (
@@ -109,10 +113,8 @@ function Hero() {
         </ArraReveal>
         <ArraReveal delay={450}>
           <div className="mt-12 flex justify-center gap-4">
-            <InteractiveHoverButton className="text-sm px-8 h-14 border-primary/20 hover:border-primary/50">
-              <a href="#vision" className="flex items-center">
-                Explore the vision
-              </a>
+            <InteractiveHoverButton href="#vision" className="text-sm px-8 h-14 border-primary/20 hover:border-primary/50">
+              Explore the vision
             </InteractiveHoverButton>
           </div>
         </ArraReveal>
@@ -513,10 +515,8 @@ function EnterpriseReadiness() {
               current focus is to keep the thinking clear, the scope honest, and
               the technical habits responsible.
             </p>
-            <InteractiveHoverButton className="mt-12 text-sm px-8 h-14 border-primary/20 hover:border-primary/50">
-              <a href={mailToPilot} className="flex items-center">
-                Start a conversation
-              </a>
+            <InteractiveHoverButton href={mailToPilot} className="mt-12 text-sm px-8 h-14 border-primary/20 hover:border-primary/50">
+              Start a conversation
             </InteractiveHoverButton>
           </div>
           <div className="grid gap-6 content-start">
