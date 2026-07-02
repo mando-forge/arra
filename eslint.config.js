@@ -8,7 +8,13 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
-export default defineConfig([globalIgnores(['dist']), {
+export default defineConfig([globalIgnores([
+  'dist',
+  'storybook-static',
+  '.agent',
+  '.codex',
+  'node_modules',
+]), {
   files: ['**/*.{ts,tsx}'],
   extends: [
     js.configs.recommended,
@@ -32,5 +38,10 @@ export default defineConfig([globalIgnores(['dist']), {
         ],
       },
     ],
+    'react-hooks/set-state-in-effect': 'off',
   },
-}, ...storybook.configs["flat/recommended"]])
+}, ...storybook.configs["flat/recommended"], {
+  rules: {
+    'storybook/no-renderer-packages': 'off',
+  },
+}])

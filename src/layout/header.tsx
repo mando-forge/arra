@@ -2,153 +2,133 @@ import { useEffect, useState } from "react"
 import { Menu, X } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { navItems } from "@/content/arra"
 import { cn } from "@/lib/utils"
-
-const navLinks = [
-  { label: "Gateway", href: "#nexus-gateway" },
-  { label: "Constellation", href: "#constellation" },
-  { label: "Pathfinders", href: "#pathfinders" },
-  { label: "Protocol", href: "#protocol" },
-  { label: "Resonance", href: "#resonance" },
-]
+import { useTheme } from "@/components/theme-provider"
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 
 export function Header() {
-  const [time, setTime] = useState("")
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("nexus-gateway")
+  const [activeSection, setActiveSection] = useState("home")
+  const { theme, setTheme } = useTheme()
+  const resolvedTheme = theme === "system" 
+    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") 
+    : (theme as "light" | "dark")
 
   useEffect(() => {
-    const update = () =>
-      setTime(
-        new Date().toLocaleTimeString("en-US", {
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-      )
-    update()
-    const id = setInterval(update, 1000)
-    return () => clearInterval(id)
-  }, [])
-
-  useEffect(() => {
-    const sectionIds = navLinks.map((l) => l.href.slice(1))
-    const intersectingMap = new Map<string, boolean>()
-
+    const sectionIds = ["home", ...navItems.map((link) => link.href.slice(1))]
     const observer = new IntersectionObserver(
       (entries) => {
-        for (const entry of entries) {
-          intersectingMap.set(entry.target.id, entry.isIntersecting)
-        }
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
 
-        for (const id of sectionIds) {
-          if (intersectingMap.get(id)) {
-            setActiveSection(id)
-            break
-          }
+        if (visible?.target.id) {
+          setActiveSection(visible.target.id)
         }
       },
-      { rootMargin: "-40% 0px -40% 0px", threshold: 0 }
+      { rootMargin: "-35% 0px -55% 0px", threshold: [0, 0.25, 0.5] }
     )
+
     for (const id of sectionIds) {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
+      const section = document.getElementById(id)
+      if (section) observer.observe(section)
     }
+
     return () => observer.disconnect()
   }, [])
 
   return (
-    <header className="z-50 w-full fixed top-0 pt-6 pointer-events-none">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-6 md:px-12 pointer-events-auto">
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/55 bg-background/82 backdrop-blur-xl">
+      <div className="container-enterprise flex h-16 items-center justify-between">
+        <a
+          href="#home"
+          className="flex items-center gap-3 text-sm font-semibold tracking-[0.08em] text-foreground"
+          aria-label="ARRA home"
+        >
+          <span className="grid size-6 grid-cols-2 gap-0.5 rounded-sm">
+            <span className="rounded-[2px] bg-primary" />
+            <span className="rounded-[2px] bg-accent" />
+            <span className="rounded-[2px] bg-foreground/80" />
+            <span className="rounded-[2px] border border-border" />
+          </span>
+          <span>ARRA</span>
+        </a>
 
-        {/* Left: Logo */}
-        <div className="flex items-center gap-2">
-          <div className="grid grid-cols-2 gap-0.5 opacity-90">
-            <div className="size-3 bg-primary" />
-            <div className="size-3 bg-primary" />
-            <div className="size-3 bg-primary" />
-            <div className="size-3 bg-primary/20" />
-          </div>
-          <span className="font-semibold text-lg tracking-tight ml-2 uppercase">ARRA</span>
-        </div>
-
-        {/* Center: Desktop Nav */}
-        <nav className="hidden lg:flex items-center gap-1 border border-white/10 bg-black/40 backdrop-blur-md p-1.5 shadow-xl">
-          {navLinks.map(({ label, href }) => (
-            <a
-              key={label}
-              href={href}
-              aria-current={activeSection === href.slice(1) ? "true" : undefined}
-              className={cn(
-                "px-4 py-2 text-xs font-bold transition-colors hover:text-foreground hover:bg-white/5 uppercase",
-                activeSection === href.slice(1)
-                  ? "text-foreground border-b-2 border-primary shadow-[0_1px_0_var(--color-primary)]"
-                  : "text-muted-foreground"
-              )}
-            >
-              {label}
-            </a>
-          ))}
+        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+          {navItems.map(({ label, href }) => {
+            const isActive = activeSection === href.slice(1)
+            return (
+              <a
+                key={label}
+                href={href}
+                aria-current={isActive ? "page" : undefined}
+                className={cn(
+                  "rounded-md border border-transparent px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-border/70 hover:bg-card/45 hover:text-foreground",
+                  isActive && "border-border/80 bg-card/55 text-foreground"
+                )}
+              >
+                {label}
+              </a>
+            )
+          })}
         </nav>
 
-        {/* Right: Time + CTA + Mobile Toggle */}
-        <div className="flex items-center gap-4">
-          <div className="hidden md:flex items-center text-xs font-mono text-muted-foreground">
-            {time} (NEXUS)
-          </div>
-          <Button asChild className="flex border-primary bg-transparent px-3 font-bold text-primary shadow-[0_0_20px_var(--color-primary)] hover:bg-primary/10 hover:text-primary sm:px-6">
-            <a href="#resonance">
-              <span className="hidden sm:inline">Establish&nbsp;</span>Comms
-            </a>
+        <div className="flex items-center gap-2">
+          <AnimatedThemeToggler 
+            variant="star"
+            theme={resolvedTheme} 
+            onThemeChange={(newTheme) => setTheme(newTheme)}
+            className="inline-flex size-10 items-center justify-center rounded-md border border-border/80 bg-card/55 text-foreground hover:bg-muted"
+          />
+          <Button
+            asChild
+            variant="outline"
+            className="hidden h-10 rounded-lg border-border/80 bg-card/55 px-4 text-sm sm:inline-flex"
+          >
+            <a href="#contact">Contact</a>
           </Button>
-          {/* Mobile hamburger */}
           <button
-            className="lg:hidden flex items-center justify-center p-2 text-foreground"
-            onClick={() => setMobileOpen((v) => !v)}
+            type="button"
+            className="inline-flex size-10 items-center justify-center rounded-md border border-border/80 bg-card/55 text-foreground lg:hidden"
+            onClick={() => setMobileOpen((value) => !value)}
             aria-label="Toggle navigation"
             aria-controls="mobile-navigation"
             aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+            {mobileOpen ? (
+              <X className="size-5" />
+            ) : (
+              <Menu className="size-5" />
+            )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Dropdown */}
       <div
         id="mobile-navigation"
-        aria-hidden={!mobileOpen}
         inert={!mobileOpen ? true : undefined}
         className={cn(
-          "lg:hidden w-full border-t border-white/10 bg-black/90 backdrop-blur-md mt-4 overflow-hidden transition-all duration-300",
-          mobileOpen
-            ? "max-h-96 opacity-100 pointer-events-auto"
-            : "max-h-0 opacity-0 pointer-events-none"
+          "overflow-hidden border-t border-border/50 bg-background/95 transition-[max-height,opacity] duration-200 lg:hidden",
+          mobileOpen ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0"
         )}
       >
-        <nav className="mx-auto flex max-w-7xl flex-col px-6 py-4 gap-1">
-          {navLinks.map(({ label, href }) => (
+        <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4 md:px-12">
+          {navItems.map(({ label, href }) => (
             <a
               key={label}
               href={href}
               onClick={() => setMobileOpen(false)}
-              aria-current={activeSection === href.slice(1) ? "true" : undefined}
-              className={cn(
-                "px-4 py-3 text-xs font-bold uppercase tracking-widest transition-colors hover:text-foreground",
-                activeSection === href.slice(1)
-                  ? "text-foreground"
-                  : "text-muted-foreground"
-              )}
+              className="rounded-md px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
             >
               {label}
             </a>
           ))}
-          <div className="pt-2">
-            <Button asChild className="w-full border-primary bg-transparent font-bold text-primary hover:bg-primary/10 hover:text-primary">
-              <a href="#resonance" onClick={() => setMobileOpen(false)}>
-                Establish Comms
-              </a>
-            </Button>
-          </div>
+          <Button asChild className="mt-2 h-11 rounded-lg text-sm">
+            <a href="#contact" onClick={() => setMobileOpen(false)}>
+              Contact
+            </a>
+          </Button>
         </nav>
       </div>
     </header>
