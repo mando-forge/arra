@@ -8,14 +8,8 @@ export type ThemeProviderState = {
   setTheme: (theme: Theme) => void
 }
 
-export const initialThemeProviderState: ThemeProviderState = {
-  theme: "system",
-  resolvedTheme: "light",
-  setTheme: () => null,
-}
-
-export const ThemeProviderContext = createContext<ThemeProviderState>(
-  initialThemeProviderState
+export const ThemeProviderContext = createContext<ThemeProviderState | undefined>(
+  undefined
 )
 
 export const useTheme = () => {

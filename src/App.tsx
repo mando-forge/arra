@@ -121,11 +121,9 @@ function Hero() {
             </div>
 
             <div className="flex flex-wrap gap-4 pt-4">
-              <a href="#vision">
-                <InteractiveHoverButton className="h-12 px-7 font-mono text-xs font-semibold uppercase sm:h-14 sm:px-8 sm:text-sm">
-                  Explore the vision
-                </InteractiveHoverButton>
-              </a>
+              <InteractiveHoverButton href="#vision" className="h-12 px-7 font-mono text-xs font-semibold uppercase sm:h-14 sm:px-8 sm:text-sm">
+                Explore the vision
+              </InteractiveHoverButton>
               <Button
                 asChild
                 variant="outline"
@@ -142,7 +140,7 @@ function Hero() {
             </div>
           </ArraReveal>
 
-          <ArraReveal delay={100}>
+          <ArraReveal>
             <EngravingFigure
               src={images.hero.src}
               alt={images.hero.alt}
@@ -190,7 +188,7 @@ function Vision() {
           />
         </ArraReveal>
 
-        <ArraReveal delay={90}>
+        <ArraReveal>
           <div className="grid h-full bg-muted overflow-hidden">
             <div className="p-7 md:p-8">
               <p className="mono-label">Field discipline</p>
@@ -235,7 +233,7 @@ function Approach() {
     >
         <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {principles.map((principle, index) => (
-            <ArraReveal key={principle.title} delay={index * 45}>
+            <ArraReveal key={principle.title}>
               <MagicCard 
                 className="grid min-h-52 content-between p-6 border-0 shadow-none bg-white/8 backdrop-blur-sm cursor-pointer text-current"
                 gradientColor="rgba(255,255,255,0.15)"
@@ -311,8 +309,8 @@ function Principles() {
         </ArraReveal>
 
         <div className="grid gap-3 sm:grid-cols-2">
-          {trustItems.map(({ icon, text, body }, index) => (
-            <ArraReveal key={text} delay={index * 35}>
+          {trustItems.map(({ icon, text, body }) => (
+            <ArraReveal key={text}>
               <ArraEvidenceItem icon={icon} title={text} body={body} />
             </ArraReveal>
           ))}
@@ -346,7 +344,7 @@ function FAQ() {
           </aside>
         </ArraReveal>
 
-        <ArraReveal delay={90}>
+        <ArraReveal>
           <div>
             <Accordion type="single" collapsible defaultValue="item-0">
               {faqs.map((item, index) => (
@@ -413,7 +411,7 @@ function Contact() {
             </div>
           </ArraReveal>
 
-          <ArraReveal delay={100}>
+          <ArraReveal>
             <form
               action={mailToPilot}
               method="post"

@@ -72,12 +72,7 @@ export function Header() {
               onThemeChange={(newTheme) => setTheme(newTheme)}
               className="grid w-14 place-items-center border-r border-border bg-background text-foreground transition-colors hover:bg-foreground hover:text-background"
             />
-            <a
-              href="#contact"
-              className="mono-label hidden items-center px-4 transition-colors hover:bg-foreground hover:text-background sm:flex"
-            >
-              Contact
-            </a>
+
             <button
               type="button"
               className="grid w-14 place-items-center bg-background text-foreground transition-colors hover:bg-foreground hover:text-background lg:hidden"

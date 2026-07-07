@@ -83,7 +83,6 @@ export function ArraReveal({
 }: {
   children: ReactNode
   className?: string
-  delay?: number
 }) {
   return <div className={cn("arra-reveal", className)}>{children}</div>
 }

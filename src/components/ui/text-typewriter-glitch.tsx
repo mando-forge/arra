@@ -8,14 +8,12 @@ import { cn } from "@/lib/utils";
 interface TextTypewriterGlitchProps {
   children: string;
   className?: string;
-  duration?: number;
   repeatDelay?: number;
 }
 
 export default function TextTypewriterGlitch({
   children,
   className = "",
-  duration = 3,
   repeatDelay = 30,
 }: TextTypewriterGlitchProps) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -27,6 +25,8 @@ export default function TextTypewriterGlitch({
       const finalText = children;
       const wrongChars = "!@#$%^&*()QWERTY";
 
+      let activeCall: gsap.core.Tween | null = null;
+
       const runAnimation = () => {
         let currentText = "";
         let targetIndex = 0;
@@ -34,7 +34,7 @@ export default function TextTypewriterGlitch({
         const typeChar = () => {
           if (targetIndex >= finalText.length) {
             el.textContent = finalText;
-            gsap.delayedCall(repeatDelay, runAnimation);
+            activeCall = gsap.delayedCall(repeatDelay, runAnimation);
             return;
           }
 
@@ -47,32 +47,32 @@ export default function TextTypewriterGlitch({
             currentText += wrongChar;
             el.textContent = currentText + "|";
 
-            gsap.delayedCall(0.1 + Math.random() * 0.15, () => {
+            activeCall = gsap.delayedCall(0.1 + Math.random() * 0.15, () => {
               currentText = currentText.slice(0, -1);
               el.textContent = currentText + "|";
 
-              gsap.delayedCall(0.08, () => {
+              activeCall = gsap.delayedCall(0.08, () => {
                 if (Math.random() > 0.5) {
                   const anotherWrong =
                     wrongChars[Math.floor(Math.random() * wrongChars.length)];
                   currentText += anotherWrong;
                   el.textContent = currentText + "|";
 
-                  gsap.delayedCall(0.12, () => {
+                  activeCall = gsap.delayedCall(0.12, () => {
                     currentText = currentText.slice(0, -1);
                     el.textContent = currentText + "|";
-                    gsap.delayedCall(0.08, () => {
+                    activeCall = gsap.delayedCall(0.08, () => {
                       currentText += targetChar;
                       el.textContent = currentText + "|";
                       targetIndex++;
-                      gsap.delayedCall(0.05 + Math.random() * 0.1, typeChar);
+                      activeCall = gsap.delayedCall(0.05 + Math.random() * 0.1, typeChar);
                     });
                   });
                 } else {
                   currentText += targetChar;
                   el.textContent = currentText + "|";
                   targetIndex++;
-                  gsap.delayedCall(0.05 + Math.random() * 0.1, typeChar);
+                  activeCall = gsap.delayedCall(0.05 + Math.random() * 0.1, typeChar);
                 }
               });
             });
@@ -80,17 +80,21 @@ export default function TextTypewriterGlitch({
             currentText += targetChar;
             el.textContent = currentText + "|";
             targetIndex++;
-            gsap.delayedCall(0.04 + Math.random() * 0.08, typeChar);
+            activeCall = gsap.delayedCall(0.04 + Math.random() * 0.08, typeChar);
           }
         };
 
         el.textContent = "|";
-        gsap.delayedCall(0.5, typeChar);
+        activeCall = gsap.delayedCall(0.5, typeChar);
       };
 
       runAnimation();
+
+      return () => {
+        if (activeCall) activeCall.kill();
+      };
     },
-    { scope: containerRef, dependencies: [children, duration, repeatDelay] }
+    { scope: containerRef, dependencies: [children, repeatDelay] }
   );
 
   return (

@@ -22,7 +22,7 @@ export function Header() {
       <nav className="mx-auto flex h-14 w-full max-w-5xl items-center justify-between px-4">
         <a
           className="rounded-none p-2 hover:bg-muted dark:hover:bg-muted/50"
-          href="#"
+          href="/"
         >
           <Logo className="h-4" />
         </a>

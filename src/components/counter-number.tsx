@@ -89,7 +89,7 @@ export function CounterNumber({
         setDisplayValue(end)
         displayValRef.current = end
       })
-      return
+      return () => cancelAnimationFrame(frameId)
     }
 
     const step = (timestamp: number) => {

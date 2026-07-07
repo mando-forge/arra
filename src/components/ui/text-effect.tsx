@@ -40,7 +40,7 @@ const motionElements = {
 }
 
 export function TextEffect({
-  as = "p",
+  as = "span",
   children,
   className,
   delay = 0,
