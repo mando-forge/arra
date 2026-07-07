@@ -60,17 +60,17 @@ export function SectionHeading({
   return (
     <div
       className={cn(
-        "border-b border-current pb-7 md:pb-8",
+        "pb-7 md:pb-8",
         className
       )}
     >
-      <div className="flex flex-wrap gap-x-5 gap-y-2 border-b border-current pb-4">
+      <div className="flex flex-wrap gap-x-5 gap-y-2 pb-4">
         <p className="mono-label">{eyebrow}</p>
       </div>
       <h2 className="editorial-heading mt-7 max-w-5xl">
         {title}
       </h2>
-      <div className="mt-7 grid gap-5 border-t border-current pt-5 md:grid-cols-[0.85fr_1fr]">
+      <div className="mt-7 grid gap-5 pt-5 md:grid-cols-[0.85fr_1fr]">
         <p className="body-copy opacity-[0.82]">{description}</p>
       </div>
     </div>
@@ -102,7 +102,7 @@ export function ArraEvidenceItem({
   return (
     <article
       className={cn(
-        "grid min-h-40 content-between border border-current bg-background p-5 text-foreground md:p-6",
+        "grid min-h-40 content-between bg-background shadow-sm p-5 text-foreground md:p-6",
         className
       )}
     >
@@ -157,7 +157,7 @@ export function EngravingFigure({
   imageClassName?: string
 }) {
   return (
-    <figure className={cn("grid border border-current bg-background", className)}>
+    <figure className={cn("grid bg-background overflow-hidden shadow-sm", className)}>
       <div
         className={cn("engraving-frame", frameClassName)}
         data-tone={tone}
@@ -171,7 +171,7 @@ export function EngravingFigure({
         />
       </div>
       {caption || meta ? (
-        <figcaption className="grid gap-3 border-t border-current p-4 md:p-5">
+        <figcaption className="grid gap-3 p-4 md:p-5">
           {meta ? <p className="mono-label text-[0.64rem]">{meta}</p> : null}
           {caption ? <div>{caption}</div> : null}
         </figcaption>

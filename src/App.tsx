@@ -28,6 +28,11 @@ import {
 } from "@/content/arra"
 import { Header } from "@/layout/header"
 
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
+import { MagicCard } from "@/components/ui/magic-card"
+import { TextEffect } from "@/components/ui/text-effect"
+import { AnimatedGroup } from "@/components/ui/animated-group"
+
 const fieldNotes = [
   "Regional infrastructure realities",
   "Human workflows and coordination",
@@ -89,7 +94,7 @@ function Hero() {
         <div className="grid gap-10 xl:grid-cols-[minmax(0,1fr)_30rem] xl:items-end">
           <ArraReveal className="grid gap-8">
             <div>
-              <div className="flex flex-wrap gap-x-5 gap-y-2 border-b border-current pb-4">
+              <div className="flex flex-wrap gap-x-5 gap-y-2 pb-4">
                 {heroMeta.map((item) => (
                   <span key={item} className="mono-label">
                     {item}
@@ -97,46 +102,43 @@ function Hero() {
                 ))}
               </div>
               <h1 className="serif-display mt-7 max-w-5xl text-[clamp(3.25rem,10vw,7rem)] leading-[0.92] text-balance uppercase">
-                Technology for Northeast India
+                <TextEffect per="word" preset="fade">
+                  Technology for Northeast India
+                </TextEffect>
               </h1>
             </div>
 
-            <div className="grid gap-5 border-t border-current pt-6 md:grid-cols-[0.85fr_1fr]">
+            <div className="grid gap-6 pt-8 md:grid-cols-[0.85fr_1fr]">
               <p className="body-copy opacity-[0.84]">
                 ARRA is an early-stage technology company focused on thoughtful
                 innovation and long-term regional transformation.
               </p>
-              <div>
-                <p className="compact-copy opacity-[0.74]">
-                  We are building quietly, with care, discipline, and respect
-                  for what is still taking shape. No inflated claims. No
-                  premature roadmap. Just the foundation for serious work.
-                </p>
-                <div className="mt-6 flex flex-wrap gap-3">
-                  <Button
-                    asChild
-                    className="arra-cta h-11 rounded-none border border-current bg-foreground px-4 font-mono text-[0.68rem] font-semibold text-background uppercase hover:bg-background hover:text-foreground sm:h-12 sm:px-5 sm:text-xs"
-                  >
-                    <a href="#vision">
-                      Explore the vision
-                      <ArrowRight className="size-4" />
-                    </a>
-                  </Button>
-                  <Button
-                    asChild
-                    variant="outline"
-                    className="arra-cta h-11 rounded-none border-current bg-background px-4 font-mono text-[0.68rem] font-semibold text-foreground uppercase hover:bg-foreground hover:text-background sm:h-12 sm:px-5 sm:text-xs"
-                  >
-                    <a href="#contact">
-                      <span className="hidden sm:inline">
-                        Start a conversation
-                      </span>
-                      <span className="sm:hidden">Contact</span>
-                      <ArrowRight className="size-4" />
-                    </a>
-                  </Button>
-                </div>
-              </div>
+              <AnimatedGroup preset="fade" className="compact-copy opacity-[0.74]">
+                <p>We are building quietly, with care, discipline, and respect for what is still taking shape.</p>
+                <p>No inflated claims. No premature roadmap.</p>
+                <p>Just the foundation for serious work.</p>
+              </AnimatedGroup>
+            </div>
+
+            <div className="flex flex-wrap gap-4 pt-4">
+              <a href="#vision">
+                <InteractiveHoverButton className="h-12 px-7 font-mono text-xs font-semibold uppercase sm:h-14 sm:px-8 sm:text-sm">
+                  Explore the vision
+                </InteractiveHoverButton>
+              </a>
+              <Button
+                asChild
+                variant="outline"
+                className="arra-cta h-12 border-foreground/20 bg-transparent px-7 font-mono text-xs font-semibold text-foreground uppercase hover:bg-foreground hover:text-background sm:h-14 sm:px-8 sm:text-sm"
+              >
+                <a href="#contact">
+                  <span className="hidden sm:inline">
+                    Start a conversation
+                  </span>
+                  <span className="sm:hidden">Contact</span>
+                  <ArrowRight className="size-4" />
+                </a>
+              </Button>
             </div>
           </ArraReveal>
 
@@ -189,8 +191,8 @@ function Vision() {
         </ArraReveal>
 
         <ArraReveal delay={90}>
-          <div className="grid h-full border border-current bg-background">
-            <div className="p-6 md:p-7">
+          <div className="grid h-full bg-muted overflow-hidden">
+            <div className="p-7 md:p-8">
               <p className="mono-label">Field discipline</p>
               <h3 className="serif-display mt-7 max-w-xl text-3xl leading-[0.96] uppercase md:text-4xl">
                 Start with the region
@@ -201,19 +203,20 @@ function Vision() {
                 about technology and long-term value.
               </p>
             </div>
-            <div className="border-t border-current">
+            <div className="mx-7 md:mx-8">
               {fieldNotes.map((item, index) => (
                 <div
                   key={item}
-                  className="grid grid-cols-[4rem_1fr] border-b border-current last:border-b-0"
+                  className="grid grid-cols-[3rem_1fr] items-center border-t border-foreground/10 py-4"
                 >
-                  <span className="mono-label grid place-items-center border-r border-current py-5">
+                  <span className="mono-label">
                     0{index + 1}
                   </span>
-                  <p className="p-5 text-sm leading-6 font-semibold">{item}</p>
+                  <p className="text-sm leading-6 font-semibold">{item}</p>
                 </div>
               ))}
             </div>
+            <div className="h-7 md:h-8" />
           </div>
         </ArraReveal>
       </div>
@@ -230,43 +233,46 @@ function Approach() {
       title="Careful work before public claims"
       description="ARRA is in a formative stage. Our focus is on internal research, observation, and disciplined thinking so future decisions can be made with clarity."
     >
-        <div className="mt-8 grid border border-current md:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {principles.map((principle, index) => (
             <ArraReveal key={principle.title} delay={index * 45}>
-              <article className="grid min-h-52 content-between border-b border-current p-5 md:border-r lg:border-b-0">
-                <p className="mono-label">0{index + 1}</p>
-                <div>
+              <MagicCard 
+                className="grid min-h-52 content-between p-6 border-0 shadow-none bg-white/8 backdrop-blur-sm cursor-pointer text-current"
+                gradientColor="rgba(255,255,255,0.15)"
+              >
+                <p className="mono-label relative z-10 opacity-60">0{index + 1}</p>
+                <div className="relative z-10">
                   <h3 className="text-lg leading-6 font-semibold">
                     {principle.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-6 opacity-[0.72]">
+                  <p className="mt-3 text-sm leading-6 opacity-[0.65]">
                     {principle.body}
                   </p>
                 </div>
-              </article>
+              </MagicCard>
             </ArraReveal>
           ))}
         </div>
 
         <ArraReveal className="mt-8">
-          <div className="grid border border-current lg:grid-cols-[1fr_0.9fr]">
-            <div className="p-6 md:p-8">
+          <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
+            <div className="p-7 md:p-8 bg-white/8 backdrop-blur-sm">
               <h3 className="serif-display max-w-3xl text-3xl leading-[0.96] uppercase md:text-4xl">
                 No product claims, technical choices, or roadmaps yet
               </h3>
-              <p className="body-copy mt-5 opacity-[0.76]">
+              <p className="body-copy mt-5 opacity-[0.7]">
                 Those decisions will be shaped over time by real requirements,
                 evidence, and usefulness. For now, our responsibility is to
                 build the foundation carefully and communicate with restraint.
               </p>
             </div>
-            <div className="grid border-t border-current sm:grid-cols-2 lg:border-t-0 lg:border-l">
+            <div className="grid sm:grid-cols-2 gap-4">
               {operatingNotes.map((note, index) => (
                 <div
                   key={note}
-                  className="grid min-h-28 content-between border-b border-current p-5 even:sm:border-l"
+                  className="grid min-h-32 content-between bg-white/8 backdrop-blur-sm p-6"
                 >
-                  <p className="mono-label">Note 0{index + 1}</p>
+                  <p className="mono-label opacity-60">Note 0{index + 1}</p>
                   <p className="text-base leading-6 font-semibold">{note}</p>
                 </div>
               ))}
@@ -296,7 +302,9 @@ function Principles() {
             meta="Trust posture"
             caption={
               <h3 className="serif-display text-3xl leading-[0.96] uppercase md:text-4xl">
-                Responsible foundations, early
+                <TextEffect per="word" preset="fade">
+                  Responsible foundations, early
+                </TextEffect>
               </h3>
             }
           />
@@ -323,14 +331,14 @@ function FAQ() {
       title="Direct answers for an early company"
       description="ARRA is preparing with intention. These answers clarify the current stage without overstatement."
     >
-      <div className="mt-9 grid gap-6 lg:grid-cols-[0.42fr_1fr]">
+      <div className="mt-9 grid gap-8 lg:grid-cols-[0.42fr_1fr]">
         <ArraReveal>
-          <aside className="sticky top-28 border border-current p-6">
+          <aside className="sticky top-28 p-7 bg-muted">
             <p className="mono-label">Public language</p>
             <h3 className="serif-display mt-8 text-3xl leading-[0.96] uppercase md:text-4xl">
               Clear. Measured. No inflated promise.
             </h3>
-            <p className="body-copy mt-5 opacity-[0.76]">
+            <p className="body-copy mt-5 opacity-[0.68]">
               ARRA is not announcing a product, partnership, or public roadmap
               yet. The current message is simple: the company is preparing with
               intention.
@@ -339,18 +347,18 @@ function FAQ() {
         </ArraReveal>
 
         <ArraReveal delay={90}>
-          <div className="border border-current">
+          <div>
             <Accordion type="single" collapsible defaultValue="item-0">
               {faqs.map((item, index) => (
                 <AccordionItem
                   key={item.question}
                   value={`item-${index}`}
-                  className="border-current px-5 py-4"
+                  className="px-1 py-4 border-b border-foreground/10 last:border-0"
                 >
                   <AccordionTrigger className="text-left text-lg leading-6 font-semibold hover:no-underline md:text-xl">
                     {item.question}
                   </AccordionTrigger>
-                  <AccordionContent className="body-copy pb-5 opacity-[0.76]">
+                  <AccordionContent className="body-copy pb-5 opacity-[0.68]">
                     {item.answer}
                   </AccordionContent>
                 </AccordionItem>
@@ -370,9 +378,9 @@ function Contact() {
       className="arra-section surface-blue py-16 md:py-20"
     >
       <div className="editorial-shell">
-        <div className="grid min-w-0 grid-cols-[minmax(0,1fr)] border border-current lg:grid-cols-[minmax(0,1fr)_30rem]">
+        <div className="grid min-w-0 gap-8 lg:grid-cols-[minmax(0,1fr)_28rem]">
           <ArraReveal>
-            <div className="grid min-h-[31rem] min-w-0 content-between gap-10 p-6 md:p-8">
+            <div className="grid min-h-[28rem] min-w-0 content-between gap-10">
               <div>
                 <p className="mono-label">Contact</p>
                 <h2 className="serif-display mt-7 max-w-3xl text-[2.45rem] leading-[0.94] text-balance uppercase sm:text-[clamp(3rem,5.8vw,5.75rem)] sm:leading-[0.92]">
@@ -385,23 +393,19 @@ function Contact() {
                 </p>
               </div>
 
-              <div className="grid max-w-2xl border border-current">
+              <div className="grid max-w-md gap-3">
                 <a
                   href="mailto:transmission@arra.tech"
-                  className="grid grid-cols-[4rem_1fr] items-center border-b border-current transition-colors hover:bg-foreground hover:text-background"
+                  className="flex items-center gap-4 bg-white/10 px-6 py-3.5 transition-colors hover:bg-white/20"
                 >
-                  <span className="grid h-14 place-items-center border-r border-current">
-                    <Mail className="size-5" aria-hidden="true" />
-                  </span>
-                  <span className="min-w-0 px-4 text-sm leading-6 font-semibold break-words md:text-base">
+                  <Mail className="size-5 shrink-0" aria-hidden="true" />
+                  <span className="min-w-0 text-sm leading-6 font-semibold break-words md:text-base">
                     transmission@arra.tech
                   </span>
                 </a>
-                <div className="grid grid-cols-[4rem_1fr] items-center">
-                  <span className="grid h-14 place-items-center border-r border-current">
-                    <MapPin className="size-5" aria-hidden="true" />
-                  </span>
-                  <span className="px-4 text-sm leading-6 font-semibold md:text-base">
+                <div className="flex items-center gap-4 bg-white/10 px-6 py-3.5">
+                  <MapPin className="size-5 shrink-0" aria-hidden="true" />
+                  <span className="text-sm leading-6 font-semibold md:text-base">
                     Northeast India
                   </span>
                 </div>
@@ -414,7 +418,7 @@ function Contact() {
               action={mailToPilot}
               method="post"
               encType="text/plain"
-              className="surface-light w-full max-w-full min-w-0 border-t border-current p-6 md:p-8 lg:border-t-0 lg:border-l"
+              className="surface-light w-full max-w-full min-w-0 p-7 md:p-8"
             >
               <div className="grid gap-5">
                 <ArraField label="Name">
@@ -423,7 +427,7 @@ function Contact() {
                     name="name"
                     autoComplete="name"
                     required
-                    className="contact-field rounded-none px-4 focus-visible:ring-0 dark:bg-transparent"
+                    className="contact-field px-4 focus-visible:ring-0 dark:bg-transparent"
                   />
                 </ArraField>
                 <ArraField label="Email">
@@ -433,14 +437,14 @@ function Contact() {
                     type="email"
                     autoComplete="email"
                     required
-                    className="contact-field rounded-none px-4 focus-visible:ring-0 dark:bg-transparent"
+                    className="contact-field px-4 focus-visible:ring-0 dark:bg-transparent"
                   />
                 </ArraField>
                 <ArraField label="Conversation type">
                   <select
                     id="intent"
                     name="intent"
-                    className="contact-field w-full appearance-none px-4 outline-none focus-visible:ring-0"
+                    className="contact-field w-full appearance-none px-4 py-2 outline-none focus-visible:ring-0 bg-transparent"
                     defaultValue={contactIntents[0]}
                   >
                     {contactIntents.map((intent) => (
@@ -457,16 +461,17 @@ function Contact() {
                   <Textarea
                     id="message"
                     name="message"
-                    className="contact-field min-h-36 resize-none rounded-none px-4 py-3 focus-visible:ring-0 dark:bg-transparent"
+                    className="contact-field min-h-36 resize-none px-4 py-3 focus-visible:ring-0 dark:bg-transparent"
                     required
                   />
                 </ArraField>
               </div>
               <Button
                 type="submit"
-                className="mt-7 h-12 rounded-none border border-current bg-foreground px-6 font-mono text-xs font-semibold text-background uppercase hover:bg-background hover:text-foreground"
+                className="mt-7 h-13 w-full bg-foreground px-6 font-mono text-sm font-semibold text-background uppercase tracking-wide hover:bg-foreground/90"
               >
                 Send message
+                <ArrowRight className="ml-2 size-4" />
               </Button>
             </form>
           </ArraReveal>
@@ -486,7 +491,7 @@ function Footer() {
   ]
 
   return (
-    <footer className="editorial-shell mt-10 border-t border-current pt-8">
+    <footer className="editorial-shell mt-10 pt-8">
       <div className="grid gap-8 md:grid-cols-[1fr_1.2fr]">
         <div>
           <p className="serif-display text-4xl leading-none uppercase">ARRA</p>
@@ -508,7 +513,7 @@ function Footer() {
           ))}
         </div>
       </div>
-      <div className="mt-8 flex flex-col gap-4 border-t border-current pt-6 text-xs md:flex-row md:items-center md:justify-between">
+      <div className="mt-8 flex flex-col gap-4 pt-6 text-xs md:flex-row md:items-center md:justify-between">
         <p className="opacity-[0.74]">ARRA. Technology for Northeast India.</p>
         <div className="flex flex-wrap gap-5">
           <a className="opacity-[0.74] hover:opacity-100" href="#home">

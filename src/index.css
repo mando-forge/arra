@@ -12,9 +12,10 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: "EB Garamond", var(--font-serif);
+  --font-heading:
+    "EB Garamond", var(--font-serif);
   --font-sans:
-    "Instrument Sans Variable", Inter, ui-sans-serif, system-ui, sans-serif;
+    'Instrument Sans Variable', Inter, ui-sans-serif, system-ui, sans-serif;
   --font-mono:
     "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
     "Liberation Mono", "Courier New", monospace;
@@ -87,34 +88,34 @@
   --popover-foreground: var(--arra-blue);
   --primary: var(--arra-blue);
   --primary-foreground: var(--arra-white);
-  --secondary: var(--arra-white);
+  --secondary: color-mix(in srgb, var(--arra-blue) 6%, var(--arra-white));
   --secondary-foreground: var(--arra-blue);
-  --muted: var(--arra-white);
-  --muted-foreground: color-mix(in srgb, var(--arra-blue) 68%, white);
-  --accent: var(--arra-blue);
-  --accent-foreground: var(--arra-white);
+  --muted: color-mix(in srgb, var(--arra-blue) 5%, var(--arra-white));
+  --muted-foreground: color-mix(in srgb, var(--arra-blue) 55%, white);
+  --accent: color-mix(in srgb, var(--arra-blue) 6%, var(--arra-white));
+  --accent-foreground: var(--arra-blue);
   --destructive: #d40000;
-  --border: var(--arra-blue);
-  --input: var(--arra-blue);
+  --border: color-mix(in srgb, var(--arra-blue) 12%, var(--arra-white));
+  --input: color-mix(in srgb, var(--arra-blue) 18%, var(--arra-white));
   --ring: var(--arra-blue);
   --chart-1: var(--arra-blue);
-  --chart-2: var(--arra-blue);
-  --chart-3: var(--arra-blue);
-  --chart-4: var(--arra-blue);
-  --chart-5: var(--arra-blue);
+  --chart-2: color-mix(in srgb, var(--arra-blue) 80%, white);
+  --chart-3: color-mix(in srgb, var(--arra-blue) 60%, white);
+  --chart-4: color-mix(in srgb, var(--arra-blue) 40%, white);
+  --chart-5: color-mix(in srgb, var(--arra-blue) 25%, white);
   --radius: 0;
   --sidebar: var(--arra-white);
   --sidebar-foreground: var(--arra-blue);
   --sidebar-primary: var(--arra-blue);
   --sidebar-primary-foreground: var(--arra-white);
-  --sidebar-accent: var(--arra-white);
+  --sidebar-accent: color-mix(in srgb, var(--arra-blue) 6%, var(--arra-white));
   --sidebar-accent-foreground: var(--arra-blue);
-  --sidebar-border: var(--arra-blue);
+  --sidebar-border: color-mix(in srgb, var(--arra-blue) 12%, var(--arra-white));
   --sidebar-ring: var(--arra-blue);
   --code: var(--arra-white);
   --vault-revealed: var(--arra-blue);
-  --grid-line: color-mix(in srgb, var(--arra-blue) 18%, transparent);
-  --section-soft: var(--arra-white);
+  --grid-line: color-mix(in srgb, var(--arra-blue) 10%, transparent);
+  --section-soft: color-mix(in srgb, var(--arra-blue) 3%, var(--arra-white));
 }
 
 .dark {
@@ -123,38 +124,39 @@
   --surface-split-bg: var(--arra-blue);
   --surface-split-fg: var(--arra-white);
   --surface-split-line: color-mix(in srgb, var(--arra-white) 72%, var(--arra-blue));
-  --card: var(--arra-blue);
+  --card: color-mix(in srgb, var(--arra-blue) 90%, white);
   --card-foreground: var(--arra-white);
-  --popover: var(--arra-blue);
+  --popover: color-mix(in srgb, var(--arra-blue) 90%, white);
   --popover-foreground: var(--arra-white);
   --primary: var(--arra-white);
   --primary-foreground: var(--arra-blue);
-  --secondary: var(--arra-blue);
+  --secondary: color-mix(in srgb, var(--arra-white) 10%, var(--arra-blue));
   --secondary-foreground: var(--arra-white);
-  --muted: var(--arra-blue);
-  --muted-foreground: color-mix(
-    in srgb,
-    var(--arra-white) 72%,
-    var(--arra-blue)
-  );
-  --accent: var(--arra-white);
-  --accent-foreground: var(--arra-blue);
+  --muted: color-mix(in srgb, var(--arra-white) 8%, var(--arra-blue));
+  --muted-foreground: color-mix(in srgb, var(--arra-white) 65%, var(--arra-blue));
+  --accent: color-mix(in srgb, var(--arra-white) 8%, var(--arra-blue));
+  --accent-foreground: var(--arra-white);
   --destructive: #ffdfdf;
-  --border: var(--arra-white);
-  --input: var(--arra-white);
+  --border: color-mix(in srgb, var(--arra-white) 12%, var(--arra-blue));
+  --input: color-mix(in srgb, var(--arra-white) 15%, var(--arra-blue));
   --ring: var(--arra-white);
-  --sidebar: var(--arra-blue);
+  --sidebar: color-mix(in srgb, var(--arra-blue) 95%, white);
   --sidebar-foreground: var(--arra-white);
   --sidebar-primary: var(--arra-white);
   --sidebar-primary-foreground: var(--arra-blue);
-  --sidebar-accent: var(--arra-blue);
+  --sidebar-accent: color-mix(in srgb, var(--arra-white) 8%, var(--arra-blue));
   --sidebar-accent-foreground: var(--arra-white);
-  --sidebar-border: var(--arra-white);
+  --sidebar-border: color-mix(in srgb, var(--arra-white) 12%, var(--arra-blue));
   --sidebar-ring: var(--arra-white);
   --code: var(--arra-blue);
   --vault-revealed: var(--arra-white);
   --grid-line: color-mix(in srgb, var(--arra-white) 24%, transparent);
   --section-soft: var(--arra-blue);
+  --chart-1: var(--arra-white);
+  --chart-2: color-mix(in srgb, var(--arra-white) 80%, var(--arra-blue));
+  --chart-3: color-mix(in srgb, var(--arra-white) 60%, var(--arra-blue));
+  --chart-4: color-mix(in srgb, var(--arra-white) 40%, var(--arra-blue));
+  --chart-5: color-mix(in srgb, var(--arra-white) 25%, var(--arra-blue));
 }
 
 @layer base {
@@ -303,7 +305,6 @@
     position: relative;
     isolation: isolate;
     overflow: hidden;
-    border-bottom: 1px solid var(--border);
   }
 
   .engraving-frame,
@@ -314,7 +315,6 @@
     overflow: hidden;
     isolation: isolate;
     min-height: 100%;
-    border: 1px solid currentColor;
     background: var(--engraving-paper);
     color: var(--engraving-ink);
   }
@@ -333,58 +333,36 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(1) contrast(1.45) brightness(1.05);
+    filter: grayscale(0.6) contrast(1.1) brightness(1.02);
     mix-blend-mode: multiply;
-    opacity: 0.86;
+    opacity: 0.92;
   }
 
   .engraving-frame[data-tone="blue"] > img,
   .arra-engraving[data-tone="blue"] > img {
-    filter: grayscale(1) contrast(1.65) brightness(1.08);
+    filter: grayscale(0.5) contrast(1.2) brightness(1.05);
     mix-blend-mode: screen;
-    opacity: 0.78;
+    opacity: 0.85;
   }
 
-  .engraving-frame::before,
-  .arra-engraving::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 1;
-    pointer-events: none;
-    opacity: 0.22;
-    background-image: url("data:image/svg+xml,%3Csvg width='7' height='7' viewBox='0 0 7 7' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='.65' fill='white'/%3E%3C/svg%3E");
-    background-size: 7px 7px;
-    mix-blend-mode: multiply;
-  }
-
-  .engraving-frame::after,
-  .arra-engraving::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: 2;
-    pointer-events: none;
-    background-image: linear-gradient(
-      0deg,
-      transparent 0,
-      transparent 5px,
-      currentColor 6px
-    );
-    background-size: 100% 6px;
-    opacity: 0.1;
-  }
+  /* Engraving overlays removed for Nordic minimalism */
 
   .contact-field {
     box-sizing: border-box;
     width: 100%;
     min-width: 0;
     height: 3rem;
-    border: 1px solid currentColor;
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
     background: transparent;
     color: currentColor;
     font-size: 0.9rem;
     line-height: 1.5;
+    border-radius: 0;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-field:focus {
+    border-color: currentColor;
   }
 
   .contact-field::placeholder {
