@@ -3,6 +3,9 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
+  "engines": {
+    "node": ">=20.18.1"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
@@ -12,10 +15,14 @@
     "preview": "vite preview",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "chromatic": "chromatic --project-token=chpt_05d8fdaafa52363"
+    "chromatic": "chromatic --project-token=chpt_05d8fdaafa52363",
+    "test": "vitest run",
+    "test:all": "pnpm run lint && pnpm run typecheck && pnpm run test && pnpm run build"
   },
   "dependencies": {
     "@fontsource-variable/instrument-sans": "^5.2.8",
+    "@fontsource/eb-garamond": "^5.2.7",
+    "@fontsource/ibm-plex-mono": "^5.2.7",
     "@gsap/react": "^2.1.2",
     "@radix-ui/react-accordion": "^1.2.12",
     "@tailwindcss/vite": "^4",
@@ -60,7 +67,7 @@
     "prettier": "^3.8.3",
     "prettier-plugin-tailwindcss": "^0.8.0",
     "puppeteer": "^25.1.0",
-    "shadcn": "^4.11.0",
+    "shadcn": "^4.13.0",
     "storybook": "^10.4.6",
     "typescript-eslint": "^8",
     "vite": "^8",

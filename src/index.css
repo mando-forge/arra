@@ -1,14 +1,26 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@import "@fontsource/eb-garamond/latin-400.css";
+@import "@fontsource/eb-garamond/latin-600.css";
+@import "@fontsource/eb-garamond/latin-700.css";
+@import "@fontsource/ibm-plex-mono/latin-400.css";
+@import "@fontsource/ibm-plex-mono/latin-500.css";
+@import "@fontsource/ibm-plex-mono/latin-600.css";
 @import "@fontsource-variable/instrument-sans";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --font-heading: var(--font-sans);
-  --font-sans: "Instrument Sans Variable", sans-serif;
-  --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
+  --font-heading:
+    "EB Garamond", var(--font-serif);
+  --font-sans:
+    'Instrument Sans Variable', Inter, ui-sans-serif, system-ui, sans-serif;
+  --font-mono:
+    "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  --font-serif:
+    "EB Garamond", ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -40,15 +52,15 @@
   --color-card: var(--card);
   --color-foreground: var(--foreground);
   --color-background: var(--background);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  --shadow-neon: 0 0 15px var(--color-primary);
-  --shadow-neon-lg: 0 0 30px var(--color-primary);
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+  --shadow-neon: none;
+  --shadow-neon-lg: none;
   --color-code: var(--code);
   --color-vault-revealed: var(--vault-revealed);
   --color-grid-line: var(--grid-line);
@@ -56,80 +68,95 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: oklch(0.225 0.018 244);
-  --card: oklch(0.991 0.004 112);
-  --card-foreground: oklch(0.225 0.018 244);
-  --popover: oklch(0.991 0.004 112);
-  --popover-foreground: oklch(0.225 0.018 244);
-  --primary: oklch(0.47 0.072 188);
-  --primary-foreground: oklch(0.985 0.006 112);
-  --secondary: oklch(0.925 0.014 152);
-  --secondary-foreground: oklch(0.255 0.018 244);
-  --muted: oklch(0.927 0.012 126);
-  --muted-foreground: oklch(0.485 0.017 238);
-  --accent: oklch(0.68 0.066 82);
-  --accent-foreground: oklch(0.225 0.018 244);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.812 0.011 128);
-  --input: oklch(0.812 0.011 128);
-  --ring: oklch(0.47 0.072 188);
-  --chart-1: oklch(0.871 0.15 154.449);
-  --chart-2: oklch(0.723 0.219 149.579);
-  --chart-3: oklch(0.627 0.194 149.214);
-  --chart-4: oklch(0.527 0.154 150.069);
-  --chart-5: oklch(0.448 0.119 151.328);
-  --radius: 0.5rem;
-  --sidebar: oklch(0.985 0.006 95);
-  --sidebar-foreground: oklch(0.18 0.018 248);
-  --sidebar-primary: oklch(0.63 0.12 182);
-  --sidebar-primary-foreground: oklch(0.12 0.018 248);
-  --sidebar-accent: oklch(0.94 0.026 84);
-  --sidebar-accent-foreground: oklch(0.18 0.018 248);
-  --sidebar-border: oklch(0.84 0.012 95);
-  --sidebar-ring: oklch(0.63 0.12 182);
-  --code: oklch(0.92 0.01 118);
-  --vault-revealed: oklch(0.16 0.04 220);
-  --grid-line: oklch(0.58 0.014 150 / 12%);
-  --section-soft: oklch(0.947 0.009 142);
+  --arra-blue: #0000ff;
+  --arra-white: #ffffff;
+  --arra-ink: #0000ff;
+  --background: var(--arra-white);
+  --foreground: var(--arra-blue);
+  --surface-light-bg: var(--arra-white);
+  --surface-light-fg: var(--arra-blue);
+  --surface-light-line: color-mix(in srgb, var(--arra-blue) 82%, white);
+  --surface-blue-bg: var(--arra-blue);
+  --surface-blue-fg: var(--arra-white);
+  --surface-blue-line: color-mix(in srgb, var(--arra-white) 72%, var(--arra-blue));
+  --surface-split-bg: var(--arra-white);
+  --surface-split-fg: var(--arra-blue);
+  --surface-split-line: color-mix(in srgb, var(--arra-blue) 82%, white);
+  --card: var(--arra-white);
+  --card-foreground: var(--arra-blue);
+  --popover: var(--arra-white);
+  --popover-foreground: var(--arra-blue);
+  --primary: var(--arra-blue);
+  --primary-foreground: var(--arra-white);
+  --secondary: color-mix(in srgb, var(--arra-blue) 6%, var(--arra-white));
+  --secondary-foreground: var(--arra-blue);
+  --muted: color-mix(in srgb, var(--arra-blue) 5%, var(--arra-white));
+  --muted-foreground: color-mix(in srgb, var(--arra-blue) 55%, white);
+  --accent: color-mix(in srgb, var(--arra-blue) 6%, var(--arra-white));
+  --accent-foreground: var(--arra-blue);
+  --destructive: #d40000;
+  --border: color-mix(in srgb, var(--arra-blue) 12%, var(--arra-white));
+  --input: color-mix(in srgb, var(--arra-blue) 18%, var(--arra-white));
+  --ring: var(--arra-blue);
+  --chart-1: var(--arra-blue);
+  --chart-2: color-mix(in srgb, var(--arra-blue) 80%, white);
+  --chart-3: color-mix(in srgb, var(--arra-blue) 60%, white);
+  --chart-4: color-mix(in srgb, var(--arra-blue) 40%, white);
+  --chart-5: color-mix(in srgb, var(--arra-blue) 25%, white);
+  --radius: 0;
+  --sidebar: var(--arra-white);
+  --sidebar-foreground: var(--arra-blue);
+  --sidebar-primary: var(--arra-blue);
+  --sidebar-primary-foreground: var(--arra-white);
+  --sidebar-accent: color-mix(in srgb, var(--arra-blue) 6%, var(--arra-white));
+  --sidebar-accent-foreground: var(--arra-blue);
+  --sidebar-border: color-mix(in srgb, var(--arra-blue) 12%, var(--arra-white));
+  --sidebar-ring: var(--arra-blue);
+  --code: var(--arra-white);
+  --vault-revealed: var(--arra-blue);
+  --grid-line: color-mix(in srgb, var(--arra-blue) 10%, transparent);
+  --section-soft: color-mix(in srgb, var(--arra-blue) 3%, var(--arra-white));
 }
 
 .dark {
-  --background: #000000;
-  --foreground: oklch(0.965 0.008 95);
-  --card: oklch(0.2 0.02 248);
-  --card-foreground: oklch(0.965 0.008 95);
-  --popover: oklch(0.2 0.02 248);
-  --popover-foreground: oklch(0.965 0.008 95);
-  --primary: oklch(0.72 0.13 182);
-  --primary-foreground: oklch(0.12 0.018 248);
-  --secondary: oklch(0.28 0.026 248);
-  --secondary-foreground: oklch(0.965 0.008 95);
-  --muted: oklch(0.25 0.018 248);
-  --muted-foreground: oklch(0.76 0.018 95);
-  --accent: oklch(0.78 0.14 74);
-  --accent-foreground: oklch(0.13 0.018 248);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 12%);
-  --input: oklch(1 0 0 / 16%);
-  --ring: oklch(0.72 0.13 182);
-  --chart-1: oklch(0.871 0.15 154.449);
-  --chart-2: oklch(0.723 0.219 149.579);
-  --chart-3: oklch(0.627 0.194 149.214);
-  --chart-4: oklch(0.527 0.154 150.069);
-  --chart-5: oklch(0.448 0.119 151.328);
-  --sidebar: oklch(0.2 0.02 248);
-  --sidebar-foreground: oklch(0.965 0.008 95);
-  --sidebar-primary: oklch(0.72 0.13 182);
-  --sidebar-primary-foreground: oklch(0.12 0.018 248);
-  --sidebar-accent: oklch(0.28 0.026 248);
-  --sidebar-accent-foreground: oklch(0.965 0.008 95);
-  --sidebar-border: oklch(1 0 0 / 12%);
-  --sidebar-ring: oklch(0.72 0.13 182);
-  --code: oklch(0.12 0.005 200);
-  --vault-revealed: oklch(0.12 0.04 220);
-  --grid-line: oklch(1 0 0 / 9%);
-  --section-soft: oklch(0.18 0.02 248);
+  --background: var(--arra-blue);
+  --foreground: var(--arra-white);
+  --surface-split-bg: var(--arra-blue);
+  --surface-split-fg: var(--arra-white);
+  --surface-split-line: color-mix(in srgb, var(--arra-white) 72%, var(--arra-blue));
+  --card: color-mix(in srgb, var(--arra-blue) 90%, white);
+  --card-foreground: var(--arra-white);
+  --popover: color-mix(in srgb, var(--arra-blue) 90%, white);
+  --popover-foreground: var(--arra-white);
+  --primary: var(--arra-white);
+  --primary-foreground: var(--arra-blue);
+  --secondary: color-mix(in srgb, var(--arra-white) 10%, var(--arra-blue));
+  --secondary-foreground: var(--arra-white);
+  --muted: color-mix(in srgb, var(--arra-white) 8%, var(--arra-blue));
+  --muted-foreground: color-mix(in srgb, var(--arra-white) 65%, var(--arra-blue));
+  --accent: color-mix(in srgb, var(--arra-white) 8%, var(--arra-blue));
+  --accent-foreground: var(--arra-white);
+  --destructive: #ffdfdf;
+  --border: color-mix(in srgb, var(--arra-white) 12%, var(--arra-blue));
+  --input: color-mix(in srgb, var(--arra-white) 15%, var(--arra-blue));
+  --ring: var(--arra-white);
+  --sidebar: color-mix(in srgb, var(--arra-blue) 95%, white);
+  --sidebar-foreground: var(--arra-white);
+  --sidebar-primary: var(--arra-white);
+  --sidebar-primary-foreground: var(--arra-blue);
+  --sidebar-accent: color-mix(in srgb, var(--arra-white) 8%, var(--arra-blue));
+  --sidebar-accent-foreground: var(--arra-white);
+  --sidebar-border: color-mix(in srgb, var(--arra-white) 12%, var(--arra-blue));
+  --sidebar-ring: var(--arra-white);
+  --code: var(--arra-blue);
+  --vault-revealed: var(--arra-white);
+  --grid-line: color-mix(in srgb, var(--arra-white) 24%, transparent);
+  --section-soft: var(--arra-blue);
+  --chart-1: var(--arra-white);
+  --chart-2: color-mix(in srgb, var(--arra-white) 80%, var(--arra-blue));
+  --chart-3: color-mix(in srgb, var(--arra-white) 60%, var(--arra-blue));
+  --chart-4: color-mix(in srgb, var(--arra-white) 40%, var(--arra-blue));
+  --chart-5: color-mix(in srgb, var(--arra-white) 25%, var(--arra-blue));
 }
 
 @layer base {
@@ -145,87 +172,201 @@
   body {
     @apply bg-background text-foreground;
     z-index: 0;
-    text-rendering: optimizeLegibility;
+    min-width: 320px;
     overflow-x: hidden;
+    background-image: none;
+    text-rendering: optimizeLegibility;
   }
 
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    opacity: 0.12;
-    background-image:
-      url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='.42'/%3E%3C/svg%3E"),
-      linear-gradient(
-        90deg,
-        transparent 0,
-        color-mix(in oklch, var(--foreground) 3%, transparent) 50%,
-        transparent 100%
-      );
-    background-size:
-      180px 180px,
-      100% 100%;
-    mix-blend-mode: multiply;
+  h1,
+  h2,
+  .font-heading {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0;
   }
 
   ::selection {
-    background: color-mix(in oklch, var(--primary) 34%, transparent);
-    color: var(--foreground);
+    background: var(--foreground);
+    color: var(--background);
   }
 
   * {
-    scrollbar-color: color-mix(in oklch, var(--primary) 36%, transparent)
-      transparent;
+    scrollbar-color: var(--foreground) transparent;
   }
 
-  :where(a, button, input, textarea, [tabindex]):focus-visible {
-    outline: 2px solid var(--color-primary);
+  :where(a, button, input, textarea, select, [tabindex]):focus-visible {
+    outline: 2px solid var(--foreground);
     outline-offset: 3px;
   }
 }
 
 @layer utilities {
-  .glow-text {
-    text-shadow:
-      0 0 20px var(--color-primary),
-      0 0 40px var(--color-primary);
-  }
-
-  .m-char {
-    transition:
-      color 0.3s ease-out,
-      text-shadow 0.5s ease-out;
-  }
-
-  .m-char[data-state="scrambling"] {
-    color: var(--accent, var(--color-primary));
-    text-shadow: 0 0 8px var(--accent, var(--color-primary));
-  }
-
-  .m-char[data-state="locked"] {
-    color: inherit;
-    text-shadow:
-      0 0 20px var(--accent, var(--color-primary)),
-      0 0 40px var(--accent, var(--color-primary));
-  }
-
-  .m-char:not([data-state]) {
-    color: inherit;
-    text-shadow: none;
-  }
-
   .container-enterprise {
-    width: min(100% - 2rem, 76rem);
+    width: min(calc(100% - 2rem), 82rem);
     margin-inline: auto;
   }
 
-  .section-grid {
-    background-image:
-      linear-gradient(var(--color-grid-line) 1px, transparent 1px),
-      linear-gradient(90deg, var(--color-grid-line) 1px, transparent 1px);
-    background-size: 96px 96px;
+  .editorial-shell {
+    width: min(calc(100% - 2rem), 82rem);
+    margin-inline: auto;
+  }
+
+  .editorial-grid {
+    background-image: none;
+  }
+
+  .surface-light {
+    --background: var(--surface-light-bg);
+    --foreground: var(--surface-light-fg);
+    --border: var(--surface-light-line);
+    --input: var(--surface-light-fg);
+    --ring: var(--surface-light-fg);
+    background: var(--surface-light-bg);
+    color: var(--surface-light-fg);
+  }
+
+  .surface-blue {
+    --background: var(--surface-blue-bg);
+    --foreground: var(--surface-blue-fg);
+    --border: var(--surface-blue-line);
+    --input: var(--surface-blue-fg);
+    --ring: var(--surface-blue-fg);
+    background: var(--surface-blue-bg);
+    color: var(--surface-blue-fg);
+  }
+
+  .surface-split {
+    --background: var(--surface-split-bg);
+    --foreground: var(--surface-split-fg);
+    --border: var(--surface-split-line);
+    --input: var(--surface-split-fg);
+    --ring: var(--surface-split-fg);
+    background: var(--surface-split-bg);
+    color: var(--surface-split-fg);
+  }
+
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    line-height: 1.4;
+    text-transform: uppercase;
+  }
+
+  .serif-display {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    letter-spacing: 0;
+    overflow-wrap: break-word;
+  }
+
+  .editorial-heading {
+    font-family: var(--font-heading);
+    font-size: clamp(2.65rem, 5.2vw, 5.6rem);
+    font-weight: 600;
+    letter-spacing: 0;
+    line-height: 0.94;
+    overflow-wrap: break-word;
+    text-wrap: balance;
+    text-transform: uppercase;
+  }
+
+  .body-copy {
+    max-width: 42rem;
+    font-size: 0.95rem;
+    line-height: 1.8;
+  }
+
+  .compact-copy {
+    max-width: 34rem;
+    font-size: 0.82rem;
+    line-height: 1.7;
+  }
+
+  .hard-panel {
+    border: 1px solid var(--border);
+    background: var(--background);
+    color: var(--foreground);
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .hard-panel-invert {
+    border: 1px solid var(--foreground);
+    background: var(--foreground);
+    color: var(--background);
+    box-shadow: none;
+    border-radius: 0;
+  }
+
+  .arra-section {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .engraving-frame,
+  .arra-engraving {
+    --engraving-paper: var(--arra-white);
+    --engraving-ink: var(--arra-blue);
+    position: relative;
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 100%;
+    background: var(--engraving-paper);
+    color: var(--engraving-ink);
+  }
+
+  .engraving-frame[data-tone="blue"],
+  .arra-engraving[data-tone="blue"] {
+    --engraving-paper: var(--arra-blue);
+    --engraving-ink: var(--arra-white);
+  }
+
+  .engraving-frame > img,
+  .arra-engraving > img {
+    position: relative;
+    z-index: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(0.6) contrast(1.1) brightness(1.02);
+    mix-blend-mode: multiply;
+    opacity: 0.92;
+  }
+
+  .engraving-frame[data-tone="blue"] > img,
+  .arra-engraving[data-tone="blue"] > img {
+    filter: grayscale(0.5) contrast(1.2) brightness(1.05);
+    mix-blend-mode: screen;
+    opacity: 0.85;
+  }
+
+  /* Engraving overlays removed for Nordic minimalism */
+
+  .contact-field {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    height: 3rem;
+    border: 1px solid color-mix(in srgb, currentColor 25%, transparent);
+    background: transparent;
+    color: currentColor;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    border-radius: 0;
+    transition: border-color 0.2s ease;
+  }
+
+  .contact-field:focus {
+    border-color: currentColor;
+  }
+
+  .contact-field::placeholder {
+    color: color-mix(in srgb, currentColor 48%, transparent);
   }
 
   .no-scrollbar {
@@ -241,104 +382,18 @@
     min-width: 44px;
   }
 
-  .arra-section {
-    background-image:
-      linear-gradient(
-        90deg,
-        color-mix(in oklch, var(--primary) 4%, transparent),
-        transparent 18%,
-        transparent 82%,
-        color-mix(in oklch, var(--accent) 4%, transparent)
-      ),
-      repeating-linear-gradient(
-        0deg,
-        transparent 0,
-        transparent 5.8rem,
-        color-mix(in oklch, var(--border) 34%, transparent) 5.85rem
-      );
-  }
-
-  .nordic-panel {
-    box-shadow:
-      inset 0 1px 0 color-mix(in oklch, white 76%, transparent),
-      inset 0 -1px 0 color-mix(in oklch, var(--foreground) 4%, transparent);
-  }
-
-  .maker-mark {
-    background-image:
-      linear-gradient(90deg, var(--primary), var(--accent)),
-      linear-gradient(var(--border), var(--border));
-    background-position:
-      left top,
-      left calc(100% - 1px);
-    background-repeat: no-repeat;
-    background-size:
-      3.25rem 2px,
-      100% 1px;
-  }
-
-  .arra-reveal {
-    opacity: 0;
-    transform: translateY(10px);
-    filter: blur(2px);
-    transition:
-      opacity 680ms ease,
-      transform 680ms ease,
-      filter 680ms ease;
-    will-change: opacity, transform, filter;
-  }
-
-  .arra-reveal[data-visible="true"] {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-
   .arra-cta {
-    isolation: isolate;
     position: relative;
+    isolation: isolate;
     box-shadow: none;
   }
 
-  .arra-cta::before {
-    content: "";
-    position: absolute;
-    right: 0.82rem;
-    top: 50%;
-    z-index: -1;
-    width: 0.36rem;
-    height: 0.36rem;
-    border-radius: 2px;
-    background: currentColor;
-    opacity: 0;
-    transform: translateY(-50%);
-    transition:
-      inset 240ms ease,
-      width 240ms ease,
-      height 240ms ease,
-      border-radius 240ms ease,
-      opacity 240ms ease;
-  }
-
-  .arra-cta:hover::before {
-    right: 0.25rem;
-    width: calc(100% - 0.5rem);
-    height: calc(100% - 0.5rem);
-    border-radius: 6px;
-    opacity: 0.08;
-  }
-
-  .arra-cta > :where(span, svg) {
-    position: relative;
-    z-index: 1;
-  }
-
   .arra-cta svg {
-    transition: transform 180ms ease;
+    transition: transform 160ms linear;
   }
 
   .arra-cta:hover svg {
-    transform: translateX(2px);
+    transform: translateX(3px);
   }
 }
 
@@ -408,7 +463,6 @@
   mix-blend-mode: normal;
 }
 
-/* Scoped to AnimatedThemeToggler — the toggler sets the data-attribute and the variable only during a theme toggle. */
 html[data-magicui-theme-vt="active"]::view-transition-group(root) {
   animation-duration: var(--magicui-theme-toggle-vt-duration);
 }

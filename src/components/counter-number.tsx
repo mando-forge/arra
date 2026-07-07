@@ -85,9 +85,11 @@ export function CounterNumber({
     const diff = end - start
 
     if (duration <= 0) {
-      setDisplayValue(end)
-      displayValRef.current = end
-      return
+      frameId = requestAnimationFrame(() => {
+        setDisplayValue(end)
+        displayValRef.current = end
+      })
+      return () => cancelAnimationFrame(frameId)
     }
 
     const step = (timestamp: number) => {
@@ -135,7 +137,7 @@ export function CounterNumber({
   }
 
   const combinedClassName = cn(
-    "inline-block tabular-nums tracking-wider transition-all",
+    "inline-block tracking-wider tabular-nums transition-all",
     sizeClasses[size],
     colorClasses[color],
     preserveAspectRatio && "font-mono",

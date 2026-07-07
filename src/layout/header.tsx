@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react"
 import { Menu, X } from "lucide-react"
 
-import { Button } from "@/components/ui/button"
+import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
+import { useTheme } from "@/components/theme-context"
 import { navItems } from "@/content/arra"
 import { cn } from "@/lib/utils"
-import { useTheme } from "@/components/theme-provider"
-import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
-  const { theme, setTheme } = useTheme()
-  const resolvedTheme = theme === "system" 
-    ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light") 
-    : (theme as "light" | "dark")
+  const { resolvedTheme, setTheme } = useTheme()
 
   useEffect(() => {
     const sectionIds = ["home", ...navItems.map((link) => link.href.slice(1))]
@@ -39,97 +35,82 @@ export function Header() {
   }, [])
 
   return (
-    <header className="fixed inset-x-0 top-0 z-50 border-b border-border/55 bg-background/82 backdrop-blur-xl">
-      <div className="container-enterprise flex h-16 items-center justify-between">
-        <a
-          href="#home"
-          className="flex items-center gap-3 text-sm font-semibold tracking-[0.08em] text-foreground"
-          aria-label="ARRA home"
-        >
-          <span className="grid size-6 grid-cols-2 gap-0.5 rounded-sm">
-            <span className="rounded-[2px] bg-primary" />
-            <span className="rounded-[2px] bg-accent" />
-            <span className="rounded-[2px] bg-foreground/80" />
-            <span className="rounded-[2px] border border-border" />
-          </span>
-          <span>ARRA</span>
-        </a>
+    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3">
+      <div className="container-enterprise border border-border bg-background text-foreground">
+        <div className="grid min-h-16 grid-cols-[auto_1fr_auto] items-stretch">
+          <a
+            href="#home"
+            className="serif-display flex min-w-36 items-center border-r border-border px-4 text-3xl leading-none uppercase md:min-w-52 md:text-4xl"
+            aria-label="ARRA home"
+          >
+            ARRA
+          </a>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
-          {navItems.map(({ label, href }) => {
-            const isActive = activeSection === href.slice(1)
-            return (
+          <nav className="hidden grid-cols-5 lg:grid" aria-label="Primary">
+            {navItems.map(({ label, href }) => {
+              const isActive = activeSection === href.slice(1)
+              return (
+                <a
+                  key={label}
+                  href={href}
+                  aria-current={isActive ? "page" : undefined}
+                  className={cn(
+                    "mono-label flex items-center border-r border-border px-4 text-foreground/72 transition-colors hover:bg-foreground hover:text-background",
+                    isActive && "bg-foreground text-background"
+                  )}
+                >
+                  {label}
+                </a>
+              )
+            })}
+          </nav>
+
+          <div className="ml-auto flex items-stretch border-l border-border lg:border-l-0">
+            <AnimatedThemeToggler
+              variant="rectangle"
+              theme={resolvedTheme}
+              onThemeChange={(newTheme) => setTheme(newTheme)}
+              className="grid w-14 place-items-center border-r border-border bg-background text-foreground transition-colors hover:bg-foreground hover:text-background"
+            />
+
+            <button
+              type="button"
+              className="grid w-14 place-items-center bg-background text-foreground transition-colors hover:bg-foreground hover:text-background lg:hidden"
+              onClick={() => setMobileOpen((value) => !value)}
+              aria-label="Toggle navigation"
+              aria-controls="mobile-navigation"
+              aria-expanded={mobileOpen}
+            >
+              {mobileOpen ? (
+                <X className="size-5" />
+              ) : (
+                <Menu className="size-5" />
+              )}
+            </button>
+          </div>
+        </div>
+
+        <div
+          id="mobile-navigation"
+          inert={!mobileOpen ? true : undefined}
+          className={cn(
+            "border-t border-border lg:hidden",
+            mobileOpen ? "block" : "hidden"
+          )}
+        >
+          <nav className="grid" aria-label="Mobile primary">
+            {navItems.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
-                aria-current={isActive ? "page" : undefined}
-                className={cn(
-                  "rounded-md border border-transparent px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:border-border/70 hover:bg-card/45 hover:text-foreground",
-                  isActive && "border-border/80 bg-card/55 text-foreground"
-                )}
+                onClick={() => setMobileOpen(false)}
+                className="mono-label border-b border-border px-4 py-4 transition-colors hover:bg-foreground hover:text-background"
               >
                 {label}
               </a>
-            )
-          })}
-        </nav>
-
-        <div className="flex items-center gap-2">
-          <AnimatedThemeToggler 
-            variant="star"
-            theme={resolvedTheme} 
-            onThemeChange={(newTheme) => setTheme(newTheme)}
-            className="inline-flex size-10 items-center justify-center rounded-md border border-border/80 bg-card/55 text-foreground hover:bg-muted"
-          />
-          <Button
-            asChild
-            variant="outline"
-            className="hidden h-10 rounded-lg border-border/80 bg-card/55 px-4 text-sm sm:inline-flex"
-          >
-            <a href="#contact">Contact</a>
-          </Button>
-          <button
-            type="button"
-            className="inline-flex size-10 items-center justify-center rounded-md border border-border/80 bg-card/55 text-foreground lg:hidden"
-            onClick={() => setMobileOpen((value) => !value)}
-            aria-label="Toggle navigation"
-            aria-controls="mobile-navigation"
-            aria-expanded={mobileOpen}
-          >
-            {mobileOpen ? (
-              <X className="size-5" />
-            ) : (
-              <Menu className="size-5" />
-            )}
-          </button>
+            ))}
+          </nav>
         </div>
-      </div>
-
-      <div
-        id="mobile-navigation"
-        inert={!mobileOpen ? true : undefined}
-        className={cn(
-          "overflow-hidden border-t border-border/50 bg-background/95 transition-[max-height,opacity] duration-200 lg:hidden",
-          mobileOpen ? "max-h-[520px] opacity-100" : "max-h-0 opacity-0"
-        )}
-      >
-        <nav className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-4 md:px-12">
-          {navItems.map(({ label, href }) => (
-            <a
-              key={label}
-              href={href}
-              onClick={() => setMobileOpen(false)}
-              className="rounded-md px-3 py-3 text-sm font-medium text-muted-foreground hover:bg-muted hover:text-foreground"
-            >
-              {label}
-            </a>
-          ))}
-          <Button asChild className="mt-2 h-11 rounded-lg text-sm">
-            <a href="#contact" onClick={() => setMobileOpen(false)}>
-              Contact
-            </a>
-          </Button>
-        </nav>
       </div>
     </header>
   )
