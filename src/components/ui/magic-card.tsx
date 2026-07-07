@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useRef } from "react"
 import {
   motion,
   useMotionTemplate,
@@ -9,7 +9,7 @@ import {
 } from "motion/react"
 
 import { cn } from "@/lib/utils"
-import { useTheme } from "@/components/theme-provider"
+import { useTheme } from "@/components/theme-context"
 
 interface MagicCardBaseProps {
   children?: React.ReactNode
@@ -72,12 +72,8 @@ export function MagicCard(props: MagicCardProps) {
   const glowSize = isOrbMode(props) ? (props.glowSize ?? 420) : 420
   const glowBlur = isOrbMode(props) ? (props.glowBlur ?? 60) : 60
   const glowOpacity = isOrbMode(props) ? (props.glowOpacity ?? 0.9) : 0.9
-  const [mounted, setMounted] = useState(false)
-
   const { resolvedTheme } = useTheme()
-  const isDarkTheme = mounted && resolvedTheme === "dark"
-
-  useEffect(() => setMounted(true), [])
+  const isDarkTheme = resolvedTheme === "dark"
 
   const mouseX = useMotionValue(-gradientSize)
   const mouseY = useMotionValue(-gradientSize)
@@ -179,17 +175,17 @@ export function MagicCard(props: MagicCardProps) {
       onPointerLeave={() => reset("leave")}
       onPointerEnter={(e) => {
         if (modeRef.current === "orb") {
-          const rect = e.currentTarget.getBoundingClientRect();
-          mouseX.set(e.clientX - rect.left);
-          mouseY.set(e.clientY - rect.top);
+          const rect = e.currentTarget.getBoundingClientRect()
+          mouseX.set(e.clientX - rect.left)
+          mouseY.set(e.clientY - rect.top)
         }
-        reset("enter");
+        reset("enter")
       }}
       style={{
         background: borderBg,
       }}
     >
-      <div className="bg-background absolute inset-px z-20 rounded-[inherit]" />
+      <div className="absolute inset-px z-20 rounded-[inherit] bg-background" />
 
       {mode === "gradient" && (
         <motion.div
@@ -228,4 +224,3 @@ export function MagicCard(props: MagicCardProps) {
     </motion.div>
   )
 }
-

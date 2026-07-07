@@ -34,6 +34,7 @@ export function LazyImage({
     inView ? undefined : src
   )
   const [isLoading, setIsLoading] = React.useState(true)
+  const effectiveImgSrc = imgSrc ?? (isInView ? src : undefined)
 
   const handleError = () => {
     if (fallback) {
@@ -68,18 +69,12 @@ export function LazyImage({
     return () => observer.disconnect()
   }, [inView, isInView])
 
-  React.useEffect(() => {
-    if (isInView && !imgSrc) {
-      setImgSrc(src)
-    }
-  }, [isInView, src, imgSrc])
-
   // Handle cached images instantly
   React.useEffect(() => {
     if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
       handleLoad()
     }
-  }, [handleLoad, imgSrc])
+  }, [handleLoad, effectiveImgSrc])
 
   return (
     <AspectRatio
@@ -90,7 +85,7 @@ export function LazyImage({
       ratio={ratio}
       ref={ref}
     >
-      {imgSrc && (
+      {effectiveImgSrc && (
         // biome-ignore lint/correctness/useImageSize: dynamic image size
         <img
           alt={alt}
@@ -105,7 +100,7 @@ export function LazyImage({
           onError={handleError}
           onLoad={handleLoad}
           ref={imgRef}
-          src={imgSrc}
+          src={effectiveImgSrc}
         />
       )}
     </AspectRatio>
