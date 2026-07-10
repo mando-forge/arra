@@ -37,33 +37,36 @@ export type FAQItem = {
 }
 
 export const navItems: NavItem[] = [
-  { label: "Vision", href: "#vision" },
-  { label: "Approach", href: "#approach" },
-  { label: "Principles", href: "#principles" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Contact", href: "#contact" },
+  { label: "Home", href: "/" },
+  { label: "About", href: "/about" },
+  { label: "Explorations", href: "/products" },
+  { label: "Contact", href: "/contact" },
 ]
 
 export const images = {
   hero: {
-    src: "/images/arra-founders-gateway.png",
-    alt: "Flat vector futuristic poster of two ARRA founders looking from a Manipur hilltop toward a quiet luminous pathway and gateway",
-  },
-  loom: {
-    src: "/images/arra-founders-product-ecosystem.png",
-    alt: "Flat vector futuristic poster of two ARRA founders overlooking four connected product directions across hills and water",
-  },
-  learning: {
-    src: "/images/arra-founders-learning-campus.png",
-    alt: "Flat vector futuristic poster of two ARRA founders walking through a calm learning and workflow campus beside water",
+    src: "/images/arra-cel-hero-field-journal-v3.png",
+    alt: "Two Northeast Indian co-founders, seen from behind, looking across a quiet mountain landscape",
   },
   governance: {
-    src: "/images/arra-founders-trust-observatory.png",
-    alt: "Flat vector futuristic poster of two ARRA founders reviewing a transparent data vault in a quiet observatory",
+    src: "/images/arra-cel-responsible-foundations-v2.png",
+    alt: "Two Northeast Indian co-founders, seen from behind, reviewing field notes in a bright studio",
   },
   topographic: {
-    src: "/images/arra-founders-terrain.png",
-    alt: "Flat vector futuristic poster of two ARRA founders mapping Manipur terrain as it becomes a connected intelligence grid",
+    src: "/images/arra-cel-regional-terrain-v3.png",
+    alt: "Layered Northeast Indian mountains, water, vegetation, and two homes rendered as a restrained field-journal landscape",
+  },
+  explorations: {
+    src: "/images/arra-cel-explorations-v2.png",
+    alt: "Two Northeast Indian co-founders, seen from behind, observing connected areas of learning, community, and movement",
+  },
+  founderOliver: {
+    src: "/images/arra-cel-founder-oliver-rear-v2.png",
+    alt: "Rear-view flat illustration of ARRA co-founder Oliver O in modern clothing",
+  },
+  founderOmega: {
+    src: "/images/arra-cel-founder-omega-rear-v2.png",
+    alt: "Rear-view flat illustration of ARRA co-founder Omega N in modern clothing",
   },
 } satisfies Record<string, ImageAsset>
 
@@ -133,7 +136,7 @@ export const faqs: FAQItem[] = [
   {
     question: "Why is ARRA not sharing product details?",
     answer:
-      "We believe public claims should follow maturity. Product details, technical choices, and roadmaps will be shared only when the work has enough clarity to justify public attention.",
+      "We believe public claims should follow maturity. Our current areas of exploration are not a product roadmap. Specific products, technical choices, and timelines will be shared only when the work has enough clarity to justify public attention.",
   },
   {
     question: "What is ARRA's focus?",

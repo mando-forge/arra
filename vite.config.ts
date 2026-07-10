@@ -3,6 +3,7 @@ import path from "path";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
+import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 import { fileURLToPath } from 'node:url';
@@ -12,7 +13,34 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    VitePWA({
+      registerType: 'autoUpdate',
+      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
+      manifest: {
+        name: 'ARRA',
+        short_name: 'ARRA',
+        description: 'Technology grounded in Northeast India',
+        theme_color: '#f3f0e8',
+        background_color: '#fcfbf7',
+        display: 'standalone',
+        icons: [
+          {
+            src: 'pwa-192x192.svg',
+            sizes: '192x192',
+            type: 'image/svg+xml'
+          },
+          {
+            src: 'pwa-512x512.svg',
+            sizes: '512x512',
+            type: 'image/svg+xml'
+          }
+        ]
+      }
+    })
+  ],
   resolve: {
     alias: {
       "@": path.resolve(dirname, "./src")

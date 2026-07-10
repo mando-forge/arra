@@ -58,7 +58,7 @@ export function AnimatedGroup({
       className={className}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: "-80px" }}
+      viewport={{ once, margin: "-10px" }}
       variants={{
         hidden: {},
         visible: {

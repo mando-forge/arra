@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { flushSync } from "react-dom"
+import { motion, type HTMLMotionProps } from "framer-motion"
 
 import { cn } from "@/lib/utils"
 
@@ -15,7 +16,7 @@ export type TransitionVariant =
   | "rectangle"
   | "star"
 
-interface AnimatedThemeTogglerProps extends React.ComponentPropsWithoutRef<"button"> {
+interface AnimatedThemeTogglerProps extends HTMLMotionProps<"button"> {
   duration?: number
   variant?: TransitionVariant
   /** When true, the transition expands from the viewport center instead of the button center. */
@@ -260,15 +261,18 @@ export const AnimatedThemeToggler = ({
   }, [shape, fromCenter, duration, isDark, isControlled, onThemeChange])
 
   return (
-    <button
+    <motion.button
       type="button"
       ref={buttonRef}
       onClick={toggleTheme}
       className={cn(className)}
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.92 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       {...props}
     >
       {isDark ? <Sun className="h-[1.2rem] w-[1.2rem]" /> : <Moon className="h-[1.2rem] w-[1.2rem]" />}
       <span className="sr-only">Toggle theme</span>
-    </button>
+    </motion.button>
   )
 }
