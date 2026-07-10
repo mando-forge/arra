@@ -1,4 +1,5 @@
 const { chromium } = require('playwright');
+const fs = require('fs');
 
 (async () => {
   const browser = await chromium.launch({ headless: true });
@@ -93,6 +94,7 @@ const { chromium } = require('playwright');
     const pageText = await page.innerText('body');
     console.log("Page Text:", pageText);
     
+    fs.mkdirSync('scratch', { recursive: true });
     await page.screenshot({ path: 'scratch/debug-screenshot.png' });
     await page.waitForTimeout(5000); // Wait 5s before closing to capture network responses
     

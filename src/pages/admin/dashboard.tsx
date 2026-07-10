@@ -63,8 +63,9 @@ export default function AdminDashboard() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-foreground/80 font-bold">Document Title</label>
+                <label htmlFor="title" className="text-xs uppercase tracking-widest text-foreground/80 font-bold">Document Title</label>
                 <Input
+                  id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   placeholder="e.g. Protocol 7 Specifications"
@@ -73,8 +74,9 @@ export default function AdminDashboard() {
                 />
               </div>
               <div className="space-y-2">
-                <label className="text-xs uppercase tracking-widest text-foreground/80 font-bold">Raw Content</label>
+                <label htmlFor="content" className="text-xs uppercase tracking-widest text-foreground/80 font-bold">Raw Content</label>
                 <Textarea
+                  id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   placeholder="Paste documentation, lore, or factual data here..."

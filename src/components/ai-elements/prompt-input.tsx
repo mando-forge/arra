@@ -70,6 +70,7 @@ import {
   useMemo,
   useRef,
   useState,
+  forwardRef,
 } from "react";
 
 // ============================================================================
@@ -425,19 +426,23 @@ export type PromptInputProps = Omit<
   ) => void | Promise<void>;
 };
 
-export const PromptInput = ({
-  className,
-  accept,
-  multiple,
-  globalDrop,
-  syncHiddenInput,
-  maxFiles,
-  maxFileSize,
-  onError,
-  onSubmit,
-  children,
-  ...props
-}: PromptInputProps) => {
+export const PromptInput = forwardRef<HTMLFormElement, PromptInputProps>(
+  (
+    {
+      className,
+      accept,
+      multiple,
+      globalDrop,
+      syncHiddenInput,
+      maxFiles,
+      maxFileSize,
+      onError,
+      onSubmit,
+      children,
+      ...props
+    },
+    ref
+  ) => {
   // Try to use a provider controller if present
   const controller = useOptionalPromptInputController();
   const usingProvider = !!controller;
@@ -797,7 +802,8 @@ export const PromptInput = ({
             if (usingProvider) {
               controller.textInput.clear();
             }
-          } catch {
+          } catch (err) {
+            console.error("Failed to submit async form data", err);
             // Don't clear on error - user may want to retry
           }
         } else {
@@ -810,7 +816,8 @@ export const PromptInput = ({
             controller.textInput.clear();
           }
         }
-      } catch {
+      } catch (err) {
+        console.error("Failed to process attachments or submit form", err);
         // Don't clear on error - user may want to retry
       }
     },
@@ -833,7 +840,14 @@ export const PromptInput = ({
       <form
         className={cn("w-full", className)}
         onSubmit={handleSubmit}
-        ref={formRef}
+        ref={(node) => {
+          formRef.current = node;
+          if (typeof ref === "function") {
+            ref(node);
+          } else if (ref) {
+            ref.current = node;
+          }
+        }}
         {...props}
       >
         <InputGroup className="overflow-hidden">{children}</InputGroup>
@@ -853,7 +867,7 @@ export const PromptInput = ({
       {withReferencedSources}
     </LocalAttachmentsContext.Provider>
   );
-};
+});
 
 export type PromptInputBodyProps = HTMLAttributes<HTMLDivElement>;
 

@@ -12,7 +12,7 @@ import { toast } from "sonner"
 import { contactIntents } from "@/content/arra"
 import { supabase } from "@/lib/supabase"
 
-type SubmissionStatus = "idle" | "submitting" | "success" | "error"
+type SubmissionStatus = "idle" | "submitting"
 
 export default function Contact() {
   const [status, setStatus] = useState<SubmissionStatus>("idle")

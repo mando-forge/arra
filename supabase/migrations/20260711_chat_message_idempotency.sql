@@ -6,5 +6,5 @@ alter table chat_messages
 
 drop index if exists chat_messages_client_message_key;
 
-create unique index concurrently chat_messages_client_message_key
+create unique index chat_messages_client_message_key
   on chat_messages (conversation_id, client_message_id);

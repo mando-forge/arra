@@ -2,20 +2,20 @@
 
 ## Comparison target
 
-- Source visual truth: `C:\venture\arra\docs\design\arra-nordic-field-journal-cel-shaded-target-v2.png`
-- Browser-rendered implementation: `C:\venture\arra\docs\design\implementation-home-desktop-normalized-v2.png`
+- Source visual truth: `./docs/design/arra-nordic-field-journal-cel-shaded-target-v2.png`
+- Browser-rendered implementation: `./docs/design/implementation-home-desktop-normalized-v2.png`
 - Viewport: browser override `1501 × 1070`; captured page raster `1486 × 1059` at device-pixel-ratio 1, matching the source raster exactly
 - State: home route, top of page, light theme, desktop navigation closed, chat closed
 
 ## Comparison evidence
 
-- Full-view comparison: `C:\venture\arra\docs\design\design-qa-comparison-full-final.png`
-- Focused hero comparison: `C:\venture\arra\docs\design\design-qa-comparison-hero-final.png`
-- Focused posture comparison: `C:\venture\arra\docs\design\design-qa-comparison-posture-final.png`
-- Mobile home: `C:\venture\arra\docs\design\implementation-home-mobile-final.png`
-- Mobile illustration crop: `C:\venture\arra\docs\design\implementation-home-mobile-art-final.png`
-- Mobile contact: `C:\venture\arra\docs\design\implementation-contact-mobile-final.png`
-- Mobile chat sheet: `C:\venture\arra\docs\design\implementation-chat-mobile.png`
+- Full-view comparison: `./docs/design/design-qa-comparison-full-final.png`
+- Focused hero comparison: `./docs/design/design-qa-comparison-hero-final.png`
+- Focused posture comparison: `./docs/design/design-qa-comparison-posture-final.png`
+- Mobile home: `./docs/design/implementation-home-mobile-final.png`
+- Mobile illustration crop: `./docs/design/implementation-home-mobile-art-final.png`
+- Mobile contact: `./docs/design/implementation-contact-mobile-final.png`
+- Mobile chat sheet: `./docs/design/implementation-chat-mobile.png`
 
 Focused comparisons were required because the source depends on precise headline wrapping, character scale, image crop, and the isolated regional illustration treatment. The hero and posture crops make those details readable at 1:1 scale.
 
@@ -37,19 +37,19 @@ The implementation preserves the source composition: a three-line editorial hero
 
 ### Iteration 1 — browser preflight
 
-- Evidence: `C:\venture\arra\docs\design\implementation-desktop-v1.png`
+- Evidence: `./docs/design/implementation-desktop-v1.png`
 - Earlier P2 findings: the hero wrapped into two lines instead of three; the image stopped short of the source's right edge; the header wordmark used the display serif; the posture copy was vertically misaligned; route changes retained the previous scroll position.
 - Fixes: forced source-faithful headline breaks, extended the hero grid to the right edge, restored a tracked sans wordmark, aligned the posture content to the illustration top, and added route scroll restoration.
 
 ### Iteration 2 — normalized visual comparison
 
-- Evidence: `C:\venture\arra\docs\design\design-qa-comparison-full-v2.png`
+- Evidence: `./docs/design/design-qa-comparison-full-v2.png`
 - Earlier P2 findings: the founder pair was too small and low in the hero; the regional illustration was a tall framed scene instead of the source's isolated panoramic landscape; the paper tone was too dark.
 - Fixes: regenerated the hero with a larger rear-facing founder pair, created a source-faithful panoramic terrain asset, changed the regional slot to a 3:1 contained composition, and lightened the paper token.
 
 ### Iteration 3 — post-fix comparison
 
-- Evidence: `C:\venture\arra\docs\design\design-qa-comparison-full-final.png`, `C:\venture\arra\docs\design\design-qa-comparison-hero-final.png`, and `C:\venture\arra\docs\design\design-qa-comparison-posture-final.png`
+- Evidence: `./docs/design/design-qa-comparison-full-final.png`, `./docs/design/design-qa-comparison-hero-final.png`, and `./docs/design/design-qa-comparison-posture-final.png`
 - Result: the previous P2 findings are resolved. No new P0, P1, or P2 issues were found.
 
 ## Browser verification

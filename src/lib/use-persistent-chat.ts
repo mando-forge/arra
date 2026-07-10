@@ -113,5 +113,5 @@ export function usePersistentChat(apiEndpoint: string, supabaseAnonKey: string) 
     }
   }
 
-  return { ...chat, sendMessage, clearMessages, isReady, historyError }
+  return { ...chat, sendMessage, clearMessages, isReady, historyError, stop: chat.stop }
 }

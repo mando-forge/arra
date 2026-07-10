@@ -72,7 +72,7 @@ export function ChatWidget() {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
 
-  const { messages, sendMessage, clearMessages, status, error, isReady, historyError } = usePersistentChat(
+  const { messages, sendMessage, clearMessages, status, error, isReady, historyError, stop } = usePersistentChat(
     `${supabaseUrl}/functions/v1/chat`,
     supabaseAnonKey
   )
@@ -307,6 +307,11 @@ export function ChatWidget() {
               <PromptInputSubmit
                 status={status === "streaming" ? "streaming" : "ready"}
                 disabled={!chatAvailable || isLoading}
+                onStop={() => {
+                  if (status === "streaming") {
+                    stop();
+                  }
+                }}
                 className="absolute bottom-1.5 right-2"
               />
             </PromptInput>
