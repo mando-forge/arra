@@ -1,6 +1,6 @@
 import { useChat } from "@ai-sdk/react"
 import { DefaultChatTransport } from "ai"
-import { useState } from "react"
+import { useState, useMemo } from "react"
 
 export default function DebugPage() {
   const [input, setInput] = useState("")
@@ -8,15 +8,15 @@ export default function DebugPage() {
   const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ""
   const chatAvailable = Boolean(supabaseUrl && supabaseAnonKey)
 
-  const { messages, sendMessage, status, error } = useChat({
-    transport: new DefaultChatTransport({
-      api: `${supabaseUrl}/functions/v1/chat`,
-      headers: {
-        Authorization: `Bearer ${supabaseAnonKey}`,
-        apikey: supabaseAnonKey,
-      },
-    }),
-  })
+  const transport = useMemo(() => new DefaultChatTransport({
+    api: `${supabaseUrl}/functions/v1/chat`,
+    headers: {
+      Authorization: `Bearer ${supabaseAnonKey}`,
+      apikey: supabaseAnonKey,
+    },
+  }), [supabaseUrl, supabaseAnonKey])
+
+  const { messages, sendMessage, status, error } = useChat({ transport })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()

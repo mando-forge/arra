@@ -23,8 +23,9 @@ export default defineConfig({
         name: 'ARRA',
         short_name: 'ARRA',
         description: 'Technology grounded in Northeast India',
-        theme_color: '#f3f0e8',
+        theme_color: '#173c3a',
         background_color: '#fcfbf7',
+        start_url: '/',
         display: 'standalone',
         icons: [
           {

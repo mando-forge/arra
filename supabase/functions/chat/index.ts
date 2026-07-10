@@ -173,9 +173,17 @@ serve(async (req) => {
     const supabase = createClient(supabaseUrl, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     })
-    const conversationId = await getConversation(supabase, body.sessionId)
+    
+    let conversationId: string | undefined;
+    const { data: existingSession } = await supabase
+      .from("chat_conversations")
+      .select("id")
+      .eq("session_id", body.sessionId)
+      .maybeSingle()
+    if (existingSession) conversationId = existingSession.id as string
 
     if (body.action === "clear") {
+      if (!conversationId) return json(req, { success: true })
       const { error } = await supabase
         .from("chat_messages")
         .delete()
@@ -185,6 +193,7 @@ serve(async (req) => {
     }
 
     if (body.action === "history") {
+      if (!conversationId) return json(req, { messages: [] })
       const { data, error } = await supabase
         .from("chat_messages")
         .select("id, role, content, created_at")
@@ -202,16 +211,21 @@ serve(async (req) => {
     if (!input) return json(req, { error: "A message is required" }, 400)
     if (input.length > MAX_INPUT_LENGTH) return json(req, { error: "Message is too long" }, 413)
 
+    const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown"
     const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString()
     const { count, error: countError } = await supabase
       .from("chat_messages")
       .select("id", { count: "exact", head: true })
-      .eq("conversation_id", conversationId)
+      .eq("ip_address", ip)
       .eq("role", "user")
       .gte("created_at", oneMinuteAgo)
     if (countError) throw countError
     if ((count ?? 0) >= REQUESTS_PER_MINUTE) {
       return json(req, { error: "Too many messages. Please wait a moment and try again." }, 429)
+    }
+
+    if (!conversationId) {
+      conversationId = await getConversation(supabase, body.sessionId)
     }
 
     const { data: history, error: historyError } = await supabase
@@ -227,6 +241,7 @@ serve(async (req) => {
     const { error: saveUserError } = await supabase.from("chat_messages").upsert({
       conversation_id: conversationId,
       client_message_id: clientMessageId,
+      ip_address: ip,
       role: "user",
       content: input,
     }, { onConflict: "conversation_id,client_message_id", ignoreDuplicates: true })

@@ -71,11 +71,9 @@ function Hero() {
 
           <BlurFade delay={0.65} inView>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5 mt-10">
-              <a href="#vision" className="inline-block">
-                <InteractiveHoverButton className="h-13 px-6 text-sm bg-primary-foreground text-primary">
-                  Explore the vision
-                </InteractiveHoverButton>
-              </a>
+              <InteractiveHoverButton href="#vision" className="h-13 px-6 text-sm bg-primary-foreground text-primary">
+                Explore the vision
+              </InteractiveHoverButton>
               <Link
                 className="inline-flex items-center gap-3 py-2 border-b border-current text-[0.92rem] hover:text-primary transition-colors group ml-2 sm:ml-4"
                 to="/contact"

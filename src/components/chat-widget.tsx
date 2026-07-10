@@ -88,9 +88,9 @@ export function ChatWidget() {
     setIsOpen(true)
   }
 
-  const handlePromptSubmit = (msg: PromptInputMessage) => {
+  const handlePromptSubmit = async (msg: PromptInputMessage) => {
     if (!msg.text.trim() || isLoading || !chatAvailable) return
-    void sendMessage(msg.text.trim())
+    await sendMessage(msg.text.trim())
   }
 
   const suggestedPrompts = [
@@ -285,7 +285,7 @@ export function ChatWidget() {
                 {(error || historyError) && (
                   <div className="flex gap-3 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive" role="alert">
                     <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
-                    <p>{historyError ?? "The guide could not respond. Please wait a moment and try again."}</p>
+                    <p>{historyError ?? (error ? error.message : "The guide could not respond. Please wait a moment and try again.")}</p>
                   </div>
                 )}
               </ConversationContent>

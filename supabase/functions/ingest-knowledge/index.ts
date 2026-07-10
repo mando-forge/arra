@@ -126,9 +126,15 @@ serve(async (req) => {
     }))
     if (rows.some((row) => !Array.isArray(row.embedding))) throw new Error('Embedding response was incomplete')
 
-    await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title })
-    const { error: insertError } = await supabaseClient.from('knowledge_base').insert(rows)
+    const { data: inserted, error: insertError } = await supabaseClient.from('knowledge_base').insert(rows).select('id')
     if (insertError) throw insertError
+    
+    const newIds = inserted?.map(r => r.id).join(',')
+    if (newIds) {
+      await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title }).not('id', 'in', `(${newIds})`)
+    } else {
+      await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title })
+    }
     
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },

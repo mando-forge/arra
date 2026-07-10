@@ -17,6 +17,12 @@ export function TextScramble({ text, speed = 30, className, scrambleOnHover = fa
   const isInView = useInView(ref, { once: true, amount: 0.5 })
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
+  useEffect(() => {
+    if (intervalRef.current) clearInterval(intervalRef.current)
+    isScrambling.current = false
+    setDisplayText(text)
+  }, [text])
+
   const scramble = useCallback(() => {
     if (isScrambling.current) return
     isScrambling.current = true

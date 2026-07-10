@@ -11,7 +11,7 @@ export function AdminLayout() {
   const location = useLocation()
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    const handleSession = (session: Session | null) => {
       const adminSession = session?.user.app_metadata.role === "admin" ? session : null
       setSession(adminSession)
       setLoading(false)
@@ -20,19 +20,13 @@ export function AdminLayout() {
       } else if (adminSession && location.pathname === '/admin/login') {
         navigate('/admin')
       }
-    })
+    }
+
+    supabase.auth.getSession().then(({ data: { session } }) => handleSession(session))
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      const adminSession = session?.user.app_metadata.role === "admin" ? session : null
-      setSession(adminSession)
-      if (!adminSession && location.pathname !== '/admin/login') {
-        navigate('/admin/login')
-      } else if (adminSession && location.pathname === '/admin/login') {
-        navigate('/admin')
-      }
-    })
+    } = supabase.auth.onAuthStateChange((_event, session) => handleSession(session))
 
     return () => subscription.unsubscribe()
   }, [navigate, location.pathname])

@@ -14,10 +14,8 @@ import { mermaid } from "@streamdown/mermaid";
 import { BrainIcon, ChevronDownIcon } from "lucide-react";
 import type { ComponentProps, ReactNode } from "react";
 import {
-  createContext,
   memo,
   useCallback,
-  useContext,
   useEffect,
   useMemo,
   useRef,
@@ -27,22 +25,7 @@ import { Streamdown } from "streamdown";
 
 import { Shimmer } from "./shimmer";
 
-interface ReasoningContextValue {
-  isStreaming: boolean;
-  isOpen: boolean;
-  setIsOpen: (open: boolean) => void;
-  duration: number | undefined;
-}
-
-const ReasoningContext = createContext<ReasoningContextValue | null>(null);
-
-export const useReasoning = () => {
-  const context = useContext(ReasoningContext);
-  if (!context) {
-    throw new Error("Reasoning components must be used within Reasoning");
-  }
-  return context;
-};
+import { ReasoningContext, useReasoning } from "./reasoning-context";
 
 export type ReasoningProps = ComponentProps<typeof Collapsible> & {
   isStreaming?: boolean;
@@ -88,6 +71,7 @@ export const Reasoning = memo(
     useEffect(() => {
       if (isStreaming) {
         hasEverStreamedRef.current = true;
+        setHasAutoClosed(false);
         if (startTimeRef.current === null) {
           startTimeRef.current = Date.now();
         }

@@ -70,19 +70,19 @@ ALTER TABLE knowledge_base ENABLE ROW LEVEL SECURITY;
 
 -- Contact submissions policies
 CREATE POLICY "Enable insert for all users" ON contact_submissions FOR INSERT TO public WITH CHECK (true);
-CREATE POLICY "Enable select for admins only" ON contact_submissions FOR SELECT TO authenticated USING (auth.jwt() ->> 'role' = 'service_role');
+CREATE POLICY "Enable select for admins only" ON contact_submissions FOR SELECT TO authenticated USING (auth.jwt() -> 'app_metadata' ->> 'role' = 'admin');
 
 -- Posts policies
 CREATE POLICY "Enable select for published posts" ON posts FOR SELECT TO public USING (status = 'published');
-CREATE POLICY "Enable all access for admins" ON posts FOR ALL TO authenticated USING (auth.jwt() ->> 'role' = 'service_role');
+CREATE POLICY "Enable all access for admins" ON posts FOR ALL TO authenticated USING (auth.jwt() -> 'app_metadata' ->> 'role' = 'admin');
 
 -- Subscribers policies
 CREATE POLICY "Enable insert for all users" ON subscribers FOR INSERT TO public WITH CHECK (true);
-CREATE POLICY "Enable select for admins only" ON subscribers FOR SELECT TO authenticated USING (auth.jwt() ->> 'role' = 'service_role');
+CREATE POLICY "Enable select for admins only" ON subscribers FOR SELECT TO authenticated USING (auth.jwt() -> 'app_metadata' ->> 'role' = 'admin');
 
 -- Knowledge base policies
 CREATE POLICY "Enable select for all users" ON knowledge_base FOR SELECT TO public USING (true);
-CREATE POLICY "Enable all access for admins" ON knowledge_base FOR ALL TO authenticated USING (auth.jwt() ->> 'role' = 'service_role');
+CREATE POLICY "Enable all access for admins" ON knowledge_base FOR ALL TO authenticated USING (auth.jwt() -> 'app_metadata' ->> 'role' = 'admin');
 
 -- Chat policies
 CREATE POLICY "Enable insert for all users" ON chat_conversations FOR INSERT TO public WITH CHECK (true);

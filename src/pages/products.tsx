@@ -90,7 +90,7 @@ export default function Products() {
               <p className="body-copy mt-8 max-w-xl text-lg opacity-80 mb-10">
                 These are questions we are learning from, not products we are announcing. They describe the territory around ARRA&apos;s early work and may change as evidence grows.
               </p>
-              <InteractiveHoverButton>Read Field Notes</InteractiveHoverButton>
+              <InteractiveHoverButton href="#methodology">Read Field Notes</InteractiveHoverButton>
             </ArraReveal>
 
             <motion.div style={{ y }} className="w-full hidden lg:block">

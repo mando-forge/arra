@@ -15,14 +15,19 @@ export default function AdminLogin() {
     setLoading(true)
     setError(null)
     
-    const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    })
-
-    if (error || data.user?.app_metadata.role !== "admin") {
-      if (data.session) await supabase.auth.signOut()
-      setError("The credentials could not be verified.")
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
+  
+      if (error || data.user?.app_metadata.role !== "admin") {
+        if (data?.session) await supabase.auth.signOut()
+        setError("The credentials could not be verified.")
+        setLoading(false)
+      }
+    } catch (err) {
+      setError("An unexpected error occurred. Please try again.")
       setLoading(false)
     }
   }

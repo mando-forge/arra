@@ -77,6 +77,9 @@ export function usePersistentChat(apiEndpoint: string, supabaseAnonKey: string) 
         if (!controller.signal.aborted && import.meta.env.DEV) {
           console.warn("Chat history could not be restored", error)
         }
+        if (!controller.signal.aborted) {
+          setHistoryError("Previous messages could not be restored.")
+        }
       } finally {
         if (!controller.signal.aborted) setIsReady(true)
       }

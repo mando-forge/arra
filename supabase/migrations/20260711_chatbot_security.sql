@@ -29,19 +29,13 @@ where conversation.id = ranked.id
 alter table chat_conversations
   add constraint chat_conversations_session_id_key unique (session_id);
 
-alter table chat_messages
-  add column if not exists client_message_id text;
-
-create unique index if not exists chat_messages_client_message_key
-  on chat_messages (conversation_id, client_message_id);
-
-create index if not exists chat_messages_conversation_created_idx
+create index concurrently if not exists chat_messages_conversation_created_idx
   on chat_messages (conversation_id, created_at);
 
-create index if not exists posts_author_id_idx
+create index concurrently if not exists posts_author_id_idx
   on posts (author_id);
 
-create index if not exists knowledge_base_embedding_hnsw_idx
+create index concurrently if not exists knowledge_base_embedding_hnsw_idx
   on knowledge_base using hnsw (embedding vector_cosine_ops);
 
 drop policy if exists "Enable insert for all users" on chat_conversations;
@@ -74,7 +68,7 @@ create policy "Admins can manage knowledge"
 
 revoke all on function match_documents(vector, float, int) from public, anon, authenticated;
 grant execute on function match_documents(vector, float, int) to service_role;
-alter function match_documents(vector, float, int) set search_path = public;
+alter function match_documents(vector, float, int) set search_path = public, extensions;
 
 do $$
 begin
