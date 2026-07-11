@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import { Menu, X } from "lucide-react"
 import { Link, useLocation } from "react-router-dom"
 
@@ -18,10 +18,6 @@ export function Header() {
   const location = useLocation()
   const activeRoute = location.pathname
   const { resolvedTheme, setTheme } = useTheme()
-
-  useEffect(() => {
-    setMobileOpen(false)
-  }, [activeRoute])
 
   return (
     <header className="relative w-full flex justify-between items-center py-8 z-50">

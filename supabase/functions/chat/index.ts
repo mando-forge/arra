@@ -211,7 +211,9 @@ serve(async (req) => {
     if (!input) return json(req, { error: "A message is required" }, 400)
     if (input.length > MAX_INPUT_LENGTH) return json(req, { error: "Message is too long" }, 413)
 
-    const ip = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for") ?? req.headers.get("x-real-ip") ?? "unknown"
+    const rawIp = req.headers.get("cf-connecting-ip") ?? req.headers.get("x-forwarded-for")?.split(',')[0].trim() ?? req.headers.get("x-real-ip") ?? "unknown"
+    const ipData = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(rawIp))
+    const ip = Array.from(new Uint8Array(ipData)).map((b) => b.toString(16).padStart(2, "0")).join("")
     const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString()
     const { count, error: countError } = await supabase
       .from("chat_messages")

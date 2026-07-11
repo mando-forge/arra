@@ -8,3 +8,6 @@ drop index if exists chat_messages_client_message_key;
 
 create unique index chat_messages_client_message_key
   on chat_messages (conversation_id, client_message_id);
+
+create index if not exists chat_messages_ip_address_created_idx
+  on chat_messages (ip_address, created_at);

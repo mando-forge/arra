@@ -130,11 +130,15 @@ serve(async (req) => {
     if (insertError) throw insertError
     
     const newIds = inserted?.map(r => r.id).join(',')
+    let deleteError: unknown;
     if (newIds) {
-      await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title }).not('id', 'in', `(${newIds})`)
+      const { error } = await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title }).not('id', 'in', `(${newIds})`)
+      deleteError = error;
     } else {
-      await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title })
+      const { error } = await supabaseClient.from('knowledge_base').delete().contains('metadata', { source_title: title })
+      deleteError = error;
     }
+    if (deleteError) throw deleteError;
     
     return new Response(JSON.stringify({ success: true }), {
       headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },

@@ -12,16 +12,30 @@ const CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01234567
 
 export function TextScramble({ text, speed = 30, className, scrambleOnHover = false }: TextScrambleProps) {
   const [displayText, setDisplayText] = useState(text)
+  const [prevText, setPrevText] = useState(text)
   const isScrambling = useRef(false)
   const ref = useRef<HTMLSpanElement>(null)
   const isInView = useInView(ref, { once: true, amount: 0.5 })
   const intervalRef = useRef<NodeJS.Timeout | null>(null)
 
+  if (text !== prevText) {
+    setPrevText(text)
+    setDisplayText(text)
+  }
+
   useEffect(() => {
     if (intervalRef.current) clearInterval(intervalRef.current)
     isScrambling.current = false
-    setDisplayText(text)
   }, [text])
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+        intervalRef.current = null
+      }
+    }
+  }, [])
 
   const scramble = useCallback(() => {
     if (isScrambling.current) return
