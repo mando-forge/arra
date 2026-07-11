@@ -1,116 +1,118 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Menu, X } from "lucide-react"
+import { Link, useLocation } from "react-router-dom"
 
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { useTheme } from "@/components/theme-context"
 import { navItems } from "@/content/arra"
 import { cn } from "@/lib/utils"
 
+const primaryNavItems = navItems
+  .filter(({ label }) => label !== "Blog")
+  .map((item) =>
+    item.label === "Products" ? { ...item, label: "Explorations" } : item
+  )
+
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
+  const location = useLocation()
+  const activeRoute = location.pathname
   const { resolvedTheme, setTheme } = useTheme()
 
-  useEffect(() => {
-    const sectionIds = ["home", ...navItems.map((link) => link.href.slice(1))]
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0]
-
-        if (visible?.target.id) {
-          setActiveSection(visible.target.id)
-        }
-      },
-      { rootMargin: "-35% 0px -55% 0px", threshold: [0, 0.25, 0.5] }
-    )
-
-    for (const id of sectionIds) {
-      const section = document.getElementById(id)
-      if (section) observer.observe(section)
-    }
-
-    return () => observer.disconnect()
-  }, [])
-
   return (
-    <header className="fixed inset-x-0 top-0 z-50 px-3 pt-3">
-      <div className="container-enterprise border border-border bg-background text-foreground">
-        <div className="grid min-h-16 grid-cols-[auto_1fr_auto] items-stretch">
-          <a
-            href="#home"
-            className="serif-display flex min-w-36 items-center border-r border-border px-4 text-3xl leading-none uppercase md:min-w-52 md:text-4xl"
-            aria-label="ARRA home"
-          >
-            ARRA
-          </a>
+    <header className="relative w-full flex justify-between items-center py-8 z-50">
+      <Link
+        to="/"
+        className="font-sans text-2xl font-medium leading-none tracking-[0.18em] md:text-[1.8rem]"
+        aria-label="ARRA home"
+      >
+        ARRA
+      </Link>
 
-          <nav className="hidden grid-cols-5 lg:grid" aria-label="Primary">
-            {navItems.map(({ label, href }) => {
-              const isActive = activeSection === href.slice(1)
-              return (
-                <a
-                  key={label}
-                  href={href}
-                  aria-current={isActive ? "page" : undefined}
-                  className={cn(
-                    "mono-label flex items-center border-r border-border px-4 text-foreground/72 transition-colors hover:bg-foreground hover:text-background",
-                    isActive && "bg-foreground text-background"
-                  )}
-                >
-                  {label}
-                </a>
-              )
-            })}
-          </nav>
-
-          <div className="ml-auto flex items-stretch border-l border-border lg:border-l-0">
-            <AnimatedThemeToggler
-              variant="rectangle"
-              theme={resolvedTheme}
-              onThemeChange={(newTheme) => setTheme(newTheme)}
-              className="grid w-14 place-items-center border-r border-border bg-background text-foreground transition-colors hover:bg-foreground hover:text-background"
-            />
-
-            <button
-              type="button"
-              className="grid w-14 place-items-center bg-background text-foreground transition-colors hover:bg-foreground hover:text-background lg:hidden"
-              onClick={() => setMobileOpen((value) => !value)}
-              aria-label="Toggle navigation"
-              aria-controls="mobile-navigation"
-              aria-expanded={mobileOpen}
-            >
-              {mobileOpen ? (
-                <X className="size-5" />
-              ) : (
-                <Menu className="size-5" />
+      <nav
+        className="hidden items-center justify-center gap-7 md:flex lg:gap-10"
+        aria-label="Primary"
+      >
+        {primaryNavItems.map(({ label, href }) => {
+          const isActive = activeRoute === href
+          return (
+            <Link
+              key={label}
+              to={href}
+              aria-current={isActive ? "page" : undefined}
+              className={cn(
+                "border-b py-2 text-sm text-foreground/64 transition-colors hover:border-foreground/45 hover:text-foreground",
+                isActive
+                  ? "border-foreground text-foreground"
+                  : "border-transparent"
               )}
-            </button>
-          </div>
-        </div>
+            >
+              {label}
+            </Link>
+          )
+        })}
+      </nav>
 
-        <div
-          id="mobile-navigation"
-          inert={!mobileOpen ? true : undefined}
-          className={cn(
-            "border-t border-border lg:hidden",
-            mobileOpen ? "block" : "hidden"
-          )}
+      <div className="flex items-center gap-5 justify-end">
+        <p className="mono-label hidden text-right text-[0.62rem] leading-5 text-foreground/60 xl:block">
+          Northeast India
+          <br />
+          Research stage
+        </p>
+        <AnimatedThemeToggler
+          variant="rectangle"
+          theme={resolvedTheme}
+          onThemeChange={(newTheme) => setTheme(newTheme)}
+          className="grid size-11 place-items-center border border-border bg-background text-foreground transition-colors hover:border-foreground/40 hover:bg-muted"
+        />
+        <button
+          type="button"
+          className="grid size-11 place-items-center border border-border bg-background text-foreground transition-colors hover:border-foreground/40 hover:bg-muted md:hidden"
+          onClick={() => setMobileOpen((value) => !value)}
+          aria-label="Toggle navigation"
+          aria-controls="mobile-navigation"
+          aria-expanded={mobileOpen}
         >
-          <nav className="grid" aria-label="Mobile primary">
-            {navItems.map(({ label, href }) => (
-              <a
+          {mobileOpen ? (
+            <X className="size-5" />
+          ) : (
+            <Menu className="size-5" />
+          )}
+        </button>
+      </div>
+
+      <div
+        id="mobile-navigation"
+        inert={!mobileOpen ? true : undefined}
+        className={cn(
+          "absolute inset-x-0 top-full border-b border-border bg-background md:hidden",
+          mobileOpen ? "block" : "hidden"
+        )}
+      >
+        <nav className="grid py-3 px-4 sm:px-6 md:px-8" aria-label="Mobile primary">
+          {primaryNavItems.map(({ label, href }) => {
+            const isActive = activeRoute === href
+            return (
+              <Link
                 key={label}
-                href={href}
+                to={href}
                 onClick={() => setMobileOpen(false)}
-                className="mono-label border-b border-border px-4 py-4 transition-colors hover:bg-foreground hover:text-background"
+                className={cn(
+                  "flex min-h-12 items-center justify-between border-b border-border/65 px-1 text-base transition-colors last:border-b-0 hover:text-foreground",
+                  isActive ? "text-foreground" : "text-foreground/64"
+                )}
               >
-                {label}
-              </a>
-            ))}
-          </nav>
-        </div>
+                <span>{label}</span>
+                <span className="mono-label text-[0.58rem]" aria-hidden="true">
+                  {isActive ? "Current" : "Open"}
+                </span>
+              </Link>
+            )
+          })}
+        </nav>
+        <p className="mono-label border-t border-border px-5 sm:px-7 md:px-9 py-4 text-[0.6rem] leading-5 text-foreground/55">
+          Northeast India · Research stage
+        </p>
       </div>
     </header>
   )

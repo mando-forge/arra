@@ -29,3 +29,7 @@ lighthouse-report.json
 
 *storybook.log
 storybook-static
+
+# Agent configuration
+.agent/
+.agents/
