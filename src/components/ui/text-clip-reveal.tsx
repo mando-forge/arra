@@ -17,16 +17,30 @@ function findScroller(el: HTMLElement): HTMLElement | undefined {
   return undefined;
 }
 
+const xmlEscape = (str: string) => {
+  return str.replace(/[<>&'"]/g, (c) => {
+    switch (c) {
+      case "<": return "&lt;";
+      case ">": return "&gt;";
+      case "&": return "&amp;";
+      case "'": return "&apos;";
+      case '"': return "&quot;";
+      default: return c;
+    }
+  });
+};
+
 const maskUrl = (text: string) => {
   // Dynamically calculate width based on text length to prevent clipping of long text
   const width = text.length * 125 + 120;
+  const escapedText = xmlEscape(text);
   return (
     "data:image/svg+xml," +
     encodeURIComponent(
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="220" viewBox="0 0 ${width} 220">` +
         `<text x="50%" y="50%" dominant-baseline="central" text-anchor="middle" ` +
         `font-family="Arial Black, Arial Narrow, sans-serif" font-weight="900" ` +
-        `font-size="180" letter-spacing="-8">${text}</text></svg>`,
+        `font-size="180" letter-spacing="-8">${escapedText}</text></svg>`,
     )
   );
 };
@@ -68,6 +82,10 @@ export const TextClipMaskReveal = ({
     };
 
     const animate = () => {
+      if (!isVisible) {
+        raf = 0;
+        return;
+      }
       eased += (rawProgress() - eased) * easing;
       const size = (initialMaskSize + targetMaskSize * eased) * 100;
       mask.style.webkitMaskSize = `${size}%`;
@@ -75,8 +93,25 @@ export const TextClipMaskReveal = ({
       raf = requestAnimationFrame(animate);
     };
 
-    raf = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(raf);
+    let isVisible = true;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !raf) {
+          raf = requestAnimationFrame(animate);
+        } else if (!isVisible && raf) {
+          cancelAnimationFrame(raf);
+          raf = 0;
+        }
+      },
+      { threshold: 0 }
+    );
+    observer.observe(root);
+
+    return () => {
+      observer.disconnect();
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   return (
@@ -102,6 +137,7 @@ export const TextClipMaskReveal = ({
           muted
           loop
           playsInline
+          aria-hidden="true"
         >
           <source src={src} type="video/mp4" />
         </video>

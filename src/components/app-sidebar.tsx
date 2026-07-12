@@ -21,7 +21,7 @@ export function AppSidebar() {
 			className={cn(
 				"border-r border-border/50",
 				"*:data-[slot=sidebar-inner]:bg-background/95",
-				"*:data-[slot=sidebar-inner]:dark:bg-[radial-gradient(60%_18%_at_10%_0%,var(--color-arra-cyan,theme(colors.cyan.900))/.08,transparent)]",
+				"*:data-[slot=sidebar-inner]:dark:bg-[radial-gradient(60%_18%_at_10%_0%,color-mix(in_srgb,var(--color-cyan-900,theme(colors.cyan.900))_8%,transparent),transparent)]",
 				"**:data-[slot=sidebar-menu-button]:[&>span]:text-foreground/80 **:data-[slot=sidebar-menu-button]:[&>span]:font-mono **:data-[slot=sidebar-menu-button]:[&>span]:text-[11px] **:data-[slot=sidebar-menu-button]:[&>span]:tracking-wider **:data-[slot=sidebar-menu-button]:[&>span]:uppercase"
 			)}
 			collapsible="icon"

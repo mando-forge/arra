@@ -390,12 +390,25 @@ export default function AdminDashboard() {
     setReembeddingDoc(docTitle)
     try {
       // Fetch the document content and metadata from the database
-      const { data: rows, error: fetchError } = await supabase
+      let { data: rows, error: fetchError } = await supabase
         .from("knowledge_base")
         .select("content, metadata")
         .contains("metadata", { source_title: docTitle })
 
       if (fetchError) throw fetchError
+
+      // If no rows found with metadata.source_title, fall back to legacy title matching
+      if (!rows || rows.length === 0) {
+        const { data: legacyRows, error: legacyError } = await supabase
+          .from("knowledge_base")
+          .select("content, metadata")
+          .eq("title", docTitle)
+          .is("metadata->>source_title", null)
+
+        if (legacyError) throw legacyError
+        rows = legacyRows
+      }
+
       if (!rows?.length) throw new Error("Document not found in knowledge base")
 
       // Sort rows by chunk_index in memory to guarantee correct chronological order
@@ -492,6 +505,18 @@ export default function AdminDashboard() {
                 submissions.find((item) => item.id === submission.id) ?? null
               )
               handleTabChange("inquiries")
+            }}
+            onEditPost={(post) => {
+              const fullPost = posts.find((p) => p.id === post.id)
+              if (fullPost) {
+                setEditingPost(fullPost)
+                setPostTitle(fullPost.title)
+                setPostSlug(fullPost.slug)
+                setPostExcerpt(fullPost.excerpt || "")
+                setPostContent(fullPost.content || "")
+                setPostStatus(fullPost.status)
+                handleTabChange("cms")
+              }
             }}
           />
         </TabsContent>
@@ -1040,7 +1065,7 @@ export default function AdminDashboard() {
                 ) : (
                   filteredDocs.map((doc, idx) => (
                     <div
-                      key={idx}
+                      key={doc.title || idx}
                       className="flex items-center justify-between p-4 transition-colors hover:bg-muted/50"
                     >
                       <div className="flex-1 space-y-1 truncate pr-4">

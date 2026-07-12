@@ -3,27 +3,46 @@
 
 drop policy if exists "Enable insert for all users" on public.contact_submissions;
 
+-- 1. Status default & updated_at column
 alter table public.contact_submissions
   alter column status set default 'new',
-  alter column status set not null,
   add column if not exists updated_at timestamptz not null default now();
 
+-- Avoid blocking full-table scan for NOT NULL by adding NOT VALID check first
+alter table public.contact_submissions
+  add constraint contact_submissions_status_not_null_check
+    check (status is not null) not valid;
+
+alter table public.contact_submissions
+  validate constraint contact_submissions_status_not_null_check;
+
+alter table public.contact_submissions
+  alter column status set not null;
+
+-- 2. Add validation constraints with NOT VALID
 alter table public.contact_submissions
   drop constraint if exists contact_submissions_status_check,
   add constraint contact_submissions_status_check
-    check (status in ('new', 'read', 'archived')),
+    check (status in ('new', 'read', 'archived')) not valid,
   drop constraint if exists contact_submissions_name_length_check,
   add constraint contact_submissions_name_length_check
-    check (char_length(btrim(name)) between 2 and 120),
+    check (char_length(btrim(name)) between 2 and 120) not valid,
   drop constraint if exists contact_submissions_email_length_check,
   add constraint contact_submissions_email_length_check
-    check (char_length(btrim(email)) between 3 and 254),
+    check (char_length(btrim(email)) between 3 and 254) not valid,
   drop constraint if exists contact_submissions_intent_check,
   add constraint contact_submissions_intent_check
-    check (intent in ('General conversation', 'Potential collaboration', 'Founder introduction', 'Long-term supporter')),
+    check (intent in ('General conversation', 'Potential collaboration', 'Founder introduction', 'Long-term supporter')) not valid,
   drop constraint if exists contact_submissions_message_length_check,
   add constraint contact_submissions_message_length_check
-    check (char_length(btrim(message)) between 10 and 5000);
+    check (char_length(btrim(message)) between 10 and 5000) not valid;
+
+-- Validate constraints individually to avoid long lockups
+alter table public.contact_submissions validate constraint contact_submissions_status_check;
+alter table public.contact_submissions validate constraint contact_submissions_name_length_check;
+alter table public.contact_submissions validate constraint contact_submissions_email_length_check;
+alter table public.contact_submissions validate constraint contact_submissions_intent_check;
+alter table public.contact_submissions validate constraint contact_submissions_message_length_check;
 
 create or replace function public.set_contact_submission_updated_at()
 returns trigger

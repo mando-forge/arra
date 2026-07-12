@@ -200,6 +200,7 @@ export default function Products() {
   const [selectedDoc, setSelectedDoc] = useState<{ title: string; chunks: number; created_at: string } | null>(null)
   const [loadingDocs, setLoadingDocs] = useState(true)
   const [viewMode, setViewMode] = useState<"map" | "grid">("map")
+  const [loadError, setLoadError] = useState<string | null>(null)
 
   useEffect(() => {
     async function loadDocs() {
@@ -225,6 +226,7 @@ export default function Products() {
         setDocs(Object.values(docsMap))
       } catch (err) {
         console.error("Failed to load knowledge vectors:", err)
+        setLoadError("Failed to load vector telemetry directory.")
       } finally {
         setLoadingDocs(false)
       }
@@ -316,6 +318,12 @@ export default function Products() {
           <div className="flex items-center justify-center p-20 font-mono text-xs text-foreground/50">
             <Loader2 className="animate-spin size-4 mr-2" />
             SYNCHRONIZING VECTOR MAP...
+          </div>
+        ) : loadError ? (
+          <div className="border border-dashed border-destructive/40 p-12 text-center text-xs font-mono text-destructive max-w-md mx-auto bg-destructive/5">
+            ERROR: {loadError}
+            <br /><br />
+            Please verify network access and refresh to attempt synchronization again.
           </div>
         ) : docs.length === 0 ? (
           <div className="border border-dashed border-border/40 p-12 text-center text-xs font-mono text-foreground/50 max-w-md mx-auto">

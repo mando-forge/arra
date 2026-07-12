@@ -237,8 +237,9 @@ serve(async (req) => {
       if (!countError && (count ?? 0) >= REQUESTS_PER_MINUTE) {
         return json(req, { error: "Too many messages. Please wait a moment and try again." }, 429)
       }
-    } catch {
-      // Rate limiting is best-effort; skip if column is missing
+    } catch (rateLimitErr) {
+      // Rate limiting is best-effort; log and skip if column is missing
+      console.warn("Rate-limit query failed:", rateLimitErr)
     }
 
     if (!conversationId) {
@@ -263,17 +264,24 @@ serve(async (req) => {
       content: input,
     }, { onConflict: "conversation_id,client_message_id", ignoreDuplicates: true })
     if (upsertResult.error) {
-      // Fallback: try simple insert without ip_address / client_message_id columns
-      const { error: insertFallbackError } = await supabase.from("chat_messages").insert({
-        conversation_id: conversationId,
-        role: "user",
-        content: input,
-      })
-      if (insertFallbackError) throw insertFallbackError
+      const errMsg = upsertResult.error.message ?? ""
+      const isSchemaError = /column|relation|undefined_column|42703/i.test(errMsg)
+      if (isSchemaError) {
+        // Fallback: try simple insert without ip_address / client_message_id columns
+        const { error: insertFallbackError } = await supabase.from("chat_messages").insert({
+          conversation_id: conversationId,
+          role: "user",
+          content: input,
+        })
+        if (insertFallbackError) throw insertFallbackError
+      } else {
+        throw upsertResult.error
+      }
     }
 
-    const { data: documents } = await retrieveContext(input, apiKey, supabase)
-    const retrievedContext = documents.length
+    const { data: documents, error: ragError } = await retrieveContext(input, apiKey, supabase)
+    if (ragError) console.warn("RAG retrieval failed, continuing without context:", ragError)
+    const retrievedContext = (documents ?? []).length
       ? documents.map((document: { title: string; content: string }, index: number) =>
           `[Source ${index + 1}: ${document.title}]\n${document.content}`
         ).join("\n\n")
@@ -315,29 +323,8 @@ serve(async (req) => {
   } catch (error) {
     console.error("Chat request failed", error)
     
-    // Highly robust serialization that will never return undefined or empty object
-    const details = (() => {
-      if (!error) return "No error object provided"
-      if (error instanceof Error) {
-        return { name: error.name, message: error.message, stack: error.stack }
-      }
-      if (typeof error === "object") {
-        const obj = error as Record<string, unknown>
-        try {
-          return {
-            message: String(obj.message || obj.error || obj.error_description || "Unknown object error"),
-            raw: JSON.parse(JSON.stringify(error))
-          }
-        } catch {
-          return { message: String(obj.message || "Un-serializable object error"), stringified: String(error) }
-        }
-      }
-      return String(error)
-    })()
-
     return json(req, {
       error: "The chat service could not complete this request",
-      details,
     }, 500)
   }
 })

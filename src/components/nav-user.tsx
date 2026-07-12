@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react"
 import { LogOut, Settings } from "lucide-react"
 
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
+import { toast } from "sonner"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,13 +35,18 @@ export function NavUser() {
   }, [email])
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
+    const { error } = await supabase.auth.signOut()
+    if (error) {
+      console.error("Sign out failed:", error)
+      toast.error(`Sign out failed: ${error.message}`)
+    }
   }
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
+          type="button"
           className="rounded-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none"
           aria-label="Open admin account menu"
         >

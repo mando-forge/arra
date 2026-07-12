@@ -147,6 +147,10 @@ export const MessageBranch = ({
   const [currentBranch, setCurrentBranch] = useState(defaultBranch);
   const [branches, setBranches] = useState<ReactElement[]>([]);
 
+  useEffect(() => {
+    setCurrentBranch(defaultBranch);
+  }, [defaultBranch]);
+
   const handleBranchChange = useCallback(
     (newBranch: number) => {
       setCurrentBranch(newBranch);

@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 export function DashboardSkeleton() {
 	return (
 		<div
+			aria-hidden="true"
 			className={cn(
 				"grid grid-cols-2 gap-px bg-border p-px lg:grid-cols-4",
 				"*:min-h-48 *:w-full *:bg-background/90"

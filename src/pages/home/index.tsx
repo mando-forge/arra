@@ -1,5 +1,5 @@
 import { ArrowRight } from "lucide-react"
-import { motion } from "framer-motion"
+import { motion, useReducedMotion } from "framer-motion"
 import { Link } from "react-router-dom"
 
 import {
@@ -47,18 +47,22 @@ export default function Home() {
 
 
 function Hero() {
+  const shouldReduceMotion = useReducedMotion()
+
   return (
     <section id="home" className="relative overflow-hidden min-h-[min(calc(100vh-6.75rem),50rem)] flex items-center py-12 md:py-16 lg:py-0 px-6 md:px-12 lg:px-24">
       {/* Animated Background */}
       <div className="absolute inset-0 z-0">
-        <FlickeringGrid
-          className="absolute inset-0 size-full z-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] opacity-30"
-          squareSize={4}
-          gridGap={6}
-          color="#6B7280"
-          maxOpacity={0.5}
-          flickerChance={0.1}
-        />
+        {!shouldReduceMotion && (
+          <FlickeringGrid
+            className="absolute inset-0 size-full z-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] opacity-30"
+            squareSize={4}
+            gridGap={6}
+            color="#6B7280"
+            maxOpacity={0.5}
+            flickerChance={0.1}
+          />
+        )}
       </div>
 
       <div className="w-full relative z-10 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 sm:gap-10 lg:gap-12 items-center max-w-7xl mx-auto">
@@ -66,16 +70,21 @@ function Hero() {
         <div className="flex flex-col items-start">
           <BlurFade delay={0.2} inView>
             <h1 className="font-serif text-[clamp(2.5rem,4.2vw,4rem)] font-semibold leading-[1.08] tracking-[-0.025em]">
-              Rethinking technology
-              <br />
-              and{" "}
-              <Typewriter
-                words={["innovation", "ecology", "infrastructure", "coordination", "geography"]}
-                className="text-[var(--arra-ochre)]"
-                speed={80}
-                delayBetweenWords={2500}
-                cursorChar="|"
-              />
+              <span className="sr-only">
+                Rethinking technology and innovation, ecology, infrastructure, coordination, geography
+              </span>
+              <span aria-hidden="true">
+                Rethinking technology
+                <br />
+                and{" "}
+                <Typewriter
+                  words={["innovation", "ecology", "infrastructure", "coordination", "geography"]}
+                  className="text-[var(--arra-ochre)]"
+                  speed={80}
+                  delayBetweenWords={2500}
+                  cursorChar="|"
+                />
+              </span>
             </h1>
           </BlurFade>
 
@@ -114,10 +123,11 @@ function Hero() {
           className="relative w-full aspect-[8/5] max-h-[min(70vh,34rem)] 3xl:max-h-[min(70vh,42rem)] mx-auto overflow-hidden rounded-sm"
         >
           <video
-            autoPlay
+            autoPlay={!shouldReduceMotion}
             muted
-            loop
+            loop={!shouldReduceMotion}
             playsInline
+            aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover object-center"
           >
             <source src="/video/home-hero-bg.mp4" type="video/mp4" />

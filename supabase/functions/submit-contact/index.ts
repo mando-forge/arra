@@ -88,9 +88,29 @@ Deno.serve(async (request) => {
     const admin = createClient(supabaseUrl, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
     })
+
+    const rawIp = request.headers.get("cf-connecting-ip") ?? request.headers.get("x-forwarded-for")?.split(',')[0].trim() ?? request.headers.get("x-real-ip") ?? "unknown"
+    const ipData = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(rawIp))
+    const ip = Array.from(new Uint8Array(ipData)).map((b) => b.toString(16).padStart(2, "0")).join("")
+    const tenMinutesAgo = new Date(Date.now() - 600_000).toISOString()
+
+    try {
+      const { count, error: countError } = await admin
+        .from("contact_submissions")
+        .select("id", { count: "exact", head: true })
+        .eq("ip_address", ip)
+        .gte("created_at", tenMinutesAgo)
+
+      if (!countError && (count ?? 0) >= 3) {
+        return json(responseOrigin, 429, { error: "Too many contact submissions. Please try again later." })
+      }
+    } catch (rateLimitErr) {
+      console.warn("Contact rate-limit query failed:", rateLimitErr)
+    }
+
     const { data, error } = await admin
       .from("contact_submissions")
-      .insert({ name, email, intent, message })
+      .insert({ name, email, intent, message, ip_address: ip })
       .select("id")
       .single()
 

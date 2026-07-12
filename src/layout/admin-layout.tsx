@@ -27,14 +27,8 @@ export function AdminLayout() {
     const handleSession = (session: Session | null) => {
       const adminSession =
         session?.user.app_metadata?.role === "admin" ? session : null
-
       setSession(adminSession)
       setLoading(false)
-      if (!adminSession && location.pathname !== "/admin/login") {
-        navigate("/admin/login")
-      } else if (adminSession && location.pathname === "/admin/login") {
-        navigate("/admin")
-      }
     }
 
     supabase.auth
@@ -55,7 +49,16 @@ export function AdminLayout() {
         document.documentElement.classList.remove("dark")
       }
     }
-  }, [navigate, location.pathname])
+  }, [])
+
+  useEffect(() => {
+    if (loading) return
+    if (!session && location.pathname !== "/admin/login") {
+      navigate("/admin/login")
+    } else if (session && location.pathname === "/admin/login") {
+      navigate("/admin")
+    }
+  }, [session, loading, navigate, location.pathname])
 
   if (loading) {
     return (

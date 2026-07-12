@@ -279,8 +279,6 @@ const DEFAULTS = {
   radius: 0.002,
   splatForce: 6,
 };
-const PRESSURE_ITERATIONS = 18;
-const SIM_RESOLUTION = 160;
 
 export const FluidCubeCanvas = ({
   progress,
@@ -297,11 +295,24 @@ export const FluidCubeCanvas = ({
 
     const config = { ...DEFAULTS };
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      powerPreference: "low-power",
-      alpha: true,
-    });
+    // Determine quality based on concurrency (CPU cores) and mobile device detection
+    const isMobile = /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+    const lowPower = (navigator.hardwareConcurrency && navigator.hardwareConcurrency <= 4) || isMobile;
+    const pressureIterations = lowPower ? 8 : 18;
+    const simResolution = lowPower ? 96 : 160;
+
+    let renderer: THREE.WebGLRenderer;
+    try {
+      renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        powerPreference: "low-power",
+        alpha: true,
+      });
+    } catch (e) {
+      console.warn("WebGL not supported or initialization failed:", e);
+      return () => {};
+    }
+
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.autoClear = false;
     container.appendChild(renderer.domElement);
@@ -346,11 +357,11 @@ export const FluidCubeCanvas = ({
     let simW: number;
     let simH: number;
     if (aspect >= 1) {
-      simW = Math.round(SIM_RESOLUTION * aspect);
-      simH = SIM_RESOLUTION;
+      simW = Math.round(simResolution * aspect);
+      simH = simResolution;
     } else {
-      simW = SIM_RESOLUTION;
-      simH = Math.round(SIM_RESOLUTION / aspect);
+      simW = simResolution;
+      simH = Math.round(simResolution / aspect);
     }
     const texelSize = new THREE.Vector2(1 / simW, 1 / simH);
 
@@ -536,7 +547,7 @@ export const FluidCubeCanvas = ({
       blit(clearMat, pressure.write);
       pressure.swap();
 
-      for (let i = 0; i < PRESSURE_ITERATIONS; i++) {
+      for (let i = 0; i < pressureIterations; i++) {
         pressureMat.uniforms.uPressure.value = pressure.read.texture;
         pressureMat.uniforms.uDivergence.value = divergence.texture;
         blit(pressureMat, pressure.write);

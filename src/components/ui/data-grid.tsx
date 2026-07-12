@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 interface DocItem {
+  id?: string
   title: string
   chunks: number
   created_at: string
@@ -94,8 +95,8 @@ export function DataGrid({ docs }: DataGridProps) {
       </div>
 
       {/* Responsive table container */}
-      <div className="overflow-x-auto border border-border/40 rounded-sm bg-background/25">
-        <table className="w-full text-left border-collapse font-mono text-[11px]" role="grid">
+      <div className="overflow-x-auto border border-border/40 rounded-none bg-background/25">
+        <table className="w-full text-left border-collapse font-mono text-[11px]">
           <thead>
             <tr className="border-b border-border/40 bg-background/50">
               <th className="p-3 font-semibold text-foreground/70">
@@ -143,7 +144,7 @@ export function DataGrid({ docs }: DataGridProps) {
             ) : (
               filteredAndSortedDocs.map((doc, idx) => (
                 <tr
-                  key={idx}
+                  key={doc.id || doc.title || idx}
                   className="border-b border-border/10 hover:bg-arra-cyan/[0.02] transition-colors"
                 >
                   <td className="p-3 font-medium text-foreground truncate max-w-xs" title={doc.title}>

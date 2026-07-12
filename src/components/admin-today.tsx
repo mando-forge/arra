@@ -36,6 +36,7 @@ type AdminTodayProps = {
   documents?: DashboardDocument[]
   onNavigate: (destination: "inquiries" | "cms" | "knowledge") => void
   onOpenInquiry: (submission: DashboardSubmission) => void
+  onEditPost?: (post: DashboardPost) => void
 }
 
 function shortId(prefix: string, id: string) {
@@ -48,6 +49,7 @@ export function AdminToday({
   documents,
   onNavigate,
   onOpenInquiry,
+  onEditPost,
 }: AdminTodayProps) {
   const newSubmissions = submissions.filter(
     (submission) => submission.status === "new"
@@ -159,7 +161,13 @@ export function AdminToday({
             </p>
             <div className="mt-8 flex flex-wrap items-center gap-6">
               <Button
-                onClick={() => onNavigate("cms")}
+                onClick={() => {
+                  if (featuredPost && onEditPost) {
+                    onEditPost(featuredPost)
+                  } else {
+                    onNavigate("cms")
+                  }
+                }}
                 className="h-12 rounded-none bg-primary px-6 text-primary-foreground hover:bg-primary/90"
               >
                 <ArrowRight className="mr-2 size-4" />

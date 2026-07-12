@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
+import DOMPurify from "dompurify"
 import { supabase } from "@/lib/supabase"
 import { Loader2, ArrowLeft, Calendar, User } from "lucide-react"
 import { FlickeringGrid } from "@/components/ui/flickering-grid"
@@ -88,8 +89,16 @@ export default function Blog() {
                   {posts.map((post) => (
                     <article 
                       key={post.id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => setSelectedPost(post)}
-                      className="group cursor-pointer space-y-3 pb-8 border-b border-border last:border-b-0"
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter" || e.key === " ") {
+                          e.preventDefault()
+                          setSelectedPost(post)
+                        }
+                      }}
+                      className="group cursor-pointer space-y-3 pb-8 border-b border-border last:border-b-0 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-arra-cyan/50"
                     >
                       <div className="flex items-center gap-3 text-[10px] font-mono text-foreground/40">
                         <span className="flex items-center gap-1">
@@ -157,7 +166,7 @@ export default function Blog() {
 
               <div 
                 className="prose dark:prose-invert max-w-none text-[0.98rem] leading-[1.8] text-foreground/80 space-y-6 font-sans"
-                dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+                dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(selectedPost.content) }}
               />
             </motion.div>
           )}

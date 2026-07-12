@@ -407,7 +407,6 @@
 
   .contact-field:focus {
     border-color: var(--arra-ochre);
-    outline: none;
   }
 
   .contact-field:focus-visible {

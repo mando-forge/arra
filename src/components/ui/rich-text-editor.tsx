@@ -1,3 +1,4 @@
+import { useEffect } from "react"
 import { useEditor, EditorContent, Editor } from "@tiptap/react"
 import StarterKit from "@tiptap/starter-kit"
 import {
@@ -142,6 +143,12 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
     immediatelyRender: false,
     shouldRerenderOnTransaction: true,
   })
+
+  useEffect(() => {
+    if (editor && value !== editor.getHTML()) {
+      editor.commands.setContent(value)
+    }
+  }, [value, editor])
 
   return (
     <div className="rounded-none border border-border/80 dark:border-border/40 bg-background flex flex-col focus-within:ring-1 focus-within:ring-arra-cyan/50 transition-shadow">

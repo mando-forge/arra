@@ -125,6 +125,11 @@ export function ChatWidget() {
     supabaseAnonKey
   )
 
+  const messagesRef = useRef(messages)
+  useEffect(() => {
+    messagesRef.current = messages
+  }, [messages])
+
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
   const [editInputText, setEditInputText] = useState("")
   const [chatBranches, setChatBranches] = useState<Record<number, ChatMessage[][]>>({})
@@ -144,21 +149,28 @@ export function ChatWidget() {
 
   const handleEditSave = async (idx: number) => {
     if (!editInputText.trim() || isLoading) return
-    const currentSuffix = messages.slice(idx) as ChatMessage[]
+    const currentSuffix = messagesRef.current.slice(idx) as ChatMessage[]
     const currentBranchList = chatBranches[idx] || [currentSuffix]
 
     // Truncate messages list
-    setMessages(messages.slice(0, idx))
+    setMessages(messagesRef.current.slice(0, idx))
     setEditingMessageId(null)
+
+    // Wait a brief tick to ensure AI SDK state settles on the truncated array
+    await new Promise((resolve) => setTimeout(resolve, 50))
 
     // Send the new prompt
     await sendMessage(editInputText.trim())
+
+    // Once sendMessage resolves, the streaming is finished!
+    // Slice the newly updated messagesRef.current containing both the user edit and the assistant response
+    const newSuffix = messagesRef.current.slice(idx) as ChatMessage[]
 
     // Store branches locally
     const newActiveIdx = currentBranchList.length
     setChatBranches((prev) => ({
       ...prev,
-      [idx]: [...currentBranchList, [{ id: Math.random().toString(), role: "user", parts: [{ type: "text", text: editInputText }] }]],
+      [idx]: [...currentBranchList, newSuffix],
     }))
     setActiveBranchIdx((prev) => ({
       ...prev,

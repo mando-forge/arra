@@ -50,8 +50,8 @@ export function RootLayout() {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      // Ctrl + Shift + A (or Cmd + Shift + A)
-      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'a') {
+      // Ctrl + Shift + M (or Cmd + Shift + M)
+      if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key.toLowerCase() === 'm') {
         e.preventDefault()
         navigate("/admin")
       }

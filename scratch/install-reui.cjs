@@ -88,8 +88,14 @@ async function main() {
   const fileOf = (name) => bundle.files.find((f) => f.path === name)?.content ?? "";
   const installSkillDir = (dir) => {
     import_node_fs.default.rmSync(dir, { recursive: true, force: true });
-    for (const f of bundle.files)
-      writeEnsured(import_node_path.default.join(dir, f.path), f.content);
+    const resolvedDir = import_node_path.default.resolve(dir);
+    for (const f of bundle.files) {
+      const target = import_node_path.default.resolve(import_node_path.default.join(resolvedDir, f.path));
+      if (!target.startsWith(resolvedDir)) {
+        throw new Error(`Security Exception: Unsafe file path inside bundle: ${f.path}`);
+      }
+      writeEnsured(target, f.content);
+    }
     return dir;
   };
   const claudeAuth = KEY ? { Authorization: 'Bearer ${REUI_LICENSE_KEY}' } : void 0;

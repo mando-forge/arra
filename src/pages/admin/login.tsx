@@ -99,7 +99,7 @@ export default function AdminLogin() {
                 autoComplete="username"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
-                className="h-12 rounded-none border-x-0 border-t-0 bg-transparent px-0 text-base focus-visible:ring-0"
+                className="h-12 rounded-none border-x-0 border-t-0 bg-transparent px-0 text-base focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-primary transition-all"
                 required
               />
             </div>
@@ -118,7 +118,7 @@ export default function AdminLogin() {
                 autoComplete="current-password"
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
-                className="h-12 rounded-none border-x-0 border-t-0 bg-transparent px-0 text-base focus-visible:ring-0"
+                className="h-12 rounded-none border-x-0 border-t-0 bg-transparent px-0 text-base focus-visible:ring-0 focus-visible:border-b-2 focus-visible:border-primary transition-all"
                 required
               />
             </div>
