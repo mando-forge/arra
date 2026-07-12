@@ -71,14 +71,14 @@ function Hero() {
           <BlurFade delay={0.2} inView>
             <h1 className="font-serif text-[clamp(2.5rem,4.2vw,4rem)] font-semibold leading-[1.08] tracking-[-0.025em]">
               <span className="sr-only">
-                Rethinking technology and innovation, ecology, infrastructure, coordination, geography
+                Rethinking technology and ecology, geography, context, design, systems
               </span>
               <span aria-hidden="true">
                 Rethinking technology
                 <br />
                 and{" "}
                 <Typewriter
-                  words={["innovation", "ecology", "infrastructure", "coordination", "geography"]}
+                  words={["ecology", "geography", "context", "design", "systems"]}
                   className="text-[var(--arra-ochre)]"
                   speed={80}
                   delayBetweenWords={2500}
@@ -120,13 +120,13 @@ function Hero() {
           initial={{ opacity: 0, clipPath: "inset(10% 0% 10% 0%)" }}
           animate={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-          className="relative w-full aspect-[8/5] max-h-[min(70vh,34rem)] 3xl:max-h-[min(70vh,42rem)] mx-auto overflow-hidden rounded-sm"
+          className="relative w-full aspect-[4/3] sm:aspect-[8/5] max-h-[min(70vh,34rem)] 3xl:max-h-[min(70vh,42rem)] mx-auto overflow-hidden rounded-none animate-pulse-once bg-muted/10"
         >
           <video
             autoPlay={!shouldReduceMotion}
-            muted
+            muted={true}
             loop={!shouldReduceMotion}
-            playsInline
+            playsInline={true}
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover object-center"
           >
