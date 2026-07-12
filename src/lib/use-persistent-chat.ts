@@ -63,6 +63,7 @@ export function usePersistentChat(apiEndpoint: string, supabaseAnonKey: string) 
               ? "The ARRA guide is temporarily unavailable."
               : "Previous messages could not be restored."
           )
+          setIsReady(true)
           return
         }
 
