@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom"
 import { Button } from "@/components/ui/button"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { usePersistentChat } from "@/lib/use-persistent-chat"
+import { supabaseUrl, supabaseAnonKey, chatAvailable } from "@/lib/supabase"
 import {
   Conversation,
   ConversationContent,
@@ -110,9 +111,6 @@ export function ChatWidget() {
   const { pathname } = useLocation()
   const [isOpen, setIsOpen] = useState(false)
   const [showScrollTop, setShowScrollTop] = useState(false)
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ""
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ""
-  const chatAvailable = Boolean(supabaseUrl && supabaseAnonKey)
   const showTrigger = pathname !== "/contact"
 
   const dialogRef = useRef<HTMLDialogElement>(null)

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Users } from "lucide-react"
-import { supabase } from "@/lib/supabase"
+import { supabase, supabaseUrl, supabaseAnonKey } from "@/lib/supabase"
 
 // Generate a random user ID for this session
 const sessionId = crypto.randomUUID()
@@ -11,7 +11,7 @@ export function PresenceIndicator() {
 
   useEffect(() => {
     // Only connect if Supabase is properly initialized
-    if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
+    if (!supabaseUrl || !supabaseAnonKey) {
       return
     }
 
