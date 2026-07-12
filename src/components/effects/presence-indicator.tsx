@@ -49,8 +49,8 @@ export function PresenceIndicator() {
         className="fixed top-6 right-6 z-50 flex items-center gap-2 px-3 py-1.5 glass-panel rounded-none border border-arra-cyan/30 bg-background/50 backdrop-blur-md"
       >
         <div className="relative flex h-2 w-2 items-center justify-center">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-arra-cyan opacity-75"></span>
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-arra-cyan"></span>
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-none bg-arra-cyan opacity-75"></span>
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-none bg-arra-cyan"></span>
         </div>
         <div className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest mono-label text-arra-cyan/90">
           <Users className="size-3" />

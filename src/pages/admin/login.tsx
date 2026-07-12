@@ -1,8 +1,10 @@
 import { useState } from "react"
-import { supabase } from "@/lib/supabase"
+import { ArrowRight, Loader2, LockKeyhole } from "lucide-react"
+
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Hexagon, Lock } from "lucide-react"
+import { Label } from "@/components/ui/label"
+import { supabase } from "@/lib/supabase"
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
@@ -10,78 +12,139 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleLogin = async (event: React.FormEvent) => {
+    event.preventDefault()
     setLoading(true)
     setError(null)
-    
+
     try {
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      })
-  
-      if (error || data.user?.app_metadata.role !== "admin") {
-        if (data?.session) await supabase.auth.signOut()
-        setError("The credentials could not be verified.")
-        setLoading(false)
+      const { data, error: signInError } =
+        await supabase.auth.signInWithPassword({ email, password })
+
+      if (signInError || data.user?.app_metadata.role !== "admin") {
+        if (data.session) await supabase.auth.signOut()
+        setError("The email or password could not be verified.")
       }
     } catch {
-      setError("An unexpected error occurred. Please try again.")
+      setError("Sign-in is temporarily unavailable. Please try again.")
     } finally {
       setLoading(false)
     }
   }
 
   return (
-    <div className="flex-1 flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-md glass-panel p-8 shadow-neon space-y-6">
-        <div className="flex flex-col items-center text-center space-y-2">
-          <Hexagon className="size-12 text-arra-cyan" />
-          <h1 className="text-2xl font-bold mono-label uppercase tracking-widest">ARRA Access</h1>
-          <p className="text-sm text-foreground/60">Restricted Authorization Required</p>
+    <div className="grid min-h-screen w-full bg-background lg:grid-cols-[minmax(0,0.95fr)_minmax(32rem,1.05fr)]">
+      <section className="relative hidden overflow-hidden border-r border-border lg:block">
+        <img
+          src="/images/arra-cel-hero-field-journal-v3.png"
+          alt="Two Northeast Indian co-founders, seen from behind, looking across a quiet mountain landscape"
+          className="absolute inset-0 size-full object-cover opacity-80"
+        />
+        <div className="absolute inset-x-0 bottom-0 bg-primary/92 px-12 py-10 text-primary-foreground">
+          <p className="font-mono text-[10px] tracking-[0.18em] uppercase opacity-70">
+            Founder workspace
+          </p>
+          <p className="mt-4 max-w-lg font-serif text-4xl leading-tight">
+            A quiet place for careful work.
+          </p>
+          <p className="mt-4 max-w-md text-sm leading-7 opacity-75">
+            Review inquiries, shape field notes, and maintain ARRA&apos;s
+            growing knowledge base.
+          </p>
         </div>
+      </section>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          {error && (
-            <div className="p-3 bg-red-900/20 border border-red-500/50 text-red-400 text-xs font-mono text-center">
-              ACCESS DENIED: {error}
-            </div>
-          )}
-          <div className="space-y-2">
-            <Input
-              type="email"
-              placeholder="Operator ID (Email)"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="bg-background/50 border-foreground/20 rounded-none h-12"
-              required
-            />
-          </div>
-          <div className="space-y-2">
-            <Input
-              type="password"
-              placeholder="Passcode"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="bg-background/50 border-foreground/20 rounded-none h-12"
-              required
-            />
-          </div>
-          <Button 
-            type="submit" 
-            className="w-full rounded-none h-12 bg-arra-cyan text-background hover:bg-arra-cyan/90 font-bold tracking-widest uppercase"
-            disabled={loading}
+      <main className="flex min-h-screen items-center justify-center px-6 py-12 sm:px-10">
+        <div className="w-full max-w-md">
+          <a
+            href="/"
+            className="font-sans text-2xl font-medium tracking-[0.2em] text-primary"
+            aria-label="Return to ARRA home"
           >
-            {loading ? "Authenticating..." : (
-              <>
-                <Lock className="mr-2 size-4" />
-                Initialize Link
-              </>
+            ARRA
+          </a>
+          <p className="mt-14 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+            Secure administration
+          </p>
+          <h1 className="mt-5 font-serif text-5xl leading-none text-primary">
+            Welcome back.
+          </h1>
+          <p className="mt-5 text-[15px] leading-7 text-muted-foreground">
+            Sign in with an authorized founder account to continue to
+            today&apos;s workspace.
+          </p>
+
+          <form onSubmit={handleLogin} className="mt-10 space-y-6" noValidate>
+            {error && (
+              <div
+                role="alert"
+                className="border-l-2 border-destructive bg-destructive/5 px-4 py-3 text-sm leading-6 text-destructive"
+              >
+                {error}
+              </div>
             )}
-          </Button>
-        </form>
-      </div>
+
+            <div className="space-y-2">
+              <Label
+                htmlFor="admin-email"
+                className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase"
+              >
+                Email address
+              </Label>
+              <Input
+                id="admin-email"
+                name="email"
+                type="email"
+                inputMode="email"
+                autoComplete="username"
+                value={email}
+                onChange={(event) => setEmail(event.target.value)}
+                className="h-12 rounded-none border-x-0 border-t-0 bg-transparent px-0 text-base focus-visible:ring-0"
+                required
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label
+                htmlFor="admin-password"
+                className="font-mono text-[10px] tracking-[0.16em] text-muted-foreground uppercase"
+              >
+                Password
+              </Label>
+              <Input
+                id="admin-password"
+                name="password"
+                type="password"
+                autoComplete="current-password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                className="h-12 rounded-none border-x-0 border-t-0 bg-transparent px-0 text-base focus-visible:ring-0"
+                required
+              />
+            </div>
+
+            <Button
+              type="submit"
+              className="h-12 w-full justify-between rounded-none bg-primary px-5 text-primary-foreground hover:bg-primary/90"
+              disabled={loading}
+            >
+              <span className="flex items-center gap-2">
+                {loading ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <LockKeyhole className="size-4" />
+                )}
+                {loading ? "Signing in..." : "Sign in securely"}
+              </span>
+              <ArrowRight className="size-4" aria-hidden="true" />
+            </Button>
+          </form>
+
+          <div className="mt-10 border-t border-border pt-5 font-mono text-[9px] leading-5 tracking-[0.12em] text-muted-foreground uppercase">
+            Authorized accounts only · Supabase protected session
+          </div>
+        </div>
+      </main>
     </div>
   )
 }

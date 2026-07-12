@@ -33,3 +33,12 @@ storybook-static
 # Agent configuration
 .agent/
 .agents/
+.claude/
+.cursor/
+.opencode/
+opencode.json
+*test-*.ts
+*debug-*.ts
+*resolve-*.ts
+*trigger-*.ts
+*serialization*.js

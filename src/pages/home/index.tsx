@@ -16,6 +16,8 @@ import {
 } from "@/components/arra"
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button"
 import { BlurFade } from "@/components/ui/blur-fade"
+import { FlickeringGrid } from "@/components/ui/flickering-grid"
+import { Typewriter } from "@/components/typewriter"
 import { faqs, images, principles, trustItems } from "@/content/arra"
 
 const fieldNotes = [
@@ -46,15 +48,34 @@ export default function Home() {
 
 function Hero() {
   return (
-    <section id="home" className="min-h-[min(calc(100vh-6.75rem),50rem)] flex items-center py-12 md:py-16 lg:py-0 px-6 md:px-12 lg:px-24">
-      <div className="w-full grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 sm:gap-10 lg:gap-12 items-center max-w-7xl mx-auto">
+    <section id="home" className="relative overflow-hidden min-h-[min(calc(100vh-6.75rem),50rem)] flex items-center py-12 md:py-16 lg:py-0 px-6 md:px-12 lg:px-24">
+      {/* Animated Background */}
+      <div className="absolute inset-0 z-0">
+        <FlickeringGrid
+          className="absolute inset-0 size-full z-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] opacity-30"
+          squareSize={4}
+          gridGap={6}
+          color="#6B7280"
+          maxOpacity={0.5}
+          flickerChance={0.1}
+        />
+      </div>
+
+      <div className="w-full relative z-10 grid grid-cols-1 lg:grid-cols-[1.15fr_0.85fr] gap-8 sm:gap-10 lg:gap-12 items-center max-w-7xl mx-auto">
         {/* Left Column — Text */}
         <div className="flex flex-col items-start">
           <BlurFade delay={0.2} inView>
             <h1 className="font-serif text-[clamp(2.5rem,4.2vw,4rem)] font-semibold leading-[1.08] tracking-[-0.025em]">
               Rethinking technology
               <br />
-              and innovation
+              and{" "}
+              <Typewriter
+                words={["innovation", "ecology", "infrastructure", "coordination", "geography"]}
+                className="text-[var(--arra-ochre)]"
+                speed={80}
+                delayBetweenWords={2500}
+                cursorChar="|"
+              />
             </h1>
           </BlurFade>
 
@@ -85,22 +106,22 @@ function Hero() {
           </BlurFade>
         </div>
 
-        {/* Right Column — Image */}
+        {/* Right Column — Video */}
         <motion.div 
           initial={{ opacity: 0, clipPath: "inset(10% 0% 10% 0%)" }}
           animate={{ opacity: 1, clipPath: "inset(0% 0% 0% 0%)" }}
           transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
           className="relative w-full aspect-[8/5] max-h-[min(70vh,34rem)] 3xl:max-h-[min(70vh,42rem)] mx-auto overflow-hidden rounded-sm"
         >
-          <motion.img
-            initial={{ scale: 1.05 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 1.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
-            src={images.hero.src}
-            alt={images.hero.alt}
-            loading="eager"
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
             className="absolute inset-0 w-full h-full object-cover object-center"
-          />
+          >
+            <source src="/video/home-hero-bg.mp4" type="video/mp4" />
+          </video>
         </motion.div>
       </div>
     </section>

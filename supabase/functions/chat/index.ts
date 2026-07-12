@@ -8,8 +8,8 @@ import { streamText } from "npm:ai@7.0.18"
 const MAX_INPUT_LENGTH = 2_000
 const HISTORY_LIMIT = 16
 const REQUESTS_PER_MINUTE = 8
-const DEFAULT_MODEL = "nvidia/nemotron-3-ultra-550b-a55b:free"
-const DEFAULT_FALLBACK_MODEL = "openai/gpt-oss-120b:free"
+const DEFAULT_MODEL = "meta-llama/llama-3.3-70b-instruct:free"
+const DEFAULT_FALLBACK_MODEL = "openrouter/free"
 
 const SYSTEM_PROMPT = `You are the ARRA guide for a technology research company grounded in Northeast India.
 Use a quiet, measured, and highly competent tone. Be concise, direct, and truthful. Do not use emojis or inflated claims.
@@ -126,21 +126,27 @@ async function retrieveContext(query: string, apiKey: string, supabase: ReturnTy
       body: JSON.stringify({ model: "openai/text-embedding-3-small", input: [query] }),
     })
 
-    if (!response.ok) return []
+    if (!response.ok) {
+      const errText = await response.text();
+      return { data: [], error: `Embedding request failed: ${response.status} - ${errText}` }
+    }
     const payload = await response.json()
     const embedding = payload?.data?.[0]?.embedding
-    if (!Array.isArray(embedding)) return []
+    if (!Array.isArray(embedding)) {
+      return { data: [], error: `Embedding payload structure invalid: ${JSON.stringify(payload)}` }
+    }
 
     const { data, error } = await supabase.rpc("match_documents", {
       query_embedding: embedding,
-      match_threshold: 0.62,
+      match_threshold: 0.35,
       match_count: 5,
     })
-    if (error) return []
-    return data ?? []
-  } catch {
-    // Retrieval is an enhancement; the scoped assistant can still fail closed without it.
-    return []
+    if (error) {
+      return { data: [], error: `match_documents RPC error: ${error.message || JSON.stringify(error)}` }
+    }
+    return { data: data ?? [], error: null }
+  } catch (err) {
+    return { data: [], error: `retrieveContext exception: ${err instanceof Error ? err.message : String(err)}` }
   }
 }
 
@@ -155,6 +161,7 @@ serve(async (req) => {
     const apiKey = Deno.env.get("OPENROUTER_API_KEY")
     const supabaseUrl = Deno.env.get("SUPABASE_URL")
     const serviceRoleKey = getSupabaseAdminKey()
+
     if (!apiKey || !supabaseUrl || !serviceRoleKey) {
       console.error("Missing Edge Function configuration", {
         openrouter: !apiKey,
@@ -169,6 +176,7 @@ serve(async (req) => {
 
     const body = await req.json()
     if (!validSessionId(body.sessionId)) return json(req, { error: "Invalid chat session" }, 400)
+
 
     const supabase = createClient(supabaseUrl, serviceRoleKey, {
       auth: { persistSession: false, autoRefreshToken: false },
@@ -191,6 +199,10 @@ serve(async (req) => {
       if (error) throw error
       return json(req, { success: true })
     }
+
+
+
+
 
     if (body.action === "history") {
       if (!conversationId) return json(req, { messages: [] })
@@ -215,15 +227,18 @@ serve(async (req) => {
     const ipData = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(rawIp))
     const ip = Array.from(new Uint8Array(ipData)).map((b) => b.toString(16).padStart(2, "0")).join("")
     const oneMinuteAgo = new Date(Date.now() - 60_000).toISOString()
-    const { count, error: countError } = await supabase
-      .from("chat_messages")
-      .select("id", { count: "exact", head: true })
-      .eq("ip_address", ip)
-      .eq("role", "user")
-      .gte("created_at", oneMinuteAgo)
-    if (countError) throw countError
-    if ((count ?? 0) >= REQUESTS_PER_MINUTE) {
-      return json(req, { error: "Too many messages. Please wait a moment and try again." }, 429)
+    try {
+      const { count, error: countError } = await supabase
+        .from("chat_messages")
+        .select("id", { count: "exact", head: true })
+        .eq("ip_address", ip)
+        .eq("role", "user")
+        .gte("created_at", oneMinuteAgo)
+      if (!countError && (count ?? 0) >= REQUESTS_PER_MINUTE) {
+        return json(req, { error: "Too many messages. Please wait a moment and try again." }, 429)
+      }
+    } catch {
+      // Rate limiting is best-effort; skip if column is missing
     }
 
     if (!conversationId) {
@@ -240,16 +255,24 @@ serve(async (req) => {
     if (historyError) throw historyError
 
     const clientMessageId = typeof latestUserMessage?.id === "string" ? latestUserMessage.id : crypto.randomUUID()
-    const { error: saveUserError } = await supabase.from("chat_messages").upsert({
+    const upsertResult = await supabase.from("chat_messages").upsert({
       conversation_id: conversationId,
       client_message_id: clientMessageId,
       ip_address: ip,
       role: "user",
       content: input,
     }, { onConflict: "conversation_id,client_message_id", ignoreDuplicates: true })
-    if (saveUserError) throw saveUserError
+    if (upsertResult.error) {
+      // Fallback: try simple insert without ip_address / client_message_id columns
+      const { error: insertFallbackError } = await supabase.from("chat_messages").insert({
+        conversation_id: conversationId,
+        role: "user",
+        content: input,
+      })
+      if (insertFallbackError) throw insertFallbackError
+    }
 
-    const documents = await retrieveContext(input, apiKey, supabase)
+    const { data: documents } = await retrieveContext(input, apiKey, supabase)
     const retrievedContext = documents.length
       ? documents.map((document: { title: string; content: string }, index: number) =>
           `[Source ${index + 1}: ${document.title}]\n${document.content}`
@@ -291,6 +314,30 @@ serve(async (req) => {
     return result.toUIMessageStreamResponse({ headers: corsHeaders(req) })
   } catch (error) {
     console.error("Chat request failed", error)
-    return json(req, { error: "The chat service could not complete this request" }, 500)
+    
+    // Highly robust serialization that will never return undefined or empty object
+    const details = (() => {
+      if (!error) return "No error object provided"
+      if (error instanceof Error) {
+        return { name: error.name, message: error.message, stack: error.stack }
+      }
+      if (typeof error === "object") {
+        const obj = error as Record<string, unknown>
+        try {
+          return {
+            message: String(obj.message || obj.error || obj.error_description || "Unknown object error"),
+            raw: JSON.parse(JSON.stringify(error))
+          }
+        } catch {
+          return { message: String(obj.message || "Un-serializable object error"), stringified: String(error) }
+        }
+      }
+      return String(error)
+    })()
+
+    return json(req, {
+      error: "The chat service could not complete this request",
+      details,
+    }, 500)
   }
 })

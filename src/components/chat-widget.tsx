@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react"
-import { MessageSquare, X, ArrowUp, AlertCircle, Trash2 } from "lucide-react"
+import { MessageSquare, X, ArrowUp, AlertCircle, Trash2, Edit2, Copy, Check } from "lucide-react"
 import { useLocation } from "react-router-dom"
 
 import { Button } from "@/components/ui/button"
@@ -15,7 +15,27 @@ import {
   Message,
   MessageContent,
   MessageResponse,
+  MessageBranch,
+  MessageBranchContent,
+  MessageBranchSelector,
+  MessageBranchPrevious,
+  MessageBranchNext,
+  MessageBranchPage,
+  MessageToolbar,
 } from "@/components/ai-elements/message"
+import {
+  Reasoning,
+  ReasoningContent,
+  ReasoningTrigger,
+} from "@/components/ai-elements/reasoning"
+import { Shimmer } from "@/components/ai-elements/shimmer"
+import { cjk } from "@streamdown/cjk"
+import { code } from "@streamdown/code"
+import { math } from "@streamdown/math"
+import { mermaid } from "@streamdown/mermaid"
+import { Streamdown } from "streamdown"
+
+const streamdownPlugins = { cjk, code, math, mermaid }
 import {
   PromptInput,
   type PromptInputMessage,
@@ -30,25 +50,42 @@ type ChatMessagePart = {
 
 type ChatMessage = {
   id: string
-  role: string
+  role: "system" | "user" | "assistant" | "data"
   parts?: ChatMessagePart[]
   content?: unknown
 }
 
 const MessageParts = ({
   message,
+  isLastMessage = false,
+  isStreaming = false,
 }: {
   message: ChatMessage
+  isLastMessage?: boolean
+  isStreaming?: boolean
 }) => {
   const parts = message.parts || (typeof message.content === "string" ? [{ type: "text", text: message.content }] : [])
 
+  const reasoningParts = parts.filter((part) => part.type === "reasoning")
+  const reasoningText = reasoningParts.map((part) => part.text || "").join("\n\n")
+  const hasReasoning = reasoningParts.length > 0
+
+  const lastPart = parts.at(-1)
+  const isReasoningStreaming = isLastMessage && isStreaming && lastPart?.type === "reasoning"
+
   return (
     <>
+      {hasReasoning && (
+        <Reasoning className="w-full mb-3" isStreaming={isReasoningStreaming}>
+          <ReasoningTrigger />
+          <ReasoningContent>{reasoningText}</ReasoningContent>
+        </Reasoning>
+      )}
       {parts.map((part, i) => {
         if (part.type === "text" || !part.type) {
           return (
             <MessageResponse key={`${message.id}-${i}`}>
-              {part.text || ""}
+              <Streamdown plugins={streamdownPlugins}>{part.text || ""}</Streamdown>
             </MessageResponse>
           )
         }
@@ -72,10 +109,72 @@ export function ChatWidget() {
   const closeButtonRef = useRef<HTMLButtonElement>(null)
   const returnFocusRef = useRef<HTMLElement | null>(null)
 
-  const { messages, sendMessage, clearMessages, status, error, isReady, historyError, stop } = usePersistentChat(
+  const { messages, sendMessage, clearMessages, status, error, isReady, historyError, stop, setMessages } = usePersistentChat(
     `${supabaseUrl}/functions/v1/chat`,
     supabaseAnonKey
   )
+
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null)
+  const [editInputText, setEditInputText] = useState("")
+  const [chatBranches, setChatBranches] = useState<Record<number, ChatMessage[][]>>({})
+  const [activeBranchIdx, setActiveBranchIdx] = useState<Record<number, number>>({})
+  const [copiedMessageId, setCopiedMessageId] = useState<string | null>(null)
+
+  const handleEditClick = (msgId: string, text: string) => {
+    setEditingMessageId(msgId)
+    setEditInputText(text)
+  }
+
+  const handleEditSave = async (idx: number) => {
+    if (!editInputText.trim() || isLoading) return
+    const currentSuffix = messages.slice(idx) as ChatMessage[]
+    const currentBranchList = chatBranches[idx] || [currentSuffix]
+
+    // Truncate messages list
+    setMessages(messages.slice(0, idx))
+    setEditingMessageId(null)
+
+    // Send the new prompt
+    await sendMessage(editInputText.trim())
+
+    // Store branches locally
+    const newActiveIdx = currentBranchList.length
+    setChatBranches((prev) => ({
+      ...prev,
+      [idx]: [...currentBranchList, [{ id: Math.random().toString(), role: "user", parts: [{ type: "text", text: editInputText }] }]],
+    }))
+    setActiveBranchIdx((prev) => ({
+      ...prev,
+      [idx]: newActiveIdx,
+    }))
+  }
+
+  const handleBranchSwitch = (idx: number, targetIdx: number) => {
+    const currentSuffix = messages.slice(idx) as ChatMessage[]
+    const activeIdx = activeBranchIdx[idx] ?? 0
+    const list = [...(chatBranches[idx] || [])]
+    list[activeIdx] = currentSuffix
+
+    const targetBranch = list[targetIdx]
+
+    // Swap active list in useChat
+    setMessages(messages.slice(0, idx).concat(targetBranch as typeof messages))
+
+    setChatBranches((prev) => ({ ...prev, [idx]: list }))
+    setActiveBranchIdx((prev) => ({ ...prev, [idx]: targetIdx }))
+  }
+
+  const handleCopyClick = async (msgId: string, text: string) => {
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopiedMessageId(msgId)
+      setTimeout(() => {
+        setCopiedMessageId(null)
+      }, 2000)
+    } catch (err) {
+      console.warn("Failed to copy message", err)
+    }
+  }
 
   const isStreaming = status === "streaming"
   const isLoading = status === "submitted" || isStreaming || !isReady
@@ -145,7 +244,7 @@ export function ChatWidget() {
               type="button"
               aria-label="Scroll to top"
               onClick={scrollToTop}
-              className="size-14 flex rounded-full items-center justify-center bg-primary text-primary-foreground shadow-lg transition-all hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+              className="size-14 flex rounded-none items-center justify-center bg-primary text-primary-foreground shadow-lg transition-all hover:scale-105 hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
             >
               <ArrowUp className="size-5" aria-hidden="true" />
             </button>
@@ -158,11 +257,11 @@ export function ChatWidget() {
             aria-controls="arra-chat-dialog"
             aria-expanded={isOpen}
             onClick={openChat}
-            className="group flex h-14 items-center justify-center gap-3 rounded-full bg-primary px-4 text-primary-foreground shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
+            className="group flex h-14 items-center justify-center gap-3 rounded-none bg-primary px-4 text-primary-foreground shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4"
           >
             <span className="relative">
               <MessageSquare className="size-5" aria-hidden="true" />
-              <span className="absolute -right-1 -top-1 size-2.5 rounded-full border-2 border-primary bg-emerald-400 motion-safe:animate-pulse" aria-hidden="true" />
+              <span className="absolute -right-1 -top-1 size-2.5 rounded-none border-2 border-primary bg-emerald-400 motion-safe:animate-pulse" aria-hidden="true" />
             </span>
             <span className="hidden text-sm font-semibold sm:inline">Ask ARRA</span>
           </button>
@@ -182,12 +281,12 @@ export function ChatWidget() {
           setIsOpen(false)
           requestAnimationFrame(() => returnFocusRef.current?.focus())
         }}
-        className="fixed inset-x-0 top-auto bottom-0 z-50 m-0 ml-auto hidden h-[min(42rem,88dvh)] w-full max-w-none flex-col overflow-hidden rounded-t-lg border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-foreground/35 backdrop:backdrop-blur-[2px] [&[open]]:flex right-0 sm:right-4 md:right-6 bottom-0 sm:bottom-6 left-0 sm:left-auto sm:max-w-md sm:rounded-lg"
+        className="fixed inset-x-0 top-auto bottom-0 z-50 m-0 ml-auto hidden h-[min(42rem,88dvh)] w-full max-w-none flex-col overflow-hidden rounded-none border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-foreground/35 backdrop:backdrop-blur-[2px] [&[open]]:flex right-0 sm:right-4 md:right-6 bottom-0 sm:bottom-6 left-0 sm:left-auto sm:max-w-md sm:rounded-none"
       >
         <TooltipProvider>
           <header className="flex items-start justify-between gap-6 border-b border-border bg-background px-5 py-4 shrink-0">
             <div className="flex min-w-0 gap-3">
-              <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold tracking-[0.16em] text-primary-foreground" aria-hidden="true">
+              <div className="flex size-10 shrink-0 items-center justify-center rounded-none bg-primary text-xs font-bold tracking-[0.16em] text-primary-foreground" aria-hidden="true">
                 A
               </div>
               <div>
@@ -196,7 +295,7 @@ export function ChatWidget() {
                 Ask about our work
               </h2>
               <p id="arra-chat-description" className="mt-1 text-xs leading-5 opacity-65">
-                <span className="mr-1.5 inline-block size-1.5 rounded-full bg-emerald-500" aria-hidden="true" />
+                <span className="mr-1.5 inline-block size-1.5 rounded-none bg-emerald-500" aria-hidden="true" />
                 Online · A concise guide to ARRA’s focus and approach.
               </p>
               </div>
@@ -246,7 +345,7 @@ export function ChatWidget() {
                           type="button"
                           disabled={!chatAvailable || isLoading}
                           onClick={() => void sendMessage(prompt)}
-                          className="rounded-sm border border-border bg-background px-4 py-3 text-left text-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
+                          className="rounded-none border border-border bg-background px-4 py-3 text-left text-sm transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50"
                         >
                           {prompt}
                         </button>
@@ -254,36 +353,124 @@ export function ChatWidget() {
                     </div>
                   </div>
                 ) : (
-                  (messages as ChatMessage[]).map((message) => (
-                    <div key={message.id} className={`flex items-end gap-2 ${message.role === "user" ? "justify-end" : "justify-start"}`}>
-                      {message.role === "assistant" && (
-                        <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground" aria-hidden="true">A</span>
-                      )}
-                      <Message from={message.role as "user" | "assistant"}>
-                        <MessageContent>
-                          <MessageParts message={message} />
-                        </MessageContent>
-                      </Message>
-                    </div>
-                  ))
+                  (messages as ChatMessage[]).map((message, idx) => {
+                    const branchList = chatBranches[idx] || [[message]];
+                    const totalBranches = branchList.length;
+                    const currentBranch = activeBranchIdx[idx] ?? 0;
+
+                    return (
+                      <MessageBranch
+                        key={message.id}
+                        defaultBranch={currentBranch}
+                        onBranchChange={(newBranch) => handleBranchSwitch(idx, newBranch)}
+                        className="w-full"
+                      >
+                        <MessageBranchContent>
+                          {branchList.map((branchSuffix, bIdx) => {
+                            const msgAtBranch = branchSuffix[0];
+                            const isEditing = editingMessageId === msgAtBranch.id;
+
+                            return (
+                              <div key={bIdx} className={`group flex flex-col w-full ${msgAtBranch.role === "user" ? "items-end" : "items-start"}`}>
+                                {isEditing ? (
+                                  <div className="w-full max-w-sm flex flex-col gap-2 p-3 bg-muted/65 rounded-none border border-border">
+                                    <textarea
+                                      value={editInputText}
+                                      onChange={(e) => setEditInputText(e.target.value)}
+                                      className="w-full min-h-16 p-2 text-sm bg-background border border-border rounded-none focus:outline-none focus:ring-1 focus:ring-ring resize-none text-foreground"
+                                    />
+                                    <div className="flex justify-end gap-2">
+                                      <Button
+                                        size="sm"
+                                        variant="ghost"
+                                        onClick={() => setEditingMessageId(null)}
+                                        className="h-8 text-xs"
+                                      >
+                                        Cancel
+                                      </Button>
+                                      <Button
+                                        size="sm"
+                                        onClick={() => handleEditSave(idx)}
+                                        className="h-8 text-xs"
+                                      >
+                                        Save & Submit
+                                      </Button>
+                                    </div>
+                                  </div>
+                                ) : (
+                                  <div className={`flex items-end gap-2 w-full ${msgAtBranch.role === "user" ? "justify-end" : "justify-start"}`}>
+
+                                    <div className={`flex flex-col max-w-[85%] w-full ${msgAtBranch.role === "user" ? "items-end" : "items-start"}`}>
+                                      <Message from={msgAtBranch.role as "user" | "assistant"}>
+                                        <MessageContent>
+                                          <MessageParts
+                                            message={msgAtBranch}
+                                            isLastMessage={idx === messages.length - 1}
+                                            isStreaming={isStreaming}
+                                          />
+                                        </MessageContent>
+                                      </Message>
+                                      
+                                      {/* Action Buttons */}
+                                      <div className="mt-1 flex items-center gap-2 text-xs opacity-0 group-hover:opacity-100 transition-opacity">
+                                        {msgAtBranch.role === "user" && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleEditClick(msgAtBranch.id, typeof msgAtBranch.content === "string" ? msgAtBranch.content : (msgAtBranch.parts?.[0]?.text || ""))}
+                                            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                                            aria-label="Edit message"
+                                          >
+                                            <Edit2 className="size-3" />
+                                          </button>
+                                        )}
+                                        {msgAtBranch.role === "assistant" && (
+                                          <button
+                                            type="button"
+                                            onClick={() => handleCopyClick(msgAtBranch.id, typeof msgAtBranch.content === "string" ? msgAtBranch.content : (msgAtBranch.parts?.[0]?.text || ""))}
+                                            className="p-1 text-muted-foreground hover:text-foreground transition-colors"
+                                            aria-label="Copy message"
+                                          >
+                                            {copiedMessageId === msgAtBranch.id ? (
+                                              <Check className="size-3 text-emerald-500" />
+                                            ) : (
+                                              <Copy className="size-3" />
+                                            )}
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </MessageBranchContent>
+
+                        {totalBranches > 1 && (
+                          <MessageToolbar className="mt-1 flex justify-end w-full">
+                            <MessageBranchSelector>
+                              <MessageBranchPrevious />
+                              <MessageBranchPage className="text-xs" />
+                              <MessageBranchNext />
+                            </MessageBranchSelector>
+                          </MessageToolbar>
+                        )}
+                      </MessageBranch>
+                    );
+                  })
                 )}
                 {status === "submitted" && (
                   <div className="flex items-end gap-2" role="status" aria-label="ARRA is preparing a response">
-                    <span className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-[0.6rem] font-bold text-primary-foreground" aria-hidden="true">A</span>
-                    <div className="rounded-lg border border-border bg-background px-4 py-3 shadow-sm">
+
+                    <div className="rounded-none border border-border bg-background px-4 py-3 shadow-sm">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <span>Consulting ARRA field notes</span>
-                        <span className="flex gap-1" aria-hidden="true">
-                          {[0, 1, 2].map((dot) => (
-                            <span key={dot} className="size-1.5 animate-bounce rounded-full bg-primary/60" style={{ animationDelay: `${dot * 120}ms` }} />
-                          ))}
-                        </span>
+                        <Shimmer duration={2}>Consulting ARRA field notes...</Shimmer>
                       </div>
                     </div>
                   </div>
                 )}
                 {(error || historyError) && (
-                  <div className="flex gap-3 rounded-sm border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive" role="alert">
+                  <div className="flex gap-3 rounded-none border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive" role="alert">
                     <AlertCircle className="mt-0.5 size-4 shrink-0" aria-hidden="true" />
                     <p>{historyError ?? (error ? error.message : "The guide could not respond. Please wait a moment and try again.")}</p>
                   </div>

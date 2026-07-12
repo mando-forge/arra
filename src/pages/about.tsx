@@ -3,6 +3,7 @@ import { images } from "@/content/arra"
 import { motion, type Variants } from "framer-motion"
 import { BlurFade } from "@/components/ui/blur-fade"
 import { MagicCard } from "@/components/ui/magic-card"
+import { FlickeringGrid } from "@/components/ui/flickering-grid"
 
 const founders = [
   {
@@ -40,8 +41,20 @@ const founderItem: Variants = {
 export default function About() {
   return (
     <>
-      <section className="arra-section surface-light pb-14 pt-32 md:pb-24 md:pt-40 px-6 md:px-12 lg:px-24">
-        <div className="w-full max-w-7xl mx-auto">
+      <section className="relative overflow-hidden arra-section surface-light pb-14 pt-32 md:pb-24 md:pt-40 px-6 md:px-12 lg:px-24">
+        {/* Animated Background */}
+        <div className="absolute inset-0 z-0">
+          <FlickeringGrid
+            className="absolute inset-0 size-full z-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent_80%)] opacity-30"
+            squareSize={4}
+            gridGap={6}
+            color="#6B7280"
+            maxOpacity={0.5}
+            flickerChance={0.1}
+          />
+        </div>
+
+        <div className="w-full relative z-10 max-w-7xl mx-auto">
           <ArraReveal>
             <p className="mono-label">About ARRA</p>
           </ArraReveal>

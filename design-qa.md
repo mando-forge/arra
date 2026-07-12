@@ -80,3 +80,52 @@ The implementation preserves the source composition: a three-line editorial hero
 - [x] Pass the final side-by-side visual comparison
 
 final result: passed
+
+---
+
+# ARRA Admin Quiet Operations — Design QA
+
+## Comparison target
+
+- Source visual truth: `./docs/design/arra-admin-quiet-operations-target.png`
+- Browser-rendered implementation: `./docs/design/arra-admin-quiet-operations-implementation.png`
+- Viewport: `1440 × 1024`, desktop, light theme, authenticated admin, overview with an empty production dataset
+- Full-view comparison: `./docs/design/arra-admin-quiet-operations-comparison.png`
+- Focused header comparison: `./docs/design/arra-admin-header-comparison.png`
+- Focused workspace comparison: `./docs/design/arra-admin-workspace-comparison.png`
+- Mobile evidence: `./docs/design/arra-admin-quiet-operations-mobile.png` at `390 × 844`
+
+## Findings
+
+No actionable P0, P1, or P2 visual differences remain.
+
+- Fonts and typography: EB Garamond, Instrument Sans, and IBM Plex Mono preserve the target's editorial display, functional body, and metadata hierarchy. The implementation uses slightly larger live headings at some breakpoints while retaining the same optical structure.
+- Spacing and layout: the top navigation, three-column desktop frame, daybook rail, primary draft workspace, river image, right activity rail, and thin divider rhythm match the selected composition. Mobile collapses to a single readable column without horizontal overflow.
+- Colors and tokens: the implementation uses the existing chalk, paper, spruce, mist, fjord, and ochre tokens. Neon cyan, glass effects, animated border beams, gradients, and fictional telemetry are absent from the active experience.
+- Image quality: the river and bamboo assets are dedicated project rasters generated for the selected target, with matching subject, crop, palette, and field-journal treatment. No CSS or inline-SVG stand-ins are used.
+- Copy and content: target mock records were replaced with honest live-data states. With no current posts, inquiries, or documents, the UI invites the first field note and reports clear inbox/knowledge empty states rather than displaying fictional activity.
+
+## Comparison history
+
+### Initial implementation pass
+
+- The first browser capture matched the selected hierarchy and proportions without a P0/P1/P2 mismatch.
+- Intentional differences: target sample data became real empty states; the left daybook schedule became derived work counts; the central CTA changes from continuing a draft to creating one when no draft exists.
+- Post-build browser checks found no console errors.
+
+## Interaction and responsive verification
+
+- Authenticated dashboard load and database-backed empty states
+- Primary field-note CTA navigation to the CMS workspace
+- Desktop top navigation and mobile sheet navigation
+- Account menu and sign-out redirect
+- Theme control presence and keyboard-accessible semantic controls
+- Mobile overview at `390 × 844` with no horizontal overflow or clipped primary action
+- Premium login screen and secure contact form rendered without console errors
+
+## Follow-up polish
+
+- P3: once real field notes exist, verify long titles and excerpts against the target's line lengths.
+- P3: enable Supabase leaked-password protection and enroll the admin account in MFA before treating authentication hardening as operationally complete.
+
+final result: passed

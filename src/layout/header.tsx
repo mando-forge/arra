@@ -20,7 +20,7 @@ export function Header() {
   const { resolvedTheme, setTheme } = useTheme()
 
   return (
-    <header className="relative w-full flex justify-between items-center py-8 z-50">
+    <header className="sticky top-0 w-full flex justify-between items-center py-6 z-50 bg-background/80 backdrop-blur-md">
       <Link
         to="/"
         className="font-sans text-2xl font-medium leading-none tracking-[0.18em] md:text-[1.8rem]"

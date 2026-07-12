@@ -13,16 +13,8 @@ const AdminLayout = lazy(() =>
 const AdminLogin = lazy(() => import("@/pages/admin/login"))
 const AdminDashboard = lazy(() => import("@/pages/admin/dashboard"))
 
-const Blog = () => (
-  <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex min-h-[65vh] items-center py-20">
-    <div className="max-w-xl">
-      <p className="mono-label text-foreground/58">Field notes</p>
-      <h1 className="serif-display mt-5 text-5xl leading-none md:text-6xl">
-        Writing will arrive when the work is ready to share.
-      </h1>
-    </div>
-  </div>
-)
+// Dynamic blog page pulling articles from database
+const Blog = lazy(() => import("@/pages/blog"))
 
 const NotFound = () => (
   <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex min-h-[65vh] items-center py-20">

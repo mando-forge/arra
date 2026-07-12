@@ -41,12 +41,12 @@ const scrollProgressVariants = cva("fixed z-30 origin-left", {
       bottom: "inset-x-0 bottom-0",
     },
     rounded: {
-      none: "",
-      sm: "rounded-sm",
-      default: "rounded",
-      lg: "rounded-lg",
-      xl: "rounded-xl",
-      full: "rounded-full",
+      none: "rounded-none",
+      sm: "rounded-none",
+      default: "rounded-none",
+      lg: "rounded-none",
+      xl: "rounded-none",
+      full: "rounded-none",
     },
     glow: {
       none: "",
@@ -112,7 +112,7 @@ export function ScrollProgress({
   )
 
   const percentageClasses = cn(
-    "fixed z-40 text-xs font-medium text-foreground bg-background/80 backdrop-blur-sm px-2 py-1 rounded",
+    "fixed z-40 text-xs font-medium text-foreground bg-background/80 backdrop-blur-sm px-2 py-1 rounded-none",
     position === "top" ? "top-2" : "bottom-2",
     percentagePosition === "left" && "left-4",
     percentagePosition === "right" && "right-4",

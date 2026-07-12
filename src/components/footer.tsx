@@ -1,13 +1,18 @@
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Separator } from "@/components/ui/separator"
 
 export function Footer() {
+  const navigate = useNavigate()
   const links = [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
     { label: "Explorations", href: "/products" },
     { label: "Contact", href: "/contact" },
   ]
+
+  const handleAdminRedirect = () => {
+    navigate("/admin")
+  }
 
   return (
     <footer className="bg-background pb-10 md:pb-12 pt-10 mt-10 relative px-6 md:px-12 lg:px-24">
@@ -46,7 +51,7 @@ export function Footer() {
 
         <Separator className="my-9" />
         <div className="flex flex-col gap-4 text-xs text-foreground/58 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} ARRA</p>
+          <p>© {new Date().getFullYear()} ARRA <span className="cursor-pointer select-none font-mono opacity-20 hover:opacity-100 transition-opacity ml-1 animate-pulse" onDoubleClick={handleAdminRedirect}>▒</span></p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
             <span>Northeast India · Research stage</span>
             <a

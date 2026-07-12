@@ -98,6 +98,10 @@ serve(async (req) => {
 
     const chunks = splitIntoChunks(content)
     
+    // Prepend the document title to each chunk so the embedding captures
+    // the full semantic context (critical for short documents).
+    const embeddingInputs = chunks.map((chunk) => `${title}\n\n${chunk}`)
+    
     // Get embeddings from OpenRouter (OpenAI)
     const embeddingRes = await fetch('https://openrouter.ai/api/v1/embeddings', {
       method: 'POST',
@@ -107,7 +111,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         model: 'openai/text-embedding-3-small',
-        input: chunks
+        input: embeddingInputs
       })
     })
     
