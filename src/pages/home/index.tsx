@@ -58,7 +58,7 @@ function Hero() {
     // Explicitly enforce muted, playsinline, and loop state on the DOM properties
     video.muted = true
     video.playsInline = true
-    video.loop = !shouldReduceMotion
+    video.loop = true
 
     const attemptPlay = () => {
       video.play().catch((err) => {
@@ -154,7 +154,7 @@ function Hero() {
             ref={videoRef}
             autoPlay={!shouldReduceMotion}
             muted={true}
-            loop={!shouldReduceMotion}
+            loop={true}
             playsInline={true}
             preload="auto"
             aria-hidden="true"
