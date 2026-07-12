@@ -32,16 +32,40 @@ type IncomingMessage = {
   parts?: Array<{ type?: string; text?: string }>
 }
 
-function allowedOrigins() {
-  return (Deno.env.get("ALLOWED_ORIGINS") ?? Deno.env.get("SITE_URL") ?? "http://localhost:5173")
+function allowedOrigins(req?: Request) {
+  const configured = (Deno.env.get("ALLOWED_ORIGINS") ?? Deno.env.get("SITE_URL") ?? "http://localhost:5173")
     .split(",")
     .map((origin) => origin.trim())
     .filter(Boolean)
+
+  const defaultOrigins = [
+    "https://arra.tech",
+    "https://www.arra.tech",
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+  ]
+
+  const allowed = [...new Set([...defaultOrigins, ...configured])]
+
+  if (req) {
+    const origin = req.headers.get("origin")
+    if (origin) {
+      if (
+        /^https?:\/\/localhost(:\d+)?$/.test(origin) ||
+        /^https?:\/\/127\.0\.0\.1(:\d+)?$/.test(origin) ||
+        /^https:\/\/.*\.vercel\.app$/.test(origin)
+      ) {
+        allowed.push(origin)
+      }
+    }
+  }
+
+  return allowed
 }
 
 function corsHeaders(req: Request) {
   const origin = req.headers.get("origin")
-  const allowed = allowedOrigins()
+  const allowed = allowedOrigins(req)
   const responseOrigin = origin && allowed.includes(origin) ? origin : allowed[0]
 
   return {
@@ -156,7 +180,7 @@ serve(async (req) => {
 
   try {
     const origin = req.headers.get("origin")
-    if (origin && !allowedOrigins().includes(origin)) return json(req, { error: "Origin not allowed" }, 403)
+    if (origin && !allowedOrigins(req).includes(origin)) return json(req, { error: "Origin not allowed" }, 403)
 
     const apiKey = Deno.env.get("OPENROUTER_API_KEY")
     const supabaseUrl = Deno.env.get("SUPABASE_URL")
