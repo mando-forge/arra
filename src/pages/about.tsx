@@ -106,7 +106,7 @@ export default function About() {
                 gradientColor="var(--arra-fjord)" 
                 gradientOpacity={0.1}
               >
-                <div className="mb-4 flex items-baseline justify-between gap-4">
+                <div className="mb-4 flex items-baseline justify-between gap-4 px-4 md:px-5 pt-2">
                   <p className="mono-label">0{index + 1}</p>
                   <p className="text-sm opacity-60">{founder.role}</p>
                 </div>
@@ -114,6 +114,7 @@ export default function About() {
                   src={founder.image.src}
                   alt={founder.image.alt}
                   tone="light"
+                  className="shadow-none border-0 bg-transparent"
                   frameClassName="aspect-square w-full"
                   imageClassName="h-full w-full object-cover"
                   caption={

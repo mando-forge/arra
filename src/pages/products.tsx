@@ -206,7 +206,7 @@ export default function Products() {
     async function loadDocs() {
       try {
         const { data, error } = await supabase
-          .from("public_knowledge_base")
+          .from("knowledge_base")
           .select("id, title, metadata, created_at")
 
         if (error) throw error
