@@ -686,12 +686,16 @@ export const FluidCubeCanvas = ({
   );
 };
 
-const Scene = ({ scroller }: { scroller: HTMLElement }) => {
+const Scene = ({ scroller }: { scroller: HTMLElement | null }) => {
   const targetRef = useRef<HTMLDivElement>(null);
-  const scrollerRef = useRef<HTMLElement>(scroller);
+  const scrollerRef = useRef<HTMLElement | null>(scroller);
+
+  useEffect(() => {
+    scrollerRef.current = scroller;
+  }, [scroller]);
 
   const { scrollYProgress } = useScroll({
-    container: scrollerRef,
+    container: scroller ? (scrollerRef as React.RefObject<HTMLElement | null>) : undefined,
     target: targetRef,
     offset: ["start start", "end end"],
   });
@@ -775,7 +779,7 @@ export const FluidCubeScroll = () => {
 
   return (
     <div ref={rootRef} className="relative w-full">
-      {scroller && <Scene scroller={scroller} />}
+      <Scene scroller={scroller} />
     </div>
   );
 };

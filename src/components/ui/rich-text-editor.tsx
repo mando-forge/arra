@@ -140,6 +140,7 @@ export function RichTextEditor({ value, onChange }: RichTextEditorProps) {
       onChange(editor.getHTML())
     },
     immediatelyRender: false,
+    shouldRerenderOnTransaction: true,
   })
 
   return (

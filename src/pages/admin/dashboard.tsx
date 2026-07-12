@@ -261,6 +261,9 @@ export default function AdminDashboard() {
       content: postContent,
       status: postStatus,
       updated_at: new Date(),
+      published_at: postStatus === "published"
+        ? (editingPost?.published_at ? editingPost.published_at : new Date())
+        : null,
     }
 
     try {
@@ -275,12 +278,7 @@ export default function AdminDashboard() {
       } else {
         const { error } = await supabase
           .from("posts")
-          .insert([
-            {
-              ...postData,
-              published_at: postStatus === "published" ? new Date() : null,
-            },
-          ])
+          .insert([postData])
 
         if (error) throw error
         toast.success("Post created successfully")
@@ -366,11 +364,12 @@ export default function AdminDashboard() {
 
       if (metadataError) throw metadataError
 
-      // 2. Delete rows matching exact title
+      // 2. Delete rows matching exact title where metadata does not have source_title (legacy fallback)
       const { error: titleError } = await supabase
         .from("knowledge_base")
         .delete()
         .eq("title", docTitle)
+        .is("metadata->>source_title", null)
 
       if (titleError) throw titleError
 
@@ -390,18 +389,42 @@ export default function AdminDashboard() {
 
     setReembeddingDoc(docTitle)
     try {
-      // Fetch the document content from the database
+      // Fetch the document content and metadata from the database
       const { data: rows, error: fetchError } = await supabase
         .from("knowledge_base")
-        .select("content")
+        .select("content, metadata")
         .contains("metadata", { source_title: docTitle })
-        .order("created_at", { ascending: true })
 
       if (fetchError) throw fetchError
       if (!rows?.length) throw new Error("Document not found in knowledge base")
 
-      // Reconstruct the full content from all chunks
-      const fullContent = rows.map((r) => r.content).join("\n\n")
+      // Sort rows by chunk_index in memory to guarantee correct chronological order
+      const sortedRows = [...rows].sort((a, b) => {
+        const indexA = typeof a.metadata === "object" && a.metadata !== null && "chunk_index" in a.metadata
+          ? (a.metadata as any).chunk_index
+          : 0
+        const indexB = typeof b.metadata === "object" && b.metadata !== null && "chunk_index" in b.metadata
+          ? (b.metadata as any).chunk_index
+          : 0
+        return indexA - indexB
+      })
+
+      const chunks = sortedRows.map((r) => r.content)
+      // Merge chunks by stripping overlap
+      let fullContent = chunks[0] || ""
+      for (let i = 1; i < chunks.length; i++) {
+        const prev = fullContent
+        const curr = chunks[i]
+        let overlapLength = 0
+        const maxMatch = Math.min(prev.length, curr.length, 250)
+        for (let len = maxMatch; len > 0; len--) {
+          if (prev.endsWith(curr.slice(0, len))) {
+            overlapLength = len
+            break
+          }
+        }
+        fullContent += curr.slice(overlapLength)
+      }
 
       // Re-ingest through the Edge Function (which now prepends title to embedding input)
       const { error } = await supabase.functions.invoke("ingest-knowledge", {

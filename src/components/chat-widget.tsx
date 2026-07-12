@@ -95,6 +95,17 @@ const MessageParts = ({
   )
 }
 
+const getMessageText = (msg: ChatMessage) => {
+  if (typeof msg.content === "string") return msg.content
+  if (Array.isArray(msg.parts)) {
+    return msg.parts
+      .filter((part) => part.type === "text" || !part.type)
+      .map((part) => part.text || "")
+      .join("\n\n")
+  }
+  return ""
+}
+
 export function ChatWidget() {
   const { pathname } = useLocation()
   const [isOpen, setIsOpen] = useState(false)
@@ -123,6 +134,12 @@ export function ChatWidget() {
   const handleEditClick = (msgId: string, text: string) => {
     setEditingMessageId(msgId)
     setEditInputText(text)
+  }
+
+  const handleClearChat = async () => {
+    await clearMessages()
+    setChatBranches({})
+    setActiveBranchIdx({})
   }
 
   const handleEditSave = async (idx: number) => {
@@ -307,7 +324,7 @@ export function ChatWidget() {
                   variant="ghost"
                   size="icon"
                   aria-label="Clear chat history"
-                  onClick={() => void clearMessages()}
+                  onClick={() => void handleClearChat()}
                   disabled={isLoading}
                   className="size-9 shrink-0"
                 >
@@ -377,6 +394,7 @@ export function ChatWidget() {
                                     <textarea
                                       value={editInputText}
                                       onChange={(e) => setEditInputText(e.target.value)}
+                                      aria-label="Edit message"
                                       className="w-full min-h-16 p-2 text-sm bg-background border border-border rounded-none focus:outline-none focus:ring-1 focus:ring-ring resize-none text-foreground"
                                     />
                                     <div className="flex justify-end gap-2">
@@ -416,7 +434,7 @@ export function ChatWidget() {
                                         {msgAtBranch.role === "user" && (
                                           <button
                                             type="button"
-                                            onClick={() => handleEditClick(msgAtBranch.id, typeof msgAtBranch.content === "string" ? msgAtBranch.content : (msgAtBranch.parts?.[0]?.text || ""))}
+                                            onClick={() => handleEditClick(msgAtBranch.id, getMessageText(msgAtBranch))}
                                             className="p-1 text-muted-foreground hover:text-foreground transition-colors"
                                             aria-label="Edit message"
                                           >
@@ -426,7 +444,7 @@ export function ChatWidget() {
                                         {msgAtBranch.role === "assistant" && (
                                           <button
                                             type="button"
-                                            onClick={() => handleCopyClick(msgAtBranch.id, typeof msgAtBranch.content === "string" ? msgAtBranch.content : (msgAtBranch.parts?.[0]?.text || ""))}
+                                            onClick={() => handleCopyClick(msgAtBranch.id, getMessageText(msgAtBranch))}
                                             className="p-1 text-muted-foreground hover:text-foreground transition-colors"
                                             aria-label="Copy message"
                                           >

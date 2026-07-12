@@ -37,8 +37,8 @@ storybook-static
 .cursor/
 .opencode/
 opencode.json
-*test-*.ts
-*debug-*.ts
-*resolve-*.ts
-*trigger-*.ts
-*serialization*.js
+scratch/*test-*.ts
+scratch/*debug-*.ts
+scratch/*resolve-*.ts
+scratch/*trigger-*.ts
+scratch/*serialization*.js
