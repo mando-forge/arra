@@ -147,9 +147,13 @@ export const MessageBranch = ({
   const [currentBranch, setCurrentBranch] = useState(defaultBranch);
   const [branches, setBranches] = useState<ReactElement[]>([]);
 
-  useEffect(() => {
+  // Official React pattern: adjust state when a prop changes (no effect needed)
+  // https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes
+  const [prevDefaultBranch, setPrevDefaultBranch] = useState(defaultBranch);
+  if (prevDefaultBranch !== defaultBranch) {
+    setPrevDefaultBranch(defaultBranch);
     setCurrentBranch(defaultBranch);
-  }, [defaultBranch]);
+  }
 
   const handleBranchChange = useCallback(
     (newBranch: number) => {

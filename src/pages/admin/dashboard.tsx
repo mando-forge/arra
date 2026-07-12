@@ -390,12 +390,14 @@ export default function AdminDashboard() {
     setReembeddingDoc(docTitle)
     try {
       // Fetch the document content and metadata from the database
-      let { data: rows, error: fetchError } = await supabase
+      const { data: primaryRows, error: fetchError } = await supabase
         .from("knowledge_base")
         .select("content, metadata")
         .contains("metadata", { source_title: docTitle })
 
       if (fetchError) throw fetchError
+
+      let rows = primaryRows
 
       // If no rows found with metadata.source_title, fall back to legacy title matching
       if (!rows || rows.length === 0) {
@@ -414,10 +416,10 @@ export default function AdminDashboard() {
       // Sort rows by chunk_index in memory to guarantee correct chronological order
       const sortedRows = [...rows].sort((a, b) => {
         const indexA = typeof a.metadata === "object" && a.metadata !== null && "chunk_index" in a.metadata
-          ? (a.metadata as any).chunk_index
+          ? (a.metadata as Record<string, number>).chunk_index
           : 0
         const indexB = typeof b.metadata === "object" && b.metadata !== null && "chunk_index" in b.metadata
-          ? (b.metadata as any).chunk_index
+          ? (b.metadata as Record<string, number>).chunk_index
           : 0
         return indexA - indexB
       })
