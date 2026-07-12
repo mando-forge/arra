@@ -1,3 +1,4 @@
+import { useRef, useEffect } from "react"
 import { ArrowRight } from "lucide-react"
 import { motion, useReducedMotion } from "framer-motion"
 import { Link } from "react-router-dom"
@@ -48,6 +49,33 @@ export default function Home() {
 
 function Hero() {
   const shouldReduceMotion = useReducedMotion()
+  const videoRef = useRef<HTMLVideoElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    if (!video) return
+
+    // Explicitly enforce muted, playsinline, and loop state on the DOM properties
+    video.muted = true
+    video.playsInline = true
+    video.loop = !shouldReduceMotion
+
+    const attemptPlay = () => {
+      video.play().catch((err) => {
+        console.warn("Hero video autoplay was prevented, retrying on first interaction:", err)
+        // Add a one-time listener to start playback on user interaction if blocked
+        const startPlayback = () => {
+          video.play().catch(() => {})
+          window.removeEventListener("touchstart", startPlayback)
+          window.removeEventListener("click", startPlayback)
+        }
+        window.addEventListener("touchstart", startPlayback)
+        window.addEventListener("click", startPlayback)
+      })
+    }
+
+    attemptPlay()
+  }, [shouldReduceMotion])
 
   return (
     <section id="home" className="relative overflow-hidden min-h-[min(calc(100vh-6.75rem),50rem)] flex items-center py-12 md:py-16 lg:py-0 px-6 md:px-12 lg:px-24">
@@ -123,10 +151,12 @@ function Hero() {
           className="relative w-full aspect-[4/3] sm:aspect-[8/5] max-h-[min(70vh,34rem)] 3xl:max-h-[min(70vh,42rem)] mx-auto overflow-hidden rounded-none animate-pulse-once bg-muted/10"
         >
           <video
+            ref={videoRef}
             autoPlay={!shouldReduceMotion}
             muted={true}
             loop={!shouldReduceMotion}
             playsInline={true}
+            preload="auto"
             aria-hidden="true"
             className="absolute inset-0 w-full h-full object-cover object-center"
           >
