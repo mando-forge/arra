@@ -239,6 +239,29 @@ export function ChatWidget() {
     }
   }, [isOpen])
 
+  // iOS Safari virtual keyboard handler: adjusts dialog height when keyboard opens/closes
+  useEffect(() => {
+    if (!isOpen) return
+    const vv = window.visualViewport
+    if (!vv) return
+
+    const onResize = () => {
+      const dialog = dialogRef.current
+      if (!dialog) return
+      // visualViewport.height shrinks when iOS keyboard is visible
+      dialog.style.height = `${vv.height}px`
+    }
+
+    vv.addEventListener("resize", onResize)
+    // Set initial height
+    onResize()
+    return () => {
+      vv.removeEventListener("resize", onResize)
+      const dialog = dialogRef.current
+      if (dialog) dialog.style.height = ""
+    }
+  }, [isOpen])
+
   useEffect(() => {
     const handleOpenChat = () => {
       returnFocusRef.current =
@@ -310,7 +333,7 @@ export function ChatWidget() {
           setIsOpen(false)
           requestAnimationFrame(() => returnFocusRef.current?.focus())
         }}
-        className="fixed inset-x-0 top-auto bottom-0 z-50 m-0 ml-auto hidden h-[min(42rem,88dvh)] w-full max-w-none flex-col overflow-hidden rounded-none border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-foreground/35 backdrop:backdrop-blur-[2px] [&[open]]:flex right-0 sm:right-4 md:right-6 bottom-0 sm:bottom-6 left-0 sm:left-auto sm:max-w-md sm:rounded-none"
+        className="fixed inset-x-0 top-0 sm:top-auto bottom-0 z-50 m-0 ml-auto hidden h-[100dvh] sm:h-[min(42rem,88dvh)] w-full max-w-none flex-col overflow-hidden rounded-none border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-foreground/35 backdrop:backdrop-blur-[2px] [&[open]]:flex right-0 sm:right-4 md:right-6 bottom-0 sm:bottom-6 left-0 sm:left-auto sm:max-w-md sm:rounded-none"
       >
         <TooltipProvider>
           <header className="flex items-start justify-between gap-6 border-b border-border bg-background px-5 py-4 shrink-0">
@@ -510,7 +533,7 @@ export function ChatWidget() {
             </Conversation>
           </div>
 
-          <div className="border-t border-border bg-background p-4 shrink-0">
+          <div className="border-t border-border bg-background p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shrink-0">
             <PromptInput
               onSubmit={handlePromptSubmit}
               className="w-full relative"
