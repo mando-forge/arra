@@ -1,6 +1,7 @@
-import { lazy, Suspense, useEffect, useRef } from "react"
+import { lazy, Suspense, useEffect, useRef, useState } from "react"
 import { Outlet, useLocation, useNavigate } from "react-router-dom"
-import { AnimatePresence, motion } from "framer-motion"
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion"
+import { MessageSquare } from "lucide-react"
 import Lenis from "lenis"
 import { Header } from "@/layout/header"
 import { Footer } from "@/components/footer"
@@ -11,12 +12,59 @@ const ChatWidget = lazy(() =>
   import("@/components/chat-widget").then((module) => ({ default: module.ChatWidget }))
 )
 
+function DeferredChatWidget() {
+  const [shouldLoad, setShouldLoad] = useState(false)
+
+  if (shouldLoad) {
+    return (
+      <Suspense
+        fallback={
+          <div
+            role="status"
+            className="fixed right-4 bottom-4 z-40 flex h-14 items-center gap-3 bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-lg sm:right-6 sm:bottom-6 xl:right-12 xl:bottom-8 3xl:right-16"
+          >
+            Opening ARRA…
+          </div>
+        }
+      >
+        <ChatWidget initiallyOpen />
+      </Suspense>
+    )
+  }
+
+  return (
+    <button
+      type="button"
+      aria-label="Open ARRA chat"
+      aria-haspopup="dialog"
+      onClick={() => setShouldLoad(true)}
+      className="group fixed right-4 bottom-4 z-40 flex h-14 items-center justify-center gap-3 rounded-none bg-primary px-4 text-primary-foreground shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:outline-none sm:right-6 sm:bottom-6 xl:right-12 xl:bottom-8 3xl:right-16"
+    >
+      <span className="relative">
+        <MessageSquare className="size-5" aria-hidden="true" />
+        <span
+          className="absolute -top-1 -right-1 size-2.5 rounded-none border-2 border-primary bg-emerald-400 motion-safe:animate-pulse"
+          aria-hidden="true"
+        />
+      </span>
+      <span className="hidden text-sm font-semibold sm:inline">Ask ARRA</span>
+    </button>
+  )
+}
+
 export function RootLayout() {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const lenisRef = useRef<Lenis | null>(null)
+  const shouldReduceMotion = useReducedMotion()
 
   useEffect(() => {
+    if (shouldReduceMotion) {
+      lenisRef.current?.destroy()
+      lenisRef.current = null
+      return
+    }
+
     // Initialize Lenis for premium smooth scrolling
     lenisRef.current = new Lenis({
       duration: 1.2,
@@ -40,7 +88,7 @@ export function RootLayout() {
       cancelAnimationFrame(rafId)
       lenisRef.current?.destroy()
     }
-  }, [])
+  }, [shouldReduceMotion])
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -87,10 +135,10 @@ export function RootLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={pathname}
-                initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 15, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -15, filter: "blur(4px)" }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -15, filter: "blur(4px)" }}
+                transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 className="flex flex-1 flex-col"
               >
                 <Outlet />
@@ -99,9 +147,7 @@ export function RootLayout() {
           </main>
           <Footer />
         </div>
-        <Suspense fallback={null}>
-          <ChatWidget />
-        </Suspense>
+        {pathname !== "/contact" ? <DeferredChatWidget /> : null}
         <Toaster />
       </div>
     </TooltipProvider>

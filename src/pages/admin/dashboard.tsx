@@ -60,6 +60,32 @@ type IngestedDoc = {
   created_at: string
 }
 
+async function invokeKnowledgeIngest(title: string, content: string) {
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session?.access_token) throw new Error("Your admin session has expired. Sign in again.")
+
+  const { data, error } = await supabase.functions.invoke("ingest-knowledge", {
+    body: { title, content },
+    headers: { Authorization: `Bearer ${session.access_token}` },
+  })
+
+  if (!error) return data as {
+    success: true
+    title: string
+    chunks: number
+    embedded: boolean
+    warning?: string | null
+  }
+
+  let message = error.message || "Knowledge ingestion failed."
+  const context = (error as { context?: Response }).context
+  if (context instanceof Response) {
+    const payload = await context.clone().json().catch(() => null) as { error?: string } | null
+    if (payload?.error) message = payload.error
+  }
+  throw new Error(message)
+}
+
 
 export default function AdminDashboard() {
   const { hash } = useLocation()
@@ -100,6 +126,8 @@ export default function AdminDashboard() {
   const [ingestStatus, setIngestStatus] = useState<
     "idle" | "success" | "error"
   >("idle")
+  const [ingestError, setIngestError] = useState("")
+  const [ingestSuccessMessage, setIngestSuccessMessage] = useState("")
 
   // Form states (CMS Blog)
   const [editingPost, setEditingPost] = useState<BlogPost | null>(null)
@@ -128,30 +156,31 @@ export default function AdminDashboard() {
     if (!silent) setLoading(true)
 
     try {
-      // 1. Fetch Contact Submissions
-      const { data: subData, error: subError } = await supabase
-        .from("contact_submissions")
-        .select("*")
-        .order("created_at", { ascending: false })
+      const [submissionsResult, postsResult, knowledgeResult] =
+        await Promise.all([
+          supabase
+            .from("contact_submissions")
+            .select("*")
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("posts")
+            .select("*")
+            .order("created_at", { ascending: false }),
+          supabase
+            .from("knowledge_base")
+            .select("id, title, metadata, created_at"),
+        ])
+
+      const { data: subData, error: subError } = submissionsResult
+      const { data: postsData, error: postsError } = postsResult
+      const { data: kbData, error: kbError } = knowledgeResult
 
       if (subError) throw subError
-      setSubmissions(subData || [])
-
-      // 2. Fetch Blog Posts for CMS
-      const { data: postsData, error: postsError } = await supabase
-        .from("posts")
-        .select("*")
-        .order("created_at", { ascending: false })
-
       if (postsError) throw postsError
-      setPosts(postsData || [])
-
-      // 3. Fetch Knowledge Base chunks and group them
-      const { data: kbData, error: kbError } = await supabase
-        .from("knowledge_base")
-        .select("id, title, metadata, created_at")
-
       if (kbError) throw kbError
+
+      setSubmissions(subData || [])
+      setPosts(postsData || [])
 
       const documentsMap: Record<
         string,
@@ -321,16 +350,19 @@ export default function AdminDashboard() {
 
     setIngestLoading(true)
     setIngestStatus("idle")
+    setIngestError("")
+    setIngestSuccessMessage("")
 
     try {
-      const { error } = await supabase.functions.invoke("ingest-knowledge", {
-        body: { title, content },
-      })
-
-      if (error) throw error
+      const result = await invokeKnowledgeIngest(title, content)
 
       setIngestStatus("success")
-      toast.success("Document ingested and embedded successfully")
+      const message = result.embedded
+        ? `${result.title} added with ${result.chunks} searchable ${result.chunks === 1 ? "section" : "sections"}.`
+        : `${result.title} added to keyword search. Vector generation is pending.`
+      setIngestSuccessMessage(message)
+      if (result.embedded) toast.success(message)
+      else toast.warning(result.warning ?? message)
       setTitle("")
       setContent("")
       // Reload knowledge base docs
@@ -338,7 +370,9 @@ export default function AdminDashboard() {
     } catch (err) {
       console.error("Failed to ingest knowledge:", err)
       setIngestStatus("error")
-      toast.error("Ingestion pipeline error")
+      const message = err instanceof Error ? err.message : "Knowledge ingestion failed."
+      setIngestError(message)
+      toast.error(message)
     } finally {
       setIngestLoading(false)
     }
@@ -442,16 +476,14 @@ export default function AdminDashboard() {
       }
 
       // Re-ingest through the Edge Function (which now prepends title to embedding input)
-      const { error } = await supabase.functions.invoke("ingest-knowledge", {
-        body: { title: docTitle, content: fullContent },
-      })
-      if (error) throw error
+      await invokeKnowledgeIngest(docTitle, fullContent)
 
       toast.success(`Re-embedded "${docTitle}" with enriched vectors`)
       void fetchData(true)
     } catch (err) {
       console.error("Re-embed failed:", err)
-      toast.error("Failed to re-embed document")
+      const message = err instanceof Error ? err.message : "Failed to re-embed document"
+      toast.error(message)
     } finally {
       setReembeddingDoc(null)
     }
@@ -535,6 +567,7 @@ export default function AdminDashboard() {
                 <div className="relative flex-1">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/40" />
                   <Input
+                    aria-label="Search inquiries"
                     placeholder="Search messages, names, email..."
                     value={inquirySearch}
                     onChange={(e) => setInquirySearch(e.target.value)}
@@ -545,8 +578,10 @@ export default function AdminDashboard() {
                   {(["all", "new", "read", "archived"] as const).map(
                     (filter) => (
                       <button
+                        type="button"
                         key={filter}
                         onClick={() => setInquiryFilter(filter)}
+                        aria-pressed={inquiryFilter === filter}
                         className={`rounded-none border px-3 py-1 font-mono text-xs tracking-wider uppercase transition-all ${
                           inquiryFilter === filter
                             ? "border-foreground bg-foreground font-bold text-background"
@@ -567,10 +602,12 @@ export default function AdminDashboard() {
                   </div>
                 ) : (
                   filteredSubmissions.map((sub) => (
-                    <div
+                    <button
+                      type="button"
                       key={sub.id}
                       onClick={() => setSelectedSubmission(sub)}
-                      className={`relative flex cursor-pointer items-center justify-between p-4 text-left transition-colors ${
+                      aria-current={selectedSubmission?.id === sub.id ? "true" : undefined}
+                      className={`relative flex w-full cursor-pointer items-center justify-between p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${
                         selectedSubmission?.id === sub.id
                           ? "bg-secondary text-primary"
                           : "hover:bg-muted/50"
@@ -579,6 +616,7 @@ export default function AdminDashboard() {
                       <div className="flex-1 space-y-1 truncate pr-4">
                         <div className="flex items-center gap-2">
                           <span
+                            aria-hidden="true"
                             className={`h-1.5 w-1.5 rounded-none ${
                               sub.status === "new"
                                 ? "bg-arra-ochre"
@@ -606,7 +644,7 @@ export default function AdminDashboard() {
                           {new Date(sub.created_at).toLocaleDateString()}
                         </span>
                       </div>
-                    </div>
+                    </button>
                   ))
                 )}
               </div>
@@ -816,7 +854,11 @@ export default function AdminDashboard() {
                     Publication Status
                   </label>
                   <Select value={postStatus} onValueChange={setPostStatus}>
-                    <SelectTrigger className="h-10 w-full rounded-none border-border/80 bg-background font-mono text-xs text-foreground focus-visible:ring-1 focus-visible:ring-arra-cyan/50 dark:border-border/40 dark:bg-background/50">
+                    <SelectTrigger
+                      id="postStatus"
+                      aria-label="Publication status"
+                      className="h-10 w-full rounded-none border-border/80 bg-background font-mono text-xs text-foreground focus-visible:ring-1 focus-visible:ring-arra-cyan/50 dark:border-border/40 dark:bg-background/50"
+                    >
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
                     <SelectContent className="rounded-none font-mono">
@@ -873,6 +915,7 @@ export default function AdminDashboard() {
                 <div className="relative w-64">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/40" />
                   <Input
+                    aria-label="Search field notes"
                     placeholder="Search posts..."
                     value={postSearch}
                     onChange={(e) => setPostSearch(e.target.value)}
@@ -916,6 +959,7 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Button
+                          aria-label={`Edit ${post.title}`}
                           onClick={() => {
                             setEditingPost(post)
                             setPostTitle(post.title)
@@ -931,6 +975,7 @@ export default function AdminDashboard() {
                           <FileEdit className="size-3.5" />
                         </Button>
                         <Button
+                          aria-label={`Delete ${post.title}`}
                           onClick={() => deletePost(post.id)}
                           variant="ghost"
                           size="icon"
@@ -1000,14 +1045,14 @@ export default function AdminDashboard() {
                 </div>
 
                 {ingestStatus === "success" && (
-                  <div className="flex items-center gap-2 border border-green-500/30 bg-green-950/20 p-3 font-mono text-[10px] text-green-400">
+                  <output className="flex items-center gap-2 border border-green-500/30 bg-green-950/20 p-3 font-mono text-[10px] leading-5 text-green-400" role="status">
                     <CheckCircle2 className="size-4 shrink-0" />
-                    DATA INGESTED AND EMBEDDED SUCCESSFULLY.
-                  </div>
+                    {ingestSuccessMessage || "Source added successfully."}
+                  </output>
                 )}
                 {ingestStatus === "error" && (
-                  <div className="border border-red-500/30 bg-red-950/20 p-3 font-mono text-[10px] text-red-400">
-                    INGESTION PIPELINE ERROR. CHECK TELEMETRY LOGS.
+                  <div className="border border-red-500/30 bg-red-950/20 p-3 font-mono text-[10px] leading-5 text-red-400" role="alert">
+                    {ingestError || "Knowledge ingestion failed. Please try again."}
                   </div>
                 )}
 
@@ -1046,6 +1091,7 @@ export default function AdminDashboard() {
                 <div className="relative w-64">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/40" />
                   <Input
+                    aria-label="Search knowledge documents"
                     placeholder="Search documents..."
                     value={docSearch}
                     onChange={(e) => setDocSearch(e.target.value)}
@@ -1085,10 +1131,10 @@ export default function AdminDashboard() {
                       </div>
                       <div className="flex shrink-0 gap-1">
                         <Button
+                          aria-label={`Re-embed ${doc.title}`}
                           onClick={() => handleReembedDoc(doc.title)}
                           variant="ghost"
                           size="icon"
-                          title="Re-embed with enriched vectors"
                           className="h-8 w-8 rounded-none text-foreground/40 hover:bg-primary/10 hover:text-primary"
                           disabled={reembeddingDoc === doc.title || purgingDoc === doc.title}
                         >
@@ -1099,6 +1145,7 @@ export default function AdminDashboard() {
                           )}
                         </Button>
                         <Button
+                          aria-label={`Delete ${doc.title}`}
                           onClick={() => handlePurgeDoc(doc.title)}
                           variant="ghost"
                           size="icon"
@@ -1147,26 +1194,20 @@ export default function AdminDashboard() {
             <div className="grid gap-8 md:grid-cols-2">
               <div className="space-y-4">
                 <h4 className="font-serif text-lg font-semibold text-foreground">
-                  Operator Keyboard Shortcuts
+                  Operator workflow
                 </h4>
                 <div className="space-y-2.5 font-mono text-xs text-foreground/75">
                   <div className="flex items-center justify-between border-b border-border/10 py-1.5">
-                    <span>Toggle Dashboard View</span>
-                    <kbd className="rounded-sm border border-border bg-muted px-1.5 py-0.5 text-[10px]">
-                      Ctrl + Shift + A
-                    </kbd>
+                    <span>Move between workspace areas</span>
+                    <span className="text-[10px] text-muted-foreground">Header navigation</span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border/10 py-1.5">
-                    <span>Quick Core Sync</span>
-                    <kbd className="rounded-sm border border-border bg-muted px-1.5 py-0.5 text-[10px]">
-                      S
-                    </kbd>
+                    <span>Refresh database records</span>
+                    <span className="text-[10px] text-muted-foreground">Settings → Refresh workspace</span>
                   </div>
                   <div className="flex items-center justify-between border-b border-border/10 py-1.5">
-                    <span>Cycle Navigation Tabs</span>
-                    <kbd className="rounded-sm border border-border bg-muted px-1.5 py-0.5 text-[10px]">
-                      Tab
-                    </kbd>
+                    <span>End a shared-device session</span>
+                    <span className="text-[10px] text-muted-foreground">Account menu → Sign out</span>
                   </div>
                 </div>
               </div>
