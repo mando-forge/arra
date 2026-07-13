@@ -83,11 +83,11 @@ export default function Contact() {
       </div>
 
       <div className="relative z-10 mx-auto w-full max-w-7xl">
-        <div className="grid min-w-0 gap-10 border-t border-border pt-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.65fr)] lg:gap-16">
+        <div className="grid min-w-0 gap-10 border-t border-border pt-7 xl:grid-cols-[minmax(0,1fr)_minmax(24rem,0.65fr)] xl:gap-16">
           <div className="grid min-h-[28rem] min-w-0 content-between gap-12">
             <div>
               <p className="mono-label">Contact</p>
-              <h1 className="serif-display mt-7 max-w-3xl text-[clamp(2.5rem,7vw,6.75rem)] leading-[0.92] text-balance">
+              <h1 className="serif-display mt-7 max-w-3xl text-[clamp(2.5rem,6vw,5.25rem)] leading-[0.94] text-balance">
                 Start a thoughtful conversation.
               </h1>
               <p className="body-copy mt-7 max-w-xl opacity-[0.78]">
@@ -206,7 +206,10 @@ export default function Contact() {
                       defaultValue={contactIntents[0]}
                       required
                     >
-                      <SelectTrigger className="contact-field px-4">
+                      <SelectTrigger
+                        aria-label="Conversation type"
+                        className="contact-field px-4"
+                      >
                         <SelectValue placeholder="Select conversation type" />
                       </SelectTrigger>
                       <SelectContent className="border-border bg-background">

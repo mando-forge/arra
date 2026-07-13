@@ -1,6 +1,6 @@
 import { useRef, useState, useEffect } from "react"
-import { motion, useScroll, useTransform, type Variants, AnimatePresence } from "framer-motion"
-import { Map, BookOpen, Server, ShieldCheck, Database, Calendar, Orbit, Loader2, Network, TableProperties } from "lucide-react"
+import { motion, useScroll, useTransform, type Variants } from "framer-motion"
+import { Map, BookOpen, Server, ShieldCheck, Loader2, Network, TableProperties } from "lucide-react"
 import { ArraReveal, ArraSection, EngravingFigure } from "@/components/arra"
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid"
 import { FlickeringGrid } from "@/components/ui/flickering-grid"
@@ -14,6 +14,7 @@ import { supabase } from "@/lib/supabase"
 import { FluidCubeScroll } from "@/components/ui/fluid-cube"
 import { Button } from "@/components/ui/button"
 import { DataGrid } from "@/components/ui/data-grid"
+import { KnowledgeTerrainMap, type KnowledgeDocument } from "@/components/knowledge-terrain-map"
 
 const explorationAreas = [
   {
@@ -59,145 +60,10 @@ const itemVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 }
 
-function SemanticGalaxy({ docs, selectedDoc, onSelectDoc }: { 
-  docs: { title: string; chunks: number; created_at: string }[];
-  selectedDoc: { title: string; chunks: number; created_at: string } | null;
-  onSelectDoc: (doc: { title: string; chunks: number; created_at: string } | null) => void;
-}) {
-  const viewBoxSize = 400
-  const center = viewBoxSize / 2
-
-  // Generate deterministic coordinates
-  const nodes = docs.map((doc, idx) => {
-    const angle = (idx / docs.length) * Math.PI * 2 + (doc.title.charCodeAt(0) % 10) * 0.15
-    const radius = 80 + (doc.title.charCodeAt(doc.title.length - 1) % 4) * 25
-    const x = center + Math.cos(angle) * radius
-    const y = center + Math.sin(angle) * radius
-    return { ...doc, x, y, id: idx }
-  })
-
-  return (
-    <div className="grid md:grid-cols-5 gap-8 items-center border border-border bg-[#173c3a]/5 backdrop-blur-sm p-6 relative overflow-hidden rounded-none shadow-[0_0_15px_rgba(47,216,216,0.02)]">
-      {/* Background elements */}
-      <div className="absolute inset-0 bg-[linear-gradient(to_right,rgba(47,216,216,0.015)_1px,transparent_1px),linear-gradient(to_bottom,rgba(47,216,216,0.015)_1px,transparent_1px)] bg-[size:16px_16px] pointer-events-none z-0" />
-
-      {/* SVG map */}
-      <div className="md:col-span-3 flex justify-center items-center relative z-10 select-none">
-        <svg viewBox={`0 0 ${viewBoxSize} ${viewBoxSize}`} className="w-full max-w-[340px] aspect-square">
-          {/* Outer Orbit rings */}
-          <circle cx={center} cy={center} r={80} fill="none" stroke="rgba(47,216,216,0.08)" strokeWidth={1} strokeDasharray="3 3" />
-          <circle cx={center} cy={center} r={130} fill="none" stroke="rgba(47,216,216,0.08)" strokeWidth={1} strokeDasharray="5 5" />
-          <circle cx={center} cy={center} r={170} fill="none" stroke="rgba(47,216,216,0.05)" strokeWidth={1} />
-
-          {/* Central Neural Hub */}
-          <g>
-            <circle cx={center} cy={center} r={8} className="fill-[var(--arra-ochre)] opacity-20" />
-            <circle cx={center} cy={center} r={4} className="fill-[var(--arra-ochre)]" />
-            <circle cx={center} cy={center} r={16} fill="none" stroke="var(--arra-ochre)" strokeWidth={1} className="animate-pulse" />
-          </g>
-
-          {/* Neural paths connecting nodes to hub */}
-          {nodes.map((node) => (
-            <line
-              key={`line-${node.id}`}
-              x1={center}
-              y1={center}
-              x2={node.x}
-              y2={node.y}
-              stroke={selectedDoc?.title === node.title ? "var(--arra-cyan)" : "rgba(47,216,216,0.12)"}
-              strokeWidth={selectedDoc?.title === node.title ? 1.5 : 1}
-              strokeDasharray={selectedDoc?.title === node.title ? "none" : "2 2"}
-              className="transition-all duration-300"
-            />
-          ))}
-
-          {/* Stars / Knowledge Chunks Nodes */}
-          {nodes.map((node) => {
-            const isSelected = selectedDoc?.title === node.title
-            return (
-              <g 
-                key={`node-${node.id}`} 
-                className="cursor-pointer"
-                onClick={() => onSelectDoc(isSelected ? null : node)}
-              >
-                {/* Glow ring */}
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r={isSelected ? 10 : 7}
-                  className="fill-none stroke-current text-arra-cyan/20 transition-all duration-300"
-                  strokeWidth={isSelected ? 3 : 1.5}
-                />
-                {/* Node Center */}
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r={isSelected ? 5 : 3.5}
-                  className={`transition-all duration-300 ${
-                    isSelected ? "fill-arra-cyan drop-shadow-[0_0_4px_rgba(47,216,216,0.8)]" : "fill-[var(--arra-spruce)] dark:fill-arra-cyan/70 hover:fill-arra-cyan"
-                  }`}
-                />
-              </g>
-            )
-          })}
-        </svg>
-      </div>
-
-      {/* Detail Panel */}
-      <div className="md:col-span-2 space-y-4 relative z-10">
-        <AnimatePresence mode="wait">
-          {selectedDoc ? (
-            <motion.div
-              key={selectedDoc.title}
-              initial={{ opacity: 0, x: 15 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -15 }}
-              className="space-y-4 p-4 border border-border/40 bg-background/50 rounded-sm"
-            >
-              <div className="flex items-center gap-2 text-arra-cyan">
-                <Orbit className="size-4 animate-spin" />
-                <span className="mono-label text-[9px] tracking-wider">ACTIVE KNOWLEDGE NODE</span>
-              </div>
-              <h4 className="font-serif text-lg font-semibold leading-tight text-foreground">{selectedDoc.title}</h4>
-              
-              <div className="space-y-2.5 font-mono text-xs text-foreground/75">
-                <div className="flex justify-between border-b border-border/10 pb-1.5">
-                  <span className="text-foreground/40">Vector Volume:</span>
-                  <span className="font-bold text-arra-cyan">{selectedDoc.chunks} dimensions</span>
-                </div>
-                <div className="flex justify-between border-b border-border/10 pb-1.5">
-                  <span className="text-foreground/40">Ledger Ingress:</span>
-                  <span className="flex items-center gap-1">
-                    <Calendar className="size-3 text-foreground/40" />
-                    {new Date(selectedDoc.created_at).toLocaleDateString()}
-                  </span>
-                </div>
-              </div>
-              <p className="text-[10px] leading-relaxed text-foreground/50 font-mono italic">
-                This document is chunked, mapped, and embedded into the 1536-dimensional semantic index, forming part of ARRA's private RAG pipeline.
-              </p>
-            </motion.div>
-          ) : (
-            <motion.div
-              key="empty"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.6 }}
-              className="text-xs font-mono text-foreground/50 text-center py-10 flex flex-col items-center justify-center gap-3 border border-dashed border-border/40 p-4"
-            >
-              <Database className="size-6 text-foreground/30 animate-pulse" />
-              <span>CLICK ON A TELEMETRY NODE IN THE SECTOR MAP TO MOUNT VECTOR DATA.</span>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-    </div>
-  )
-}
-
 export default function Products() {
   const containerRef = useRef<HTMLElement>(null)
-  const [docs, setDocs] = useState<{ title: string; chunks: number; created_at: string }[]>([])
-  const [selectedDoc, setSelectedDoc] = useState<{ title: string; chunks: number; created_at: string } | null>(null)
+  const [docs, setDocs] = useState<KnowledgeDocument[]>([])
+  const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | null>(null)
   const [loadingDocs, setLoadingDocs] = useState(true)
   const [viewMode, setViewMode] = useState<"map" | "grid">("map")
   const [loadError, setLoadError] = useState<string | null>(null)
@@ -206,24 +72,18 @@ export default function Products() {
     async function loadDocs() {
       try {
         const { data, error } = await supabase
-          .from("knowledge_base")
-          .select("id, title, metadata, created_at")
+          .from("public_knowledge_directory")
+          .select("title, chunks, created_at")
 
         if (error) throw error
 
-        const docsMap: Record<string, { title: string; chunks: number; created_at: string }> = {}
-        data?.forEach((row) => {
-          const docTitle = row.metadata?.source_title || row.title
-          if (!docsMap[docTitle]) {
-            docsMap[docTitle] = {
-              title: docTitle,
-              chunks: 0,
-              created_at: row.created_at
-            }
-          }
-          docsMap[docTitle].chunks += 1
-        })
-        setDocs(Object.values(docsMap))
+        const normalizedDocs = (data || []).map((row) => ({
+            title: row.title,
+            chunks: Number(row.chunks),
+            created_at: row.created_at,
+          }))
+        setDocs(normalizedDocs)
+        setSelectedDoc((current) => normalizedDocs.find((doc) => doc.title === current?.title) ?? normalizedDocs[0] ?? null)
       } catch (err) {
         console.error("Failed to load knowledge vectors:", err)
         setLoadError("Failed to load vector telemetry directory.")
@@ -288,9 +148,9 @@ export default function Products() {
       <ArraSection
         id="knowledge-galaxy"
         tone="light"
-        eyebrow="Ingested Telemetry"
-        title="Semantic Vector space Map"
-        description="A real-time visualization of documents loaded into our vector index. Stars represent source files; coordinates indicate mapped vector clustering paths."
+        eyebrow="Research directory"
+        title="Knowledge map"
+        description="A living view of the verified sources supporting ARRA's research. Each point represents one source in the public directory."
         className="border-t border-foreground/10"
       >
         <div className="flex justify-end gap-2 mb-6 relative z-10">
@@ -301,7 +161,7 @@ export default function Products() {
             className="flex items-center gap-1.5 font-mono text-[10px] uppercase h-8 px-3"
           >
             <Network className="size-3.5" />
-            Galaxy Map
+            Map view
           </Button>
           <Button
             variant={viewMode === "grid" ? "default" : "outline"}
@@ -310,14 +170,14 @@ export default function Products() {
             className="flex items-center gap-1.5 font-mono text-[10px] uppercase h-8 px-3"
           >
             <TableProperties className="size-3.5" />
-            Data Ledger
+            List view
           </Button>
         </div>
 
         {loadingDocs ? (
           <div className="flex items-center justify-center p-20 font-mono text-xs text-foreground/50">
             <Loader2 className="animate-spin size-4 mr-2" />
-            SYNCHRONIZING VECTOR MAP...
+            LOADING RESEARCH DIRECTORY...
           </div>
         ) : loadError ? (
           <div className="border border-dashed border-destructive/40 p-12 text-center text-xs font-mono text-destructive max-w-md mx-auto bg-destructive/5">
@@ -327,12 +187,12 @@ export default function Products() {
           </div>
         ) : docs.length === 0 ? (
           <div className="border border-dashed border-border/40 p-12 text-center text-xs font-mono text-foreground/50 max-w-md mx-auto">
-            THE VECTOR INDEX IS CURRENTLY EMPTY.
+            THE RESEARCH MAP IS BEING PREPARED.
             <br /><br />
-            Please log into the Admin Control Panel and inject documents into the Neural Net to initialize the galaxy.
+            Verified sources will appear here as they are published.
           </div>
         ) : viewMode === "map" ? (
-          <SemanticGalaxy docs={docs} selectedDoc={selectedDoc} onSelectDoc={setSelectedDoc} />
+          <KnowledgeTerrainMap docs={docs} selectedDoc={selectedDoc} onSelectDoc={setSelectedDoc} />
         ) : (
           <DataGrid docs={docs} />
         )}

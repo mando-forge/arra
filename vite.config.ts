@@ -38,6 +38,36 @@ export default defineConfig({
             type: 'image/svg+xml'
           }
         ]
+      },
+      workbox: {
+        // Keep the install lightweight. Route chunks and media are cached only
+        // after a visitor actually uses them instead of precaching the entire
+        // research, admin, syntax-highlighting, and media library.
+        globPatterns: ['**/*.{html,css,webmanifest,svg,woff2}'],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request }) => request.destination === 'script',
+            handler: 'StaleWhileRevalidate',
+            options: {
+              cacheName: 'arra-scripts',
+              expiration: {
+                maxEntries: 40,
+                maxAgeSeconds: 60 * 60 * 24 * 30
+              }
+            }
+          },
+          {
+            urlPattern: ({ request }) => request.destination === 'image',
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'arra-images',
+              expiration: {
+                maxEntries: 30,
+                maxAgeSeconds: 60 * 60 * 24 * 30
+              }
+            }
+          }
+        ]
       }
     })
   ],

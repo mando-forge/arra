@@ -4,6 +4,7 @@ import type { UIMessage } from "ai"
 import { DefaultChatTransport } from "ai"
 
 import { getChatSessionId } from "./chat-session"
+import { sanitizeAssistantResponse } from "./chat-response"
 
 type StoredMessage = {
   id: string
@@ -71,7 +72,12 @@ export function usePersistentChat(apiEndpoint: string, supabaseAnonKey: string) 
         const messages: UIMessage[] = (data.messages ?? []).map((message) => ({
           id: message.id,
           role: message.role,
-          parts: [{ type: "text", text: message.content }],
+          parts: [{
+            type: "text",
+            text: message.role === "assistant"
+              ? sanitizeAssistantResponse(message.content)
+              : message.content,
+          }],
         }))
         setMessages(messages)
       } catch (error) {

@@ -81,11 +81,12 @@ export function DataGrid({ docs }: DataGridProps) {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
         <div className="flex items-center gap-2 text-primary">
           <Database className="size-4" />
-          <span className="mono-label text-[9px] tracking-wider uppercase font-mono">VECTOR INDEX TELEMETRY</span>
+          <span className="mono-label text-[9px] tracking-wider uppercase font-mono">RESEARCH SOURCE DIRECTORY</span>
         </div>
         <div className="relative w-full sm:max-w-xs">
           <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
           <Input
+            aria-label="Filter research sources"
             placeholder="Filter by keyword..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -117,7 +118,7 @@ export function DataGrid({ docs }: DataGridProps) {
                   onClick={() => handleSort("chunks")}
                   className="h-auto p-0 font-mono text-[11px] font-semibold text-foreground/70 hover:text-foreground hover:bg-transparent"
                 >
-                  VECTOR CHUNKS
+                  SOURCE SECTIONS
                   {renderSortIcon("chunks")}
                 </Button>
               </th>
@@ -152,7 +153,7 @@ export function DataGrid({ docs }: DataGridProps) {
                   </td>
                   <td className="p-3">
                     <div className="flex items-center gap-3">
-                      <span className="w-10 font-bold text-arra-cyan">{doc.chunks} dim</span>
+                      <span className="w-10 font-bold text-arra-cyan">{doc.chunks}</span>
                       <div className="h-1.5 w-24 bg-border/20 rounded-none overflow-hidden hidden sm:block">
                         <div
                           className="h-full bg-arra-cyan transition-all duration-500"
@@ -177,8 +178,8 @@ export function DataGrid({ docs }: DataGridProps) {
 
       {/* Data footer */}
       <div className="flex justify-between items-center text-[10px] text-muted-foreground font-mono">
-        <span>Showing {filteredAndSortedDocs.length} of {docs.length} assets</span>
-        <span>Index active</span>
+        <span>Showing {filteredAndSortedDocs.length} of {docs.length} verified sources</span>
+        <span>Directory synchronized</span>
       </div>
     </div>
   )

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { TooltipProvider } from "@/components/ui/tooltip"
 import { usePersistentChat } from "@/lib/use-persistent-chat"
 import { supabaseUrl, supabaseAnonKey, chatAvailable } from "@/lib/supabase"
+import { sanitizeAssistantResponse } from "@/lib/chat-response"
 import {
   Conversation,
   ConversationContent,
@@ -84,9 +85,13 @@ const MessageParts = ({
       )}
       {parts.map((part, i) => {
         if (part.type === "text" || !part.type) {
+          const text = message.role === "assistant"
+            ? sanitizeAssistantResponse(part.text || "")
+            : part.text || ""
+          if (!text) return null
           return (
             <MessageResponse key={`${message.id}-${i}`}>
-              <Streamdown plugins={streamdownPlugins}>{part.text || ""}</Streamdown>
+              <Streamdown plugins={streamdownPlugins}>{text}</Streamdown>
             </MessageResponse>
           )
         }
@@ -107,9 +112,9 @@ const getMessageText = (msg: ChatMessage) => {
   return ""
 }
 
-export function ChatWidget() {
+export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
   const { pathname } = useLocation()
-  const [isOpen, setIsOpen] = useState(false)
+  const [isOpen, setIsOpen] = useState(initiallyOpen)
   const [showScrollTop, setShowScrollTop] = useState(false)
   const showTrigger = pathname !== "/contact"
 
@@ -242,12 +247,12 @@ export function ChatWidget() {
     if (!isOpen) return
     const vv = window.visualViewport
     if (!vv) return
+    const activeDialog = dialogRef.current
 
     const onResize = () => {
-      const dialog = dialogRef.current
-      if (!dialog) return
+      if (!activeDialog) return
       // visualViewport.height shrinks when iOS keyboard is visible
-      dialog.style.height = `${vv.height}px`
+      activeDialog.style.height = `${vv.height}px`
     }
 
     vv.addEventListener("resize", onResize)
@@ -255,8 +260,7 @@ export function ChatWidget() {
     onResize()
     return () => {
       vv.removeEventListener("resize", onResize)
-      const dialog = dialogRef.current
-      if (dialog) dialog.style.height = ""
+      if (activeDialog) activeDialog.style.height = ""
     }
   }, [isOpen])
 
@@ -329,7 +333,9 @@ export function ChatWidget() {
         }}
         onClose={() => {
           setIsOpen(false)
-          requestAnimationFrame(() => returnFocusRef.current?.focus())
+          requestAnimationFrame(() =>
+            (returnFocusRef.current ?? triggerRef.current)?.focus()
+          )
         }}
         className="fixed inset-x-0 top-0 sm:top-auto bottom-0 z-50 m-0 ml-auto hidden h-[100dvh] sm:h-[min(42rem,88dvh)] w-full max-w-none flex-col overflow-hidden rounded-none border border-border bg-background p-0 text-foreground shadow-2xl backdrop:bg-foreground/35 backdrop:backdrop-blur-[2px] [&[open]]:flex right-0 sm:right-4 md:right-6 bottom-0 sm:bottom-6 left-0 sm:left-auto sm:max-w-md sm:rounded-none"
       >

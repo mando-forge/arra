@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useReducedMotion } from "framer-motion"
 
 interface TypewriterProps {
   words?: string[]
@@ -19,6 +20,7 @@ export function Typewriter({
   cursorChar = "|",
   className = "",
 }: TypewriterProps) {
+  const shouldReduceMotion = useReducedMotion()
   const [displayText, setDisplayText] = useState("")
   const [isDeleting, setIsDeleting] = useState(false)
   const [wordIndex, setWordIndex] = useState(0)
@@ -28,6 +30,8 @@ export function Typewriter({
   const currentWord = words[wordIndex]
 
   useEffect(() => {
+    if (shouldReduceMotion) return
+
     const timeout = setTimeout(
       () => {
         // Typing logic
@@ -65,24 +69,25 @@ export function Typewriter({
     delayBetweenWords,
     wordIndex,
     words,
+    shouldReduceMotion,
   ])
 
   // Cursor blinking effect
   useEffect(() => {
-    if (!cursor) return
+    if (!cursor || shouldReduceMotion) return
 
     const cursorInterval = setInterval(() => {
       setShowCursor((prev) => !prev)
     }, 500)
 
     return () => clearInterval(cursorInterval)
-  }, [cursor])
+  }, [cursor, shouldReduceMotion])
 
   return (
     <div className="inline-block">
       <span className={className}>
-        {displayText}
-        {cursor && (
+        {shouldReduceMotion ? words[0] : displayText}
+        {cursor && !shouldReduceMotion && (
           <span
             className="ml-1 transition-opacity duration-75"
             style={{ opacity: showCursor ? 1 : 0 }}

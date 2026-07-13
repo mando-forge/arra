@@ -54,6 +54,12 @@ function getSupabaseAdminKey() {
   }
 }
 
+class IngestionError extends Error {
+  constructor(public code: string, message: string, public status = 400) {
+    super(message)
+  }
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { status: 204, headers: corsHeaders(req) })
@@ -76,7 +82,7 @@ serve(async (req) => {
 
     const authorization = req.headers.get('authorization')
     const token = authorization?.replace(/^Bearer\s+/i, '')
-    if (!token) throw new Error('Unauthorized')
+    if (!token) throw new IngestionError('UNAUTHORIZED', 'Your admin session is missing. Sign in again.', 401)
 
     const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? ''
     const serviceRoleKey = getSupabaseAdminKey() ?? ''
@@ -84,51 +90,93 @@ serve(async (req) => {
       auth: { persistSession: false, autoRefreshToken: false },
     })
     const { data: { user }, error: userError } = await supabaseClient.auth.getUser(token)
-    if (userError || user?.app_metadata?.role !== 'admin') throw new Error('Unauthorized')
+    if (userError || user?.app_metadata?.role !== 'admin') {
+      throw new IngestionError('FORBIDDEN', 'An administrator account is required.', 403)
+    }
 
     const body = await req.json()
     const title = typeof body.title === 'string' ? body.title.trim() : ''
     const content = typeof body.content === 'string' ? body.content.trim() : ''
     if (!title || !content || title.length > 200 || content.length > 100_000) {
-      throw new Error('Invalid document')
+      throw new IngestionError('INVALID_DOCUMENT', 'Add a title and source content before ingesting.')
     }
 
-    const openRouterKey = Deno.env.get('OPENROUTER_API_KEY')
-    if (!openRouterKey) throw new Error('Embedding service is not configured')
-
     const chunks = splitIntoChunks(content)
-    
+
+    const { count: existingChunkCount, error: existingError } = await supabaseClient
+      .from('knowledge_base')
+      .select('id', { count: 'exact', head: true })
+      .contains('metadata', { source_title: title })
+    if (existingError) throw existingError
+
     // Prepend the document title to each chunk so the embedding captures
     // the full semantic context (critical for short documents).
     const embeddingInputs = chunks.map((chunk) => `${title}\n\n${chunk}`)
-    
-    // Get embeddings from OpenRouter (OpenAI)
-    const embeddingRes = await fetch('https://openrouter.ai/api/v1/embeddings', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${openRouterKey}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        model: 'openai/text-embedding-3-small',
-        input: embeddingInputs
-      })
-    })
-    
-    if (!embeddingRes.ok) throw new Error('Embedding request failed')
-    const embeddingData = await embeddingRes.json()
+    const embeddingsByIndex = new Map<number, number[]>()
+    let embeddingWarning: string | null = null
+    const openRouterKey = Deno.env.get('OPENROUTER_API_KEY')
 
-    if (!embeddingData.data) {
-      throw new Error('Embedding response was invalid')
+    if (!openRouterKey) {
+      embeddingWarning = 'Vector generation is temporarily unavailable; keyword search remains active.'
+    } else {
+      try {
+        const embeddingRes = await fetch('https://openrouter.ai/api/v1/embeddings', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${openRouterKey}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            model: 'openai/text-embedding-3-small',
+            input: embeddingInputs,
+            dimensions: 1_536,
+            provider: { allow_fallbacks: true },
+          }),
+        })
+
+        if (!embeddingRes.ok) {
+          embeddingWarning = `Vector generation is temporarily unavailable (provider ${embeddingRes.status}); keyword search remains active.`
+        } else {
+          const embeddingData = await embeddingRes.json()
+          if (!Array.isArray(embeddingData.data)) {
+            embeddingWarning = 'Vector generation returned an invalid response; keyword search remains active.'
+          } else {
+            for (const [position, item] of embeddingData.data.entries()) {
+              const index = typeof item.index === 'number' ? item.index : position
+              if (Array.isArray(item.embedding) && item.embedding.length === 1_536) {
+                embeddingsByIndex.set(index, item.embedding)
+              }
+            }
+            if (embeddingsByIndex.size !== chunks.length) {
+              embeddingsByIndex.clear()
+              embeddingWarning = 'Vector generation returned incomplete data; keyword search remains active.'
+            }
+          }
+        }
+      } catch {
+        embeddingWarning = 'Vector generation could not be reached; keyword search remains active.'
+      }
+    }
+
+    const embedded = embeddingsByIndex.size === chunks.length
+    if (!embedded && (existingChunkCount ?? 0) > 0) {
+      throw new IngestionError(
+        'EMBEDDING_UNAVAILABLE',
+        'The existing source was kept unchanged because vector regeneration is temporarily unavailable.',
+        503,
+      )
     }
 
     const rows = chunks.map((chunk, index) => ({
       title: chunks.length === 1 ? title : `${title} (Part ${index + 1})`,
       content: chunk,
-      embedding: embeddingData.data[index].embedding,
-      metadata: { source_title: title, chunk_index: index },
+      embedding: embeddingsByIndex.get(index) ?? null,
+      metadata: {
+        source_title: title,
+        chunk_index: index,
+        embedding_status: embedded ? 'complete' : 'pending',
+      },
     }))
-    if (rows.some((row) => !Array.isArray(row.embedding))) throw new Error('Embedding response was incomplete')
 
     const { data: inserted, error: insertError } = await supabaseClient.from('knowledge_base').insert(rows).select('id')
     if (insertError) throw insertError
@@ -144,15 +192,24 @@ serve(async (req) => {
     }
     if (deleteError) throw deleteError;
     
-    return new Response(JSON.stringify({ success: true }), {
+    return new Response(JSON.stringify({
+      success: true,
+      title,
+      chunks: rows.length,
+      embedded,
+      warning: embeddingWarning,
+    }), {
       headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
     })
   } catch (error) {
     console.error('Knowledge ingestion failed', error)
-    const unauthorized = error instanceof Error && error.message === 'Unauthorized'
-    return new Response(JSON.stringify({ error: unauthorized ? 'Unauthorized' : 'Knowledge ingestion failed' }), {
+    const knownError = error instanceof IngestionError ? error : null
+    return new Response(JSON.stringify({
+      error: knownError?.message ?? 'Knowledge ingestion failed. Please try again.',
+      code: knownError?.code ?? 'INGESTION_FAILED',
+    }), {
       headers: { ...corsHeaders(req), 'Content-Type': 'application/json' },
-      status: unauthorized ? 403 : 400,
+      status: knownError?.status ?? 500,
     })
   }
 })
