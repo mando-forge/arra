@@ -160,6 +160,7 @@ async function retrieveContext(query: string, apiKey: string, supabase: ReturnTy
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ model: "openai/text-embedding-3-small", input: [query] }),
+      signal: AbortSignal.timeout(5000),
     })
 
     if (!response.ok) {
@@ -188,7 +189,8 @@ async function retrieveContext(query: string, apiKey: string, supabase: ReturnTy
 
   // Semantic search is excellent for broad intent, while full-text search is
   // deterministic for short source titles such as "Project in the pipeline".
-  const { data: keywordMatches, error: keywordError } = await supabase.rpc("search_knowledge_documents", {
+  let keywordMatches: { id: string; title: string; content: string; similarity?: number }[] = []
+  const { data: fetchedKeywords, error: keywordError } = await supabase.rpc("search_knowledge_documents", {
     search_query: query,
     requested_count: 5,
   })
@@ -196,14 +198,18 @@ async function retrieveContext(query: string, apiKey: string, supabase: ReturnTy
     // Keep compatibility during a rolling deployment where the function may
     // arrive a few seconds before its database migration.
     errors.push(`keyword search failed: ${keywordError.message}`)
-  } else {
-    for (const document of keywordMatches ?? []) {
-      if (!documents.has(document.id)) documents.set(document.id, document)
-    }
+  } else if (fetchedKeywords) {
+    keywordMatches = fetchedKeywords
   }
 
+  const keywordIds = new Set(keywordMatches.map((doc) => doc.id))
+  const finalDocs = [
+    ...keywordMatches,
+    ...[...documents.values()].filter((doc) => !keywordIds.has(doc.id))
+  ].slice(0, 5)
+
   return {
-    data: [...documents.values()].slice(0, 5),
+    data: finalDocs,
     error: errors.length ? errors.join("; ") : null,
   }
 }

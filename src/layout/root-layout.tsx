@@ -135,10 +135,10 @@ export function RootLayout() {
             <AnimatePresence mode="wait">
               <motion.div
                 key={pathname}
-                initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
+                initial={shouldReduceMotion ? false : { opacity: 0, y: 15, filter: "blur(4px)" }}
                 animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                exit={{ opacity: 0, y: -15, filter: "blur(4px)" }}
-                transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                exit={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, y: -15, filter: "blur(4px)" }}
+                transition={shouldReduceMotion ? { duration: 0 } : { duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
                 className="flex flex-1 flex-col"
               >
                 <Outlet />

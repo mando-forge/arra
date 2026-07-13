@@ -140,7 +140,9 @@ export function KnowledgeTerrainMap({ docs, selectedDoc, onSelectDoc }: Knowledg
           animate={shouldReduceMotion
             ? { scaleX: 1.15, scaleY: 0.82 }
             : { y: [0, -4, 0], scaleX: [1.15, 1.16, 1.15], scaleY: [0.82, 0.825, 0.82] }}
-          transition={{ duration: 10, ease: "easeInOut", repeat: Infinity }}
+          transition={shouldReduceMotion
+            ? { duration: 0 }
+            : { duration: 10, ease: "easeInOut", repeat: Infinity }}
         >
           <img
             src={resolvedTheme === "dark" ? terrainDark : terrainLight}

@@ -94,7 +94,13 @@ serve(async (req) => {
       throw new IngestionError('FORBIDDEN', 'An administrator account is required.', 403)
     }
 
-    const body = await req.json()
+    const body = (await req.json().catch(() => {
+      throw new IngestionError('INVALID_DOCUMENT', 'Add a title and source content before ingesting.')
+    })) as { title?: unknown; content?: unknown }
+    if (!body || typeof body !== 'object' || Array.isArray(body)) {
+      throw new IngestionError('INVALID_DOCUMENT', 'Add a title and source content before ingesting.')
+    }
+
     const title = typeof body.title === 'string' ? body.title.trim() : ''
     const content = typeof body.content === 'string' ? body.content.trim() : ''
     if (!title || !content || title.length > 200 || content.length > 100_000) {
@@ -132,6 +138,7 @@ serve(async (req) => {
             dimensions: 1_536,
             provider: { allow_fallbacks: true },
           }),
+          signal: AbortSignal.timeout(8000),
         })
 
         if (!embeddingRes.ok) {

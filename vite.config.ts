@@ -43,7 +43,7 @@ export default defineConfig({
         // Keep the install lightweight. Route chunks and media are cached only
         // after a visitor actually uses them instead of precaching the entire
         // research, admin, syntax-highlighting, and media library.
-        globPatterns: ['**/*.{html,css,webmanifest,svg,woff2}'],
+        globPatterns: ['**/*.{html,css,webmanifest,svg,woff2}', 'assets/index-*.js'],
         runtimeCaching: [
           {
             urlPattern: ({ request }) => request.destination === 'script',

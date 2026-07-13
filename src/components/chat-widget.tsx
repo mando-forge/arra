@@ -249,6 +249,9 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
     if (!vv) return
     const activeDialog = dialogRef.current
 
+    const isMobile = window.matchMedia("(max-width: 639px)").matches
+    if (!isMobile) return
+
     const onResize = () => {
       if (!activeDialog) return
       // visualViewport.height shrinks when iOS keyboard is visible

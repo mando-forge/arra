@@ -7,7 +7,7 @@ create index if not exists knowledge_base_search_idx
   using gin (
     to_tsvector(
       'english',
-      coalesce(metadata ->> 'source_title', title, '') || ' ' || coalesce(content, '')
+      coalesce(nullif(metadata ->> 'source_title', ''), title, '') || ' ' || coalesce(content, '')
     )
   );
 
@@ -35,7 +35,7 @@ as $$
     ts_rank_cd(
       to_tsvector(
         'english',
-        coalesce(kb.metadata ->> 'source_title', kb.title, '') || ' ' || coalesce(kb.content, '')
+        coalesce(nullif(kb.metadata ->> 'source_title', ''), kb.title, '') || ' ' || coalesce(kb.content, '')
       ),
       query.value
     )::float as similarity
@@ -44,7 +44,7 @@ as $$
   where query.value is not null
     and to_tsvector(
       'english',
-      coalesce(kb.metadata ->> 'source_title', kb.title, '') || ' ' || coalesce(kb.content, '')
+      coalesce(nullif(kb.metadata ->> 'source_title', ''), kb.title, '') || ' ' || coalesce(kb.content, '')
     ) @@ query.value
   order by similarity desc, kb.created_at desc
   limit least(greatest(requested_count, 1), 20);

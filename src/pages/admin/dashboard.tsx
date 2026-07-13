@@ -482,7 +482,8 @@ export default function AdminDashboard() {
       void fetchData(true)
     } catch (err) {
       console.error("Re-embed failed:", err)
-      toast.error("Failed to re-embed document")
+      const message = err instanceof Error ? err.message : "Failed to re-embed document"
+      toast.error(message)
     } finally {
       setReembeddingDoc(null)
     }
@@ -605,7 +606,7 @@ export default function AdminDashboard() {
                       type="button"
                       key={sub.id}
                       onClick={() => setSelectedSubmission(sub)}
-                      aria-pressed={selectedSubmission?.id === sub.id}
+                      aria-current={selectedSubmission?.id === sub.id ? "true" : undefined}
                       className={`relative flex w-full cursor-pointer items-center justify-between p-4 text-left transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${
                         selectedSubmission?.id === sub.id
                           ? "bg-secondary text-primary"
@@ -1044,10 +1045,10 @@ export default function AdminDashboard() {
                 </div>
 
                 {ingestStatus === "success" && (
-                  <div className="flex items-center gap-2 border border-green-500/30 bg-green-950/20 p-3 font-mono text-[10px] leading-5 text-green-400" role="status">
+                  <output className="flex items-center gap-2 border border-green-500/30 bg-green-950/20 p-3 font-mono text-[10px] leading-5 text-green-400" role="status">
                     <CheckCircle2 className="size-4 shrink-0" />
                     {ingestSuccessMessage || "Source added successfully."}
-                  </div>
+                  </output>
                 )}
                 {ingestStatus === "error" && (
                   <div className="border border-red-500/30 bg-red-950/20 p-3 font-mono text-[10px] leading-5 text-red-400" role="alert">

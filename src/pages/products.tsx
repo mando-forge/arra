@@ -74,6 +74,7 @@ export default function Products() {
         const { data, error } = await supabase
           .from("public_knowledge_directory")
           .select("title, chunks, created_at")
+          .order("created_at", { ascending: true })
 
         if (error) throw error
 

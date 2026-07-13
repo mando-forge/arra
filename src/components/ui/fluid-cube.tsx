@@ -640,10 +640,12 @@ export const FluidCubeCanvas = ({
       if (!reducedMotion) shaderTime += dt;
 
       const p = progress.get();
-      const targetY = p * Math.PI * 4;
-      const targetX = p * Math.PI * 2;
-      cubeMesh.rotation.y += (targetY - cubeMesh.rotation.y) * 0.1;
-      cubeMesh.rotation.x += (targetX - cubeMesh.rotation.x) * 0.1;
+      if (!reducedMotion) {
+        const targetY = p * Math.PI * 4;
+        const targetX = p * Math.PI * 2;
+        cubeMesh.rotation.y += (targetY - cubeMesh.rotation.y) * 0.1;
+        cubeMesh.rotation.x += (targetX - cubeMesh.rotation.x) * 0.1;
+      }
       colorMat.uniforms.uTime.value = shaderTime;
 
       renderer.setClearColor(0x000000, 0);
@@ -657,8 +659,9 @@ export const FluidCubeCanvas = ({
       renderer.clear();
       renderer.render(cubeScene, cubeCamera);
 
+      const hasQueuedSplats = queue.length > 0;
       while (queue.length) applySplat(queue.shift() as Splat);
-      if (!reducedMotion || queue.length > 0) step(0.016);
+      if (!reducedMotion || hasQueuedSplats) step(0.016);
 
       displayMat.uniforms.uImage.value = scenePlain.texture;
       displayMat.uniforms.uImageB.value = sceneColor.texture;
@@ -780,6 +783,7 @@ const Scene = ({ scroller }: { scroller: HTMLElement | null }) => {
         >
           <FluidCubeCanvas
             progress={scrollYProgress}
+            reducedMotion={useReducedMotion()}
             className="pointer-events-auto h-full w-full"
           />
         </motion.div>
@@ -919,7 +923,7 @@ const MobileScene = ({ scroller }: { scroller: HTMLElement | null }) => {
         <div className="absolute right-5 top-[24svh] h-28 w-px bg-foreground/15">
           <motion.div
             className="h-full w-px origin-top bg-[var(--arra-ochre)]"
-            style={{ scaleY: scrollYProgress }}
+            style={{ scaleY: shouldReduceMotion ? 1 : scrollYProgress }}
           />
         </div>
       </div>
