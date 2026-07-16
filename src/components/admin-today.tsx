@@ -174,6 +174,7 @@ export function AdminToday({
                 {featuredPost ? "Continue latest draft" : "Create an update"}
               </Button>
               <button
+                type="button"
                 onClick={() => onNavigate("cms")}
                 className="inline-flex items-center gap-3 border-b border-primary pb-1 text-sm text-primary hover:opacity-65"
               >

@@ -60,7 +60,7 @@ const itemVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 }
 
-export default function Products() {
+export default function Work() {
   const containerRef = useRef<HTMLElement>(null)
   const [docs, setDocs] = useState<KnowledgeDocument[]>([])
   const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | null>(null)

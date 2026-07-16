@@ -3,7 +3,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom"
 import { RootLayout } from "@/layout/root-layout"
 import Home from "@/pages/home"
 
-const Work = lazy(() => import("@/pages/products"))
+const Work = lazy(() => import("@/pages/work"))
 const About = lazy(() => import("@/pages/about"))
 const Contact = lazy(() => import("@/pages/contact"))
 const DebugPage = lazy(() => import("@/pages/debug"))
