@@ -6,7 +6,7 @@ export function Footer() {
   const links = [
     { label: "Home", href: "/" },
     { label: "About", href: "/about" },
-    { label: "Explorations", href: "/products" },
+    { label: "Our Work", href: "/work" },
     { label: "Contact", href: "/contact" },
   ]
 
@@ -23,13 +23,12 @@ export function Footer() {
             <Link
               to="/"
               className="font-sans text-2xl font-medium leading-none tracking-[0.18em]"
-              aria-label="ARRA home"
+              aria-label="ARRA-CORE home"
             >
-              ARRA
+              ARRA-CORE
             </Link>
             <p className="compact-copy mt-4 text-foreground/64">
-              Thoughtful technology shaped by the realities and possibilities
-              of Northeast India.
+              Building web applications for community growth in Imphal, Manipur.
             </p>
           </div>
 
@@ -51,14 +50,14 @@ export function Footer() {
 
         <Separator className="my-9" />
         <div className="flex flex-col gap-4 text-xs text-foreground/58 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} ARRA <span className="cursor-pointer select-none font-mono opacity-20 hover:opacity-100 transition-opacity ml-1 animate-pulse" onDoubleClick={handleAdminRedirect}>▒</span></p>
+          <p>© {new Date().getFullYear()} ARRA-CORE <span className="cursor-pointer select-none font-mono opacity-20 hover:opacity-100 transition-opacity ml-1 animate-pulse" onDoubleClick={handleAdminRedirect}>▒</span></p>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2">
-            <span>Northeast India · Research stage</span>
+            <span>Imphal, Manipur · Bootstrapped</span>
             <a
               className="transition-colors hover:text-foreground"
-              href="mailto:transmission@arra.tech"
+              href="mailto:transmission@arra-core.tech"
             >
-              transmission@arra.tech
+              transmission@arra-core.tech
             </a>
           </div>
         </div>

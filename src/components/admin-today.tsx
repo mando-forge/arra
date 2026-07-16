@@ -145,15 +145,15 @@ export function AdminToday({
         <div className="mt-12 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,22rem)]">
           <div>
             <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-              Latest field note
+              Latest update
             </p>
             <h2 className="mt-7 max-w-2xl font-serif text-3xl leading-[1.08] text-primary sm:text-4xl">
-              {featuredPost?.title ?? "Prepare the first ARRA field note"}
+              {featuredPost?.title ?? "Prepare the first ARRA-CORE update"}
             </h2>
             <p className="mt-5 font-mono text-[10px] tracking-[0.1em] text-muted-foreground uppercase">
               {featuredPost
                 ? `${featuredPost.status} · Last updated ${new Date(featuredPost.updated_at ?? featuredPost.created_at).toLocaleDateString("en-IN")}`
-                : "Field notes · Ready for a first draft"}
+                : "Updates · Ready for a first draft"}
             </p>
             <p className="mt-6 max-w-xl text-[15px] leading-7 text-muted-foreground">
               {featuredPost?.excerpt ||
@@ -171,20 +171,20 @@ export function AdminToday({
                 className="h-12 rounded-none bg-primary px-6 text-primary-foreground hover:bg-primary/90"
               >
                 <ArrowRight className="mr-2 size-4" />
-                {featuredPost ? "Continue latest draft" : "Create a field note"}
+                {featuredPost ? "Continue latest draft" : "Create an update"}
               </Button>
               <button
                 onClick={() => onNavigate("cms")}
                 className="inline-flex items-center gap-3 border-b border-primary pb-1 text-sm text-primary hover:opacity-65"
               >
-                Open field notes <ArrowRight className="size-4" />
+                Open updates <ArrowRight className="size-4" />
               </button>
             </div>
           </div>
           <figure className="overflow-hidden bg-muted">
             <img
               src="/images/arra-cel-regional-terrain-v3.png"
-              alt="Layered Northeast Indian mountains, water, vegetation, and two homes rendered as a restrained field-journal landscape"
+              alt="Layered mountains, water, vegetation, and two homes rendered as a restrained landscape illustration"
               className="aspect-[1.04/1] h-full w-full object-cover opacity-80"
             />
           </figure>
@@ -226,7 +226,7 @@ export function AdminToday({
             <div className="flex items-start gap-3 border-b border-border py-6 text-sm text-muted-foreground">
               <BookOpen className="mt-0.5 size-4" />
               <p>
-                No field notes yet. Begin with a draft when the first
+                No updates yet. Begin with a draft when the first
                 observation is ready.
               </p>
             </div>

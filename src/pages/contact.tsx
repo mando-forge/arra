@@ -98,18 +98,18 @@ export default function Contact() {
 
             <address className="grid max-w-md gap-3 not-italic">
               <a
-                href="mailto:transmission@arra.tech"
+                href="mailto:transmission@arra-core.tech"
                 className="group flex items-center gap-4 border-t border-border py-4 transition-colors hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:outline-none"
               >
                 <Mail className="size-5 shrink-0" aria-hidden="true" />
                 <span className="min-w-0 text-sm leading-6 font-semibold break-words md:text-base">
-                  transmission@arra.tech
+                  transmission@arra-core.tech
                 </span>
               </a>
               <div className="flex items-center gap-4 border-t border-border py-4">
                 <MapPin className="size-5 shrink-0" aria-hidden="true" />
                 <span className="text-sm leading-6 font-semibold md:text-base">
-                  Northeast India
+                  Imphal, Manipur
                 </span>
               </div>
             </address>
@@ -144,7 +144,7 @@ export default function Contact() {
                       Thank you for writing thoughtfully.
                     </h2>
                     <p className="mt-5 max-w-sm text-sm leading-7 text-foreground/85">
-                      Your note is now in the ARRA inquiry workspace. We will
+                      Your note is now in the ARRA-CORE workspace. We will
                       review it carefully and respond when there is a clear way
                       forward.
                     </p>

@@ -72,7 +72,7 @@ function SourceCallout({ doc, index }: { doc: KnowledgeDocument; index: number }
         </span>
       </div>
       <p className="mt-2 font-mono text-[10px] leading-relaxed text-foreground/65">
-        Verified for ARRA&apos;s research assistant. Public directory information only.
+        Verified for ARRA-CORE&apos;s assistant. Public directory information only.
       </p>
     </motion.div>
   )
@@ -196,7 +196,7 @@ export function KnowledgeTerrainMap({ docs, selectedDoc, onSelectDoc }: Knowledg
       </div>
 
       <p className="sr-only">
-        This visual map contains one interactive point for every verified source in ARRA&apos;s public research directory.
+        This visual map contains one interactive point for every verified source in ARRA-CORE&apos;s public directory.
       </p>
     </div>
   )

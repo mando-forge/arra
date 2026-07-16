@@ -58,7 +58,7 @@ export function CommsSection() {
 				<GlobalWrapper>
 					<div className="grid grid-cols-1 gap-8 font-mono text-xs tracking-widest text-muted-foreground uppercase md:grid-cols-4 md:gap-4">
 						<div className="flex flex-col gap-4">
-							<span className="font-bold text-foreground">ARRA NEXUS</span>
+							<span className="font-bold text-foreground">ARRA-CORE NEXUS</span>
 							<span>&copy; {new Date().getFullYear()} ALL RIGHTS RESERVED</span>
 						</div>
 						<div className="flex flex-col gap-4">

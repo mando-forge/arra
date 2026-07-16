@@ -1,9 +1,9 @@
 import { lazy, Suspense } from "react"
-import { BrowserRouter, Link, Route, Routes } from "react-router-dom"
+import { BrowserRouter, Link, Navigate, Route, Routes } from "react-router-dom"
 import { RootLayout } from "@/layout/root-layout"
 import Home from "@/pages/home"
 
-const Products = lazy(() => import("@/pages/products"))
+const Work = lazy(() => import("@/pages/products"))
 const About = lazy(() => import("@/pages/about"))
 const Contact = lazy(() => import("@/pages/contact"))
 const DebugPage = lazy(() => import("@/pages/debug"))
@@ -21,7 +21,7 @@ const NotFound = () => (
     <div className="max-w-xl">
       <p className="mono-label text-foreground/58">404</p>
       <h1 className="serif-display mt-5 text-5xl leading-none md:text-6xl">
-        This page is outside the current field notes.
+        This page doesn't exist yet.
       </h1>
       <Link
         to="/"
@@ -41,7 +41,8 @@ export default function App() {
           <Route element={<RootLayout />}>
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<About />} />
-            <Route path="/products" element={<Products />} />
+            <Route path="/work" element={<Work />} />
+            <Route path="/products" element={<Navigate to="/work" replace />} />
             <Route path="/blog" element={<Blog />} />
             <Route path="/contact" element={<Contact />} />
             {import.meta.env.DEV && (

@@ -23,7 +23,7 @@ function DeferredChatWidget() {
             role="status"
             className="fixed right-4 bottom-4 z-40 flex h-14 items-center gap-3 bg-primary px-4 text-sm font-semibold text-primary-foreground shadow-lg sm:right-6 sm:bottom-6 xl:right-12 xl:bottom-8 3xl:right-16"
           >
-            Opening ARRA…
+            Opening ARRA-CORE…
           </div>
         }
       >
@@ -35,7 +35,7 @@ function DeferredChatWidget() {
   return (
     <button
       type="button"
-      aria-label="Open ARRA chat"
+      aria-label="Open ARRA-CORE chat"
       aria-haspopup="dialog"
       onClick={() => setShouldLoad(true)}
       className="group fixed right-4 bottom-4 z-40 flex h-14 items-center justify-center gap-3 rounded-none bg-primary px-4 text-primary-foreground shadow-lg transition-all hover:-translate-y-0.5 hover:bg-primary/90 hover:shadow-xl focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-4 focus-visible:outline-none sm:right-6 sm:bottom-6 xl:right-12 xl:bottom-8 3xl:right-16"
@@ -47,7 +47,7 @@ function DeferredChatWidget() {
           aria-hidden="true"
         />
       </span>
-      <span className="hidden text-sm font-semibold sm:inline">Ask ARRA</span>
+      <span className="hidden text-sm font-semibold sm:inline">Ask ARRA-CORE</span>
     </button>
   )
 }
@@ -120,12 +120,11 @@ export function RootLayout() {
 
         {/* Viewport & Rails (The Outer Frame) */}
         <div className="fixed left-4 xl:left-8 3xl:left-12 top-0 bottom-0 w-px bg-border hidden xl:flex flex-col justify-between py-12 z-40 pointer-events-none">
-          <span className="font-mono text-[0.65rem] font-semibold tracking-[0.32em] uppercase text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Arra Research</span>
-          <strong className="font-mono text-[0.7rem] tracking-[0.12em] text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Est. 2026</strong>
+          <span className="font-mono text-[0.65rem] font-semibold tracking-[0.32em] uppercase text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Arra-Core</span>
+          <strong className="font-mono text-[0.7rem] tracking-[0.12em] text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Imphal, Manipur</strong>
         </div>
         
         <div className="fixed right-4 xl:right-8 3xl:right-12 top-0 bottom-0 w-px bg-border hidden xl:flex flex-col justify-between py-12 z-40 pointer-events-none">
-          <span className="font-mono text-[0.65rem] font-semibold tracking-[0.32em] uppercase text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Nordic field journal</span>
         </div>
 
         {/* Main Centered Wrapper */}

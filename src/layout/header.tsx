@@ -9,9 +9,6 @@ import { cn } from "@/lib/utils"
 
 const primaryNavItems = navItems
   .filter(({ label }) => label !== "Blog")
-  .map((item) =>
-    item.label === "Products" ? { ...item, label: "Explorations" } : item
-  )
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -24,9 +21,9 @@ export function Header() {
       <Link
         to="/"
         className="font-sans text-2xl font-medium leading-none tracking-[0.18em] md:text-[1.8rem]"
-        aria-label="ARRA home"
+        aria-label="ARRA-CORE home"
       >
-        ARRA
+        ARRA-CORE
       </Link>
 
       <nav
@@ -55,9 +52,9 @@ export function Header() {
 
       <div className="flex items-center gap-5 justify-end">
         <p className="mono-label hidden text-right text-[0.62rem] leading-5 text-foreground/60 xl:block">
-          Northeast India
+          Imphal, Manipur
           <br />
-          Research stage
+          Building
         </p>
         <AnimatedThemeToggler
           variant="rectangle"
@@ -111,7 +108,7 @@ export function Header() {
           })}
         </nav>
         <p className="mono-label border-t border-border px-5 sm:px-7 md:px-9 py-4 text-[0.6rem] leading-5 text-foreground/55">
-          Northeast India · Research stage
+          Imphal, Manipur · Building
         </p>
       </div>
     </header>

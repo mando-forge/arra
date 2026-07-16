@@ -43,7 +43,7 @@ export default function Blog() {
     return (
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl flex min-h-[65vh] items-center justify-center font-mono text-xs text-foreground/60">
         <Loader2 className="animate-spin size-5 mr-2 text-[var(--arra-ochre)]" />
-        SYNCHRONIZING JOURNAL...
+        LOADING UPDATES...
       </div>
     )
   }
@@ -74,15 +74,15 @@ export default function Blog() {
               className="space-y-12"
             >
               <div className="max-w-xl">
-                <p className="mono-label text-[var(--arra-fjord)]">Field notes</p>
+                <p className="mono-label text-[var(--arra-fjord)]">Updates</p>
                 <h1 className="serif-display mt-4 text-4xl leading-tight md:text-5xl font-semibold">
-                  Writing and observations from our research.
+                  What we've been working on.
                 </h1>
               </div>
 
               {posts.length === 0 ? (
                 <div className="border border-border/60 bg-muted/5 p-8 max-w-xl font-mono text-xs text-foreground/50 rounded-sm">
-                  No published entries found in the neural network index. Please run the seeder inside the Admin control panel to populate content.
+                  No updates published yet. We'll share progress here as we build.
                 </div>
               ) : (
                 <div className="grid gap-8 max-w-3xl border-t border-border pt-8">
@@ -108,7 +108,7 @@ export default function Blog() {
                         <span>·</span>
                         <span className="flex items-center gap-1">
                           <User className="size-3" />
-                          ARRA Team
+                          ARRA-CORE Team
                         </span>
                       </div>
 
@@ -156,7 +156,7 @@ export default function Blog() {
                   <span>·</span>
                   <span className="flex items-center gap-1">
                     <User className="size-3" />
-                    ARRA Team
+                    ARRA-CORE Team
                   </span>
                 </div>
                 <h1 className="font-serif text-3xl sm:text-4xl font-semibold leading-tight text-foreground">
