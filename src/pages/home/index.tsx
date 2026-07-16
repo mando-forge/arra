@@ -21,17 +21,17 @@ import { FlickeringGrid } from "@/components/ui/flickering-grid"
 import { Typewriter } from "@/components/typewriter"
 import { faqs, images, principles, trustItems } from "@/content/arra"
 
-const fieldNotes = [
-  "Regional infrastructure realities",
-  "Human workflows and coordination",
-  "Responsible technology foundations",
+const whatDrivesUs = [
+  "Applications that work for everyone",
+  "Opportunities for our community",
+  "Technology built with honesty",
 ]
 
-const operatingNotes = [
-  "Listen before defining",
-  "Study before building",
-  "Decide with evidence",
-  "Share when the work is ready",
+const howWeWork = [
+  "Talk to people first",
+  "Understand before building",
+  "Build what matters",
+  "Ship when it's ready",
 ]
 
 export default function Home() {
@@ -99,14 +99,13 @@ function Hero() {
           <BlurFade delay={0.2} inView>
             <h1 className="font-serif text-[clamp(2.5rem,4.2vw,4rem)] font-semibold leading-[1.08] tracking-[-0.025em]">
               <span className="sr-only">
-                Rethinking technology and ecology, geography, context, design, systems
+                Building for community, Imphal, opportunity, growth, tomorrow
               </span>
               <span aria-hidden="true">
-                Rethinking technology
+                Building for
                 <br />
-                and{" "}
                 <Typewriter
-                  words={["ecology", "geography", "context", "design", "systems"]}
+                  words={["community", "Imphal", "opportunity", "growth", "tomorrow"]}
                   className="text-[var(--arra-ochre)]"
                   speed={80}
                   delayBetweenWords={2500}
@@ -122,18 +121,18 @@ function Hero() {
 
           <BlurFade delay={0.5} inView>
             <p className="mt-6 text-[clamp(1.1rem,1.5vw,1.35rem)] leading-[1.45] text-foreground/75 max-w-[26rem]">
-              Thoughtful innovation,<br />
-              grounded in place.
+              Two founders, one goal —<br />
+              building for our community.
             </p>
           </BlurFade>
 
           <BlurFade delay={0.65} inView>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5 mt-10">
               <InteractiveHoverButton href="#vision" className="h-13 px-6 text-sm bg-primary-foreground text-primary">
-                Explore the vision
+                See what we're building
               </InteractiveHoverButton>
               <Link
-                className="inline-flex items-center gap-3 py-2 border-b border-current text-[0.92rem] hover:text-primary transition-colors group ml-2 sm:ml-4"
+                className="inline-flex h-13 items-center justify-center gap-2 border border-foreground/20 bg-transparent px-6 text-sm font-medium hover:border-foreground/40 hover:bg-muted/30 transition-all group ml-2 sm:ml-4"
                 to="/contact"
               >
                 Start a conversation
@@ -174,18 +173,18 @@ function Posture() {
       <div className="w-full max-w-7xl mx-auto">
         <div className="grid gap-16 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] items-start">
           <ArraReveal>
-            <p className="eyebrow text-[var(--arra-fjord)]">Our posture</p>
+            <p className="eyebrow text-[var(--arra-fjord)]">Our approach</p>
             <h2 className="mt-5 font-serif text-[clamp(2.65rem,3.3vw,3.1rem)] font-semibold leading-[0.98] tracking-[-0.03em]">
-              Clarity before scale.<br />
-              Context over assumption.
+              Start small.<br />
+              Build honestly.
             </h2>
             <p className="body-copy mt-6">
-              ARRA is an early-stage technology company focused on thoughtful
-              innovation and long-term regional transformation. We work to
-              understand the right problems before shaping solutions.
+              ARRA-CORE is a bootstrapped technology company in Imphal, Manipur.
+              We're two founders building web applications that help our
+              community grow and create opportunities.
             </p>
-            <div className="mt-8 border-t border-border group/list" aria-label="Fields of attention">
-              {fieldNotes.map((item, index) => (
+            <div className="mt-8 border-t border-border group/list" aria-label="What drives us">
+              {whatDrivesUs.map((item, index) => (
                 <div 
                   key={item} 
                   className="grid grid-cols-[3rem_1fr] gap-4 py-4 border-b border-border transition-all duration-300 hover:pl-2 group-hover/list:opacity-50 hover:!opacity-100 cursor-default"
@@ -216,9 +215,9 @@ function Approach() {
     <ArraSection
       id="approach"
       tone="light"
-      eyebrow="Working method"
-      title="Careful work before public claims"
-      description="ARRA is in a formative stage. Research, observation, and disciplined thinking give future decisions a stronger foundation."
+      eyebrow="How we work"
+      title="Building with intention, shipping with transparency"
+      description="We are two founders doing the work ourselves — designing, coding, and testing. We move at the pace we can sustain and share progress honestly."
       className="border-t border-foreground/10"
     >
       <div className="grid md:grid-cols-2 3xl:grid-cols-4 border-t border-border mt-14">
@@ -240,11 +239,11 @@ function Approach() {
 
       <ArraReveal className="grid gap-10 mt-16 p-6 md:p-11 bg-[var(--arra-mist)] text-[var(--arra-spruce)] md:grid-cols-[minmax(0,1.1fr)_minmax(17rem,0.7fr)]">
         <div>
-          <p className="eyebrow">Operating notes</p>
-          <h3 className="max-w-[39rem] mt-4 font-serif text-[clamp(2rem,3.5vw,3.5rem)] font-semibold leading-none">No premature roadmap. No inflated promise.</h3>
+          <p className="eyebrow">How we work</p>
+          <h3 className="max-w-[39rem] mt-4 font-serif text-[clamp(2rem,3.5vw,3.5rem)] font-semibold leading-none">No hype. Just work.</h3>
         </div>
         <ol className="border-t border-[var(--arra-spruce)]/20 group/ops">
-          {operatingNotes.map((note, index) => (
+          {howWeWork.map((note, index) => (
             <li 
               key={note} 
               className="grid grid-cols-[3rem_1fr] py-3 border-b border-[var(--arra-spruce)]/20 text-[0.95rem] transition-all duration-300 hover:pl-2 group-hover/ops:opacity-50 hover:!opacity-100 cursor-default"
@@ -264,9 +263,9 @@ function Principles() {
     <ArraSection
       id="principles"
       tone="split"
-      eyebrow="Responsible foundations"
-      title="Accountability starts before launch"
-      description="Even before a public product, these commitments guide how ARRA evaluates ideas and shapes internal work."
+      eyebrow="What we stand for"
+      title="Honest foundations for real products"
+      description="We're a small team, but these values guide every decision we make — from what we build to how we build it."
       className="border-t border-foreground/10"
     >
       <div className="grid gap-14 md:grid-cols-[minmax(0,0.82fr)_minmax(0,1.18fr)] items-start mt-14">
@@ -275,10 +274,10 @@ function Principles() {
             src={images.governance.src}
             alt={images.governance.alt}
             frameClassName="aspect-[4/3]"
-            meta="Field note 03 · Responsible foundations"
+            meta="What we stand for"
             caption={
               <h3 className="serif-display text-3xl leading-tight md:text-4xl">
-                Technology should keep human responsibility in view.
+                Technology should help people, not complicate their lives.
               </h3>
             }
           />
@@ -312,21 +311,21 @@ function FAQ() {
     <ArraSection
       id="faq"
       tone="light"
-      eyebrow="Questions"
-      title="Direct answers for an early company"
-      description="ARRA is preparing with intention. These answers clarify the current stage without overstatement."
+      eyebrow="Common questions"
+      title="Straightforward answers"
+      description="We believe in being transparent about where we are and where we're headed."
       className="border-t border-foreground/10"
     >
       <div className="grid gap-14 md:grid-cols-[minmax(15rem,0.58fr)_minmax(0,1.42fr)] items-start mt-14">
         <ArraReveal>
           <aside className="p-7 bg-[var(--arra-mist)] text-[var(--arra-spruce)] md:sticky md:top-28 border border-border/20">
-            <p className="eyebrow">Public language</p>
-            <h3 className="mt-5 font-serif text-[2.35rem] font-semibold leading-none">Clear, measured, and useful.</h3>
+            <p className="eyebrow">How we communicate</p>
+            <h3 className="mt-5 font-serif text-[2.35rem] font-semibold leading-none">Honest and direct.</h3>
             <span className="block w-10 h-[2px] mt-5 bg-[var(--arra-ochre)]" aria-hidden="true" />
             <p className="mt-5 text-[0.95rem] leading-[1.65]">
-              We are not announcing a product, partnership, or public roadmap
-              yet. The current message is simple: the company is preparing
-              with intention.
+              We're two founders building in Imphal. We don't have a marketing
+              team or a PR strategy — just honest answers about what we're
+              doing.
             </p>
           </aside>
         </ArraReveal>

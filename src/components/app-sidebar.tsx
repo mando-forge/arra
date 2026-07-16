@@ -61,7 +61,7 @@ export function AppSidebar() {
 				</SidebarMenu>
 				<div className="px-4 pt-4 pb-2 transition-opacity group-data-[collapsible=icon]:pointer-events-none group-data-[collapsible=icon]:opacity-0 border-t border-border/50 mt-2">
 					<p className="text-nowrap font-mono uppercase tracking-widest text-[9px] text-foreground/40">
-						© {new Date().getFullYear()} ARRA Research
+						© {new Date().getFullYear()} ARRA-CORE
 					</p>
 				</div>
 			</SidebarFooter>

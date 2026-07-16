@@ -61,7 +61,7 @@ export function usePersistentChat(apiEndpoint: string, supabaseAnonKey: string) 
         if (!response.ok) {
           setHistoryError(
             response.status === 503
-              ? "The ARRA guide is temporarily unavailable."
+              ? "The ARRA-CORE guide is temporarily unavailable."
               : "Previous messages could not be restored."
           )
           setIsReady(true)

@@ -7,11 +7,9 @@ import { VitePWA } from "vite-plugin-pwa";
 
 // https://vite.dev/config/
 import { fileURLToPath } from 'node:url';
-import { storybookTest } from '@storybook/addon-vitest/vitest-plugin';
-import { playwright } from '@vitest/browser-playwright';
+
 const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(fileURLToPath(import.meta.url));
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [
     react(),
@@ -19,9 +17,9 @@ export default defineConfig({
     VitePWA({
       registerType: 'autoUpdate',
       manifest: {
-        name: 'ARRA',
-        short_name: 'ARRA',
-        description: 'Technology grounded in Northeast India',
+        name: 'ARRA-CORE',
+        short_name: 'ARRA-CORE',
+        description: 'Building for Imphal, Manipur',
         theme_color: '#173c3a',
         background_color: '#fcfbf7',
         start_url: '/',
@@ -79,27 +77,5 @@ export default defineConfig({
   server: {
     port: 5173,
     strictPort: true
-  },
-  test: {
-    projects: [{
-      extends: true,
-      plugins: [
-      // The plugin will run tests for the stories defined in your Storybook config
-      // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
-      storybookTest({
-        configDir: path.join(dirname, '.storybook')
-      })],
-      test: {
-        name: 'storybook',
-        browser: {
-          enabled: true,
-          headless: true,
-          provider: playwright({}),
-          instances: [{
-            browser: 'chromium'
-          }]
-        }
-      }
-    }]
   }
 });

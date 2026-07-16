@@ -10,17 +10,17 @@ const founders = [
     name: "Oliver O",
     role: "Co-founder",
     image: images.founderOliver,
-    note: "Oliver brings a systems-oriented lens to company direction and technical foundations, with an emphasis on clarity before scale.",
+    note: "Oliver focuses on product direction and engineering, making sure what we build actually solves real problems.",
   },
   {
     name: "Omega N",
     role: "Co-founder",
     image: images.founderOmega,
-    note: "Omega brings a grounded operating lens to research, execution, and regional context, keeping the work close to real conditions.",
+    note: "Omega brings an operational perspective, keeping the work grounded in community needs and practical execution.",
   },
 ]
 
-const headingText = "Built from Northeast India, with a long view."
+const headingText = "Two founders building from Imphal, Manipur."
 const words = headingText.split(" ")
 
 
@@ -56,7 +56,7 @@ export default function About() {
 
         <div className="w-full relative z-10 max-w-7xl mx-auto">
           <ArraReveal>
-            <p className="mono-label">About ARRA</p>
+            <p className="mono-label">About us</p>
           </ArraReveal>
           
           <h1 className="serif-display mt-7 max-w-5xl text-balance text-[clamp(2.75rem,8vw,6rem)] leading-[0.94]">
@@ -75,10 +75,10 @@ export default function About() {
           <ArraReveal>
             <div className="mt-8 grid gap-6 border-t border-border pt-6 md:grid-cols-[1.1fr_0.9fr]">
               <p className="body-copy max-w-2xl text-lg opacity-80">
-                ARRA is an early-stage technology company founded in Manipur. We are building the research habits, technical foundations, and partnerships needed to create useful work over time.
+                ARRA-CORE is a bootstrapped technology company in Imphal, Manipur. We're building web applications that help our community grow and create opportunities.
               </p>
               <p className="body-copy max-w-xl opacity-70">
-                Our approach is deliberate: understand the context, make careful choices, and communicate only what the work can support.
+                We're doing this with our own hands and our own resources. No outside funding, no shortcuts — just focused work on things that matter.
               </p>
             </div>
           </ArraReveal>
@@ -89,8 +89,8 @@ export default function About() {
         id="founders"
         tone="split"
         eyebrow="The founders"
-        title="Two perspectives, one shared practice"
-        description="ARRA is shaped by two co-founders whose work is collaborative and deliberately cross-functional. The company grows from a shared commitment to regional understanding and responsible technology."
+        title="The team behind ARRA-CORE"
+        description="ARRA-CORE is built by two co-founders who handle everything — from code to design to community conversations. We're small by choice and focused by necessity."
       >
         <motion.div 
           className="mt-12 grid gap-6 lg:grid-cols-2"

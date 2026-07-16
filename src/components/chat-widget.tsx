@@ -225,8 +225,8 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
   }
 
   const suggestedPrompts = [
-    "What is ARRA exploring?",
-    "Why Northeast India?",
+    "What is ARRA-CORE building?",
+    "Why Imphal, Manipur?",
     "How can I start a conversation?",
   ]
 
@@ -309,7 +309,7 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
           <button
             ref={triggerRef}
             type="button"
-            aria-label="Open ARRA chat"
+            aria-label="Open ARRA-CORE chat"
             aria-haspopup="dialog"
             aria-controls="arra-chat-dialog"
             aria-expanded={isOpen}
@@ -320,7 +320,7 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
               <MessageSquare className="size-5" aria-hidden="true" />
               <span className="absolute -right-1 -top-1 size-2.5 rounded-none border-2 border-primary bg-emerald-400 motion-safe:animate-pulse" aria-hidden="true" />
             </span>
-            <span className="hidden text-sm font-semibold sm:inline">Ask ARRA</span>
+            <span className="hidden text-sm font-semibold sm:inline">Ask ARRA-CORE</span>
           </button>
         </div>
       ) : null}
@@ -349,13 +349,13 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
                 A
               </div>
               <div>
-              <p className="mono-label">ARRA guide</p>
+              <p className="mono-label">ARRA-CORE guide</p>
               <h2 id="arra-chat-title" className="mt-1 text-lg font-semibold">
                 Ask about our work
               </h2>
               <p id="arra-chat-description" className="mt-1 text-xs leading-5 opacity-65">
                 <span className="mr-1.5 inline-block size-1.5 rounded-none bg-emerald-500" aria-hidden="true" />
-                Online · A concise guide to ARRA’s focus and approach.
+                Online · A concise guide to ARRA-CORE’s focus and approach.
               </p>
               </div>
             </div>
@@ -378,7 +378,7 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
                 type="button"
                 variant="ghost"
                 size="icon"
-                aria-label="Close ARRA chat"
+                aria-label="Close ARRA-CORE chat"
                 onClick={closeChat}
                 className="size-9 shrink-0"
               >
@@ -395,7 +395,7 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
                     <ConversationEmptyState
                       icon={<MessageSquare className="size-12" />}
                       title="What would you like to know?"
-                      description="Ask about ARRA’s areas of exploration, regional context, or how to begin a conversation."
+                      description="Ask about ARRA-CORE’s areas of exploration, community focus, or how to begin a conversation."
                     />
                     <div className="grid gap-2" aria-label="Suggested questions">
                       {suggestedPrompts.map((prompt) => (
@@ -520,11 +520,11 @@ export function ChatWidget({ initiallyOpen = false }: { initiallyOpen?: boolean 
                   })
                 )}
                 {status === "submitted" && (
-                  <div className="flex items-end gap-2" role="status" aria-label="ARRA is preparing a response">
+                  <div className="flex items-end gap-2" role="status" aria-label="ARRA-CORE is preparing a response">
 
                     <div className="rounded-none border border-border bg-background px-4 py-3 shadow-sm">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Shimmer duration={2}>Consulting ARRA field notes...</Shimmer>
+                        <Shimmer duration={2}>Thinking...</Shimmer>
                       </div>
                     </div>
                   </div>

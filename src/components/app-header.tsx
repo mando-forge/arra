@@ -33,9 +33,9 @@ export function AppHeader() {
         <a
           href="#overview"
           className="font-sans text-[1.7rem] font-medium tracking-[0.2em] text-primary transition-opacity hover:opacity-70"
-          aria-label="ARRA dashboard home"
+          aria-label="ARRA-CORE dashboard home"
         >
-          ARRA
+          ARRA-CORE
         </a>
 
         <nav
@@ -63,9 +63,9 @@ export function AppHeader() {
 
         <div className="ml-auto flex items-center gap-3">
           <p className="mr-2 hidden text-right font-mono text-[10px] leading-relaxed tracking-[0.16em] text-muted-foreground uppercase xl:block">
-            Northeast India
+            Imphal, Manipur
             <br />
-            Research stage
+            Building
           </p>
           <AnimatedThemeToggler
             className="flex size-10 items-center justify-center border border-border bg-transparent text-foreground transition-colors hover:bg-muted"

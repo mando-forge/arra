@@ -37,7 +37,7 @@ export default function AdminLogin() {
       <section className="relative hidden overflow-hidden border-r border-border lg:block">
         <img
           src="/images/arra-cel-hero-field-journal-v3.png"
-          alt="Two Northeast Indian co-founders, seen from behind, looking across a quiet mountain landscape"
+          alt="Two co-founders, seen from behind, looking across a quiet landscape"
           className="absolute inset-0 size-full object-cover opacity-80"
         />
         <div className="absolute inset-x-0 bottom-0 bg-primary/92 px-12 py-10 text-primary-foreground">
@@ -48,7 +48,7 @@ export default function AdminLogin() {
             A quiet place for careful work.
           </p>
           <p className="mt-4 max-w-md text-sm leading-7 opacity-75">
-            Review inquiries, shape field notes, and maintain ARRA&apos;s
+            Review inquiries, manage updates, and maintain ARRA-CORE&apos;s
             growing knowledge base.
           </p>
         </div>

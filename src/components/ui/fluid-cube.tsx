@@ -796,7 +796,7 @@ const Scene = ({ scroller }: { scroller: HTMLElement | null }) => {
               Research signals
             </h2>
             <p className="text-base text-foreground/70 font-mono">
-              Explore a live study of how observations, sources, and questions move through ARRA&apos;s research practice.
+              Explore a live study of how observations, sources, and questions move through ARRA-CORE&apos;s practice.
             </p>
           </div>
         </section>
@@ -829,7 +829,7 @@ const Scene = ({ scroller }: { scroller: HTMLElement | null }) => {
               Active inquiry
             </h2>
             <p className="text-base text-foreground/70 font-mono">
-              Interact with the study and see how ARRA keeps research grounded in Northeast India.
+              Interact with the study and see how ARRA-CORE builds for the community in Imphal, Manipur.
             </p>
           </div>
         </section>
@@ -860,7 +860,7 @@ const mobileChapters = [
   {
     index: "04",
     title: "Active inquiry",
-    body: "The work stays grounded in Northeast India as it develops.",
+    body: "The work stays grounded in Imphal, Manipur as it develops.",
     align: "left",
   },
 ] as const;

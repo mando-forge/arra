@@ -18,32 +18,32 @@ import { KnowledgeTerrainMap, type KnowledgeDocument } from "@/components/knowle
 
 const explorationAreas = [
   {
-    title: "Regional intelligence",
-    description: "Learning how local knowledge and careful data practices can make complex regional conditions easier to understand.",
+    title: "Web applications",
+    description: "Building applications that serve real needs for people in Imphal.",
     icon: <Map className="size-5 text-foreground/70" />,
     className: "md:col-span-2",
-    status: "Active Fieldwork",
+    status: "In development",
   },
   {
-    title: "Human-centred learning",
-    description: "Studying tools and systems that can support learning without losing sight of language, access, and everyday constraints.",
+    title: "Community growth",
+    description: "Creating pathways for skill development and local job opportunities through technology.",
     icon: <BookOpen className="size-5 text-foreground/70" />,
     className: "md:col-span-1",
-    status: "Synthesis",
+    status: "Planning",
   },
   {
-    title: "Resilient systems",
-    description: "Exploring digital foundations designed for uneven connectivity, constrained resources, and long-term maintainability.",
+    title: "Reliable infrastructure",
+    description: "Building applications that work well on the devices and connections people actually have.",
     icon: <Server className="size-5 text-foreground/70" />,
     className: "md:col-span-1",
-    status: "Prototyping",
+    status: "In progress",
   },
   {
-    title: "Trusted operations",
-    description: "Examining how clear permissions, accountable decisions, and responsible data handling can shape dependable technology.",
+    title: "Transparent operations",
+    description: "Running our company with clear practices around data, privacy, and accountability.",
     icon: <ShieldCheck className="size-5 text-foreground/70" />,
     className: "md:col-span-2",
-    status: "Active Research",
+    status: "Ongoing",
   },
 ]
 
@@ -60,7 +60,7 @@ const itemVariants: Variants = {
   show: { opacity: 1, y: 0, transition: { duration: 0.9, ease: "easeOut" } },
 }
 
-export default function Products() {
+export default function Work() {
   const containerRef = useRef<HTMLElement>(null)
   const [docs, setDocs] = useState<KnowledgeDocument[]>([])
   const [selectedDoc, setSelectedDoc] = useState<KnowledgeDocument | null>(null)
@@ -121,14 +121,14 @@ export default function Products() {
         <div className="w-full relative z-10 max-w-7xl mx-auto">
           <div className="grid items-center gap-12 lg:grid-cols-[1fr_1fr]">
             <ArraReveal>
-              <p className="mono-label text-primary">Field notes 02</p>
+              <p className="mono-label text-primary">What we're building</p>
               <h1 className="serif-display mt-7 max-w-4xl text-balance text-[clamp(2.75rem,8vw,6rem)] leading-[0.94]">
-                Areas of exploration
+                Our work
               </h1>
               <p className="body-copy mt-8 max-w-xl text-lg opacity-80 mb-10">
-                These are questions we are learning from, not products we are announcing. They describe the territory around ARRA&apos;s early work and may change as evidence grows.
+                We're actively building web applications in Imphal, Manipur. Here's where our work is focused.
               </p>
-              <InteractiveHoverButton href="#methodology">Read Field Notes</InteractiveHoverButton>
+              <InteractiveHoverButton href="#methodology">See our approach</InteractiveHoverButton>
             </ArraReveal>
 
             <motion.div style={{ y }} className="w-full hidden lg:block">
@@ -138,7 +138,7 @@ export default function Products() {
                 tone="light"
                 frameClassName="aspect-[16/10] w-full rounded-2xl shadow-2xl"
                 imageClassName="h-full w-full object-cover"
-                meta="Manipur / exploratory study"
+                meta="Imphal, Manipur"
               />
             </motion.div>
           </div>
@@ -149,9 +149,9 @@ export default function Products() {
       <ArraSection
         id="knowledge-galaxy"
         tone="light"
-        eyebrow="Research directory"
+        eyebrow="Focus areas"
         title="Knowledge map"
-        description="A living view of the verified sources supporting ARRA's research. Each point represents one source in the public directory."
+        description="A living view of the knowledge sources behind ARRA-CORE's work. Each point represents one source in the public directory."
         className="border-t border-foreground/10"
       >
         <div className="flex justify-end gap-2 mb-6 relative z-10">
@@ -203,9 +203,9 @@ export default function Products() {
       <ArraSection
         id="methodology"
         tone="split"
-        eyebrow="Our Process"
-        title="Research Methodology"
-        description="How we approach problems in resource-constrained environments."
+        eyebrow="Our process"
+        title="How we build"
+        description="Our process for building products that work for our community."
       >
         <div className="grid lg:grid-cols-2 gap-12 mt-12 items-start">
           <motion.div 
@@ -219,11 +219,11 @@ export default function Products() {
                 <div className="mb-4">
                   <Badge variant="secondary" className="font-normal opacity-80 px-4 py-1.5 text-sm tracking-wide">Methodology</Badge>
                 </div>
-                <CardTitle className="serif-display text-4xl md:text-5xl leading-tight">Context First</CardTitle>
+                <CardTitle className="serif-display text-4xl md:text-5xl leading-tight">Community first</CardTitle>
               </CardHeader>
               <CardContent className="space-y-6 body-copy opacity-80 p-0 text-lg leading-relaxed">
-                <p>We do not begin with software. We begin with the physical, infrastructural, and social constraints of the region.</p>
-                <p>By observing how communities naturally solve problems when technology fails, we identify the actual needs rather than assumed ones.</p>
+                <p>We start by talking to the people we're building for — understanding what they need, not what we assume they need.</p>
+                <p>By listening to how our community works and what challenges they face, we identify the real problems worth solving.</p>
               </CardContent>
             </Card>
           </motion.div>
@@ -236,21 +236,21 @@ export default function Products() {
           >
             <Accordion type="single" collapsible className="w-full mt-4 md:mt-0">
               <AccordionItem value="item-1" className="border-border/20 py-4 md:py-6">
-                <AccordionTrigger className="text-2xl md:text-3xl serif-display hover:text-primary text-left">1. Observation Phase</AccordionTrigger>
+                <AccordionTrigger className="text-2xl md:text-3xl serif-display hover:text-primary text-left">1. Listen</AccordionTrigger>
                 <AccordionContent className="body-copy opacity-75 text-lg mt-3 leading-relaxed">
-                  Extensive field studies focusing on network intermittency and power stability in rural Manipur.
+                  We spend time understanding what people in our community actually need.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-2" className="border-border/20 py-4 md:py-6">
-                <AccordionTrigger className="text-2xl md:text-3xl serif-display hover:text-primary text-left">2. Synthesis &amp; Modeling</AccordionTrigger>
+                <AccordionTrigger className="text-2xl md:text-3xl serif-display hover:text-primary text-left">2. Design &amp; build</AccordionTrigger>
                 <AccordionContent className="body-copy opacity-75 text-lg mt-3 leading-relaxed">
-                  Mapping local constraints to potential technological primitives (e.g. offline-first databases, peer-to-peer sync).
+                  We design solutions that work within real constraints — limited connectivity, everyday devices, local context.
                 </AccordionContent>
               </AccordionItem>
               <AccordionItem value="item-3" className="border-border/20 border-b-0 py-4 md:py-6">
-                <AccordionTrigger className="text-2xl md:text-3xl serif-display hover:text-primary text-left">3. Prototype Deployment</AccordionTrigger>
+                <AccordionTrigger className="text-2xl md:text-3xl serif-display hover:text-primary text-left">3. Test &amp; improve</AccordionTrigger>
                 <AccordionContent className="body-copy opacity-75 text-lg mt-3 leading-relaxed">
-                  Testing lightweight applications in real conditions and measuring resilience over feature-completeness.
+                  We put our work in front of real users, learn from their feedback, and keep improving.
                 </AccordionContent>
               </AccordionItem>
             </Accordion>
@@ -261,9 +261,9 @@ export default function Products() {
       <ArraSection
         id="exploration-areas"
         tone="split"
-        eyebrow="Open questions"
-        title="Where we are paying attention"
-        description="ARRA is still in an early research and capability-building phase. Each area below is a lens for inquiry rather than a promise of a shipped service."
+        eyebrow="Focus areas"
+        title="Where we're focused"
+        description="Each area below represents an active focus of our work. We're building, testing, and learning as we go."
       >
         <motion.div 
           className="mt-12"
