@@ -3,7 +3,7 @@ import gsap from "gsap"
 import { useReducedMotion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-export function Magnetic({ children, strength = 0.35, className }: { children: React.ReactElement<{ className?: string; ref?: React.Ref<any> }>, strength?: number, className?: string }) {
+export function Magnetic({ children, strength = 0.35, className }: { children: React.ReactElement<{ className?: string; ref?: React.Ref<HTMLElement> }>, strength?: number, className?: string }) {
   const magnetic = useRef<HTMLElement>(null)
   
   // Track if we are hovering
@@ -45,7 +45,7 @@ export function Magnetic({ children, strength = 0.35, className }: { children: R
       element.removeEventListener("mouseleave", handleMouseLeave)
       element.removeEventListener("mouseenter", handleMouseEnter)
     }
-  }, [strength])
+  }, [strength, shouldReduceMotion])
 
   return React.cloneElement(children, { 
     ref: magnetic,
