@@ -186,6 +186,7 @@ export function AdminToday({
                 >
                   Open updates <ArrowRight className="size-4" />
                 </button>
+              </div>
             </div>
             <figure 
               className="overflow-hidden bg-muted"
