@@ -173,7 +173,11 @@ export function AdminToday({
                   className="h-12 rounded-none bg-primary px-6 text-primary-foreground hover:bg-primary/90"
                 >
                   <ArrowRight className="mr-2 size-4" />
-                  {featuredPost ? "Continue latest draft" : "Create an update"}
+                  {featuredPost
+                    ? featuredPost.status === "draft"
+                      ? "Continue latest draft"
+                      : "Edit latest update"
+                    : "Create an update"}
                 </Button>
                 <button
                   type="button"

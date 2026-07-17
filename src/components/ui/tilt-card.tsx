@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
-import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useMotionTemplate, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export function TiltCard({ children, className }: { children: React.ReactNode, className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
   
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -22,7 +23,7 @@ export function TiltCard({ children, className }: { children: React.ReactNode, c
   const background = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255,255,255,0.4) 0%, transparent 60%)`;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
-    if (!ref.current) return;
+    if (!ref.current || shouldReduceMotion) return;
     const rect = ref.current.getBoundingClientRect();
     
     const width = rect.width;
@@ -54,15 +55,15 @@ export function TiltCard({ children, className }: { children: React.ReactNode, c
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        rotateX,
-        rotateY,
+        rotateX: shouldReduceMotion ? 0 : rotateX,
+        rotateY: shouldReduceMotion ? 0 : rotateY,
         transformStyle: "preserve-3d",
       }}
       className={cn("relative group transition-transform duration-300 ease-out will-change-transform", className)}
     >
       <motion.div
         className="pointer-events-none absolute inset-0 z-50 mix-blend-screen opacity-0 transition-opacity duration-300 group-hover:opacity-10 dark:opacity-0 dark:group-hover:opacity-15"
-        style={{ background }}
+        style={{ background: shouldReduceMotion ? "none" : background }}
       />
       <div
         style={{

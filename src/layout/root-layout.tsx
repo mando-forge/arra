@@ -120,7 +120,7 @@ export function RootLayout() {
 
         {/* Viewport & Rails (The Outer Frame) */}
         <div className="fixed left-4 xl:left-8 3xl:left-12 top-0 bottom-0 w-px bg-border hidden xl:flex flex-col justify-between py-12 z-40 pointer-events-none">
-          <span className="font-mono text-[0.65rem] font-semibold tracking-[0.32em] uppercase text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Arra-Core</span>
+          <span className="font-mono text-[0.65rem] font-semibold tracking-[0.32em] uppercase text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>ARRA-CORE</span>
           <strong className="font-mono text-[0.7rem] tracking-[0.12em] text-foreground/70" style={{ writingMode: 'vertical-rl', transform: 'rotate(180deg)' }}>Imphal, Manipur</strong>
         </div>
         

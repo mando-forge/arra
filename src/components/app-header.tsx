@@ -88,7 +88,7 @@ export function AppHeader() {
             </SheetTrigger>
             <SheetContent className="bg-background" side="right">
               <SheetHeader className="border-b border-border p-6">
-                <SheetTitle className="font-serif text-2xl">ARRA</SheetTitle>
+                <SheetTitle className="font-serif text-2xl">ARRA-CORE</SheetTitle>
                 <SheetDescription>Founder workspace</SheetDescription>
               </SheetHeader>
               <nav

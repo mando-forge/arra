@@ -1005,8 +1005,7 @@ export default function AdminDashboard() {
                   Add a source
                 </h3>
                 <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                  Add verified source material to ARRA-CORE&apos;s internal knowledge base
-                  knowledge base.
+                  Add verified source material to ARRA-CORE&apos;s internal knowledge base.
                 </p>
               </div>
 

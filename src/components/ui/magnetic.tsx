@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react"
 import gsap from "gsap"
+import { useReducedMotion } from "framer-motion"
 import { cn } from "@/lib/utils"
 
-export function Magnetic({ children, strength = 0.35, className }: { children: React.ReactElement, strength?: number, className?: string }) {
+export function Magnetic({ children, strength = 0.35, className }: { children: React.ReactElement<{ className?: string; ref?: React.Ref<any> }>, strength?: number, className?: string }) {
   const magnetic = useRef<HTMLElement>(null)
   
   // Track if we are hovering
   const [isHovered, setIsHovered] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     const element = magnetic.current
-    if (!element) return
+    if (!element || shouldReduceMotion) return
 
     const xTo = gsap.quickTo(element, "x", { duration: 1, ease: "elastic.out(1, 0.3)" })
     const yTo = gsap.quickTo(element, "y", { duration: 1, ease: "elastic.out(1, 0.3)" })
