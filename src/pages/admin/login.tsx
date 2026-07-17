@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { supabase } from "@/lib/supabase"
+import { images } from "@/content/arra"
 
 export default function AdminLogin() {
   const [email, setEmail] = useState("")
@@ -36,8 +37,8 @@ export default function AdminLogin() {
     <div className="grid min-h-screen w-full bg-background lg:grid-cols-[minmax(0,0.95fr)_minmax(32rem,1.05fr)]">
       <section className="relative hidden overflow-hidden border-r border-border lg:block">
         <img
-          src="/images/arra-cel-hero-field-journal-v3.png"
-          alt="Two co-founders, seen from behind, looking across a quiet landscape"
+          src={images.hero.src}
+          alt={images.hero.alt}
           className="absolute inset-0 size-full object-cover opacity-80"
         />
         <div className="absolute inset-x-0 bottom-0 bg-primary/92 px-12 py-10 text-primary-foreground">
@@ -59,9 +60,9 @@ export default function AdminLogin() {
           <a
             href="/"
             className="font-sans text-2xl font-medium tracking-[0.2em] text-primary"
-            aria-label="Return to ARRA home"
+            aria-label="Return to ARRA-CORE home"
           >
-            ARRA
+            ARRA-CORE
           </a>
           <p className="mt-14 font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
             Secure administration

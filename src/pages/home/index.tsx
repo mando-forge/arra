@@ -19,6 +19,8 @@ import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button
 import { BlurFade } from "@/components/ui/blur-fade"
 import { FlickeringGrid } from "@/components/ui/flickering-grid"
 import { Typewriter } from "@/components/typewriter"
+import { Magnetic } from "@/components/ui/magnetic"
+import { TiltCard } from "@/components/ui/tilt-card"
 import { faqs, images, principles, trustItems } from "@/content/arra"
 
 const whatDrivesUs = [
@@ -128,16 +130,20 @@ function Hero() {
 
           <BlurFade delay={0.65} inView>
             <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-5 mt-10">
-              <InteractiveHoverButton href="#vision" className="h-13 px-6 text-sm bg-primary-foreground text-primary">
-                See what we're building
-              </InteractiveHoverButton>
-              <Link
-                className="inline-flex h-13 items-center justify-center gap-2 border border-foreground/20 bg-transparent px-6 text-sm font-medium hover:border-foreground/40 hover:bg-muted/30 transition-all group ml-2 sm:ml-4"
-                to="/contact"
-              >
-                Start a conversation
-                <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
-              </Link>
+              <Magnetic strength={0.25}>
+                <InteractiveHoverButton href="#vision" className="h-13 px-6 text-sm bg-primary-foreground text-primary">
+                  See what we're building
+                </InteractiveHoverButton>
+              </Magnetic>
+              <Magnetic strength={0.25}>
+                <Link
+                  className="inline-flex h-13 items-center justify-center gap-2 border border-foreground/20 bg-transparent px-6 text-sm font-medium hover:border-foreground/40 hover:bg-muted/30 transition-all group ml-2 sm:ml-4"
+                  to="/contact"
+                >
+                  Start a conversation
+                  <ArrowRight className="size-4 transition-transform group-hover:translate-x-1" aria-hidden="true" />
+                </Link>
+              </Magnetic>
             </div>
           </BlurFade>
         </div>
@@ -222,18 +228,22 @@ function Approach() {
     >
       <div className="grid md:grid-cols-2 3xl:grid-cols-4 border-t border-border mt-14">
         {principles.map((principle, index) => (
-          <article 
+          <TiltCard 
             key={principle.title} 
-            className="grid min-h-[15rem] content-between p-6 border-b border-border md:even:border-l-[0px] md:odd:border-r transition-all duration-300 hover:bg-[var(--arra-mist)]/30 group/principle"
+            className="border-b border-border md:even:border-l-[0px] md:odd:border-r"
           >
-            <ArraReveal className="h-full flex flex-col justify-between">
-              <p className="eyebrow transition-colors duration-300 group-hover/principle:text-[var(--arra-ochre)]">0{index + 1}</p>
-              <div className="mt-8">
-                <h3 className="font-serif text-[1.8rem] font-semibold leading-[1.05]">{principle.title}</h3>
-                <p className="mt-4 text-[0.94rem] leading-[1.6] text-foreground/70">{principle.body}</p>
-              </div>
-            </ArraReveal>
-          </article>
+            <article 
+              className="grid min-h-[15rem] content-between p-6 h-full transition-all duration-300 hover:bg-[var(--arra-mist)]/30 group/principle"
+            >
+              <ArraReveal className="h-full flex flex-col justify-between">
+                <p className="eyebrow transition-colors duration-300 group-hover/principle:text-[var(--arra-ochre)]" style={{ transform: "translateZ(10px)" }}>0{index + 1}</p>
+                <div className="mt-8" style={{ transform: "translateZ(25px)" }}>
+                  <h3 className="font-serif text-[1.8rem] font-semibold leading-[1.05]">{principle.title}</h3>
+                  <p className="mt-4 text-[0.94rem] leading-[1.6] text-foreground/70">{principle.body}</p>
+                </div>
+              </ArraReveal>
+            </article>
+          </TiltCard>
         ))}
       </div>
 

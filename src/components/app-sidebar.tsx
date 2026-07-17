@@ -31,7 +31,7 @@ export function AppSidebar() {
 				<SidebarMenuButton asChild className="hover:bg-transparent">
 					<a href="#overview" className="flex items-center gap-2 mt-1">
 						<LogoIcon />
-						<span className="font-bold mono-label uppercase tracking-[0.2em] text-foreground! text-xs">ARRA_</span>
+						<span className="font-bold mono-label uppercase tracking-[0.2em] text-foreground! text-xs">ARRA-CORE</span>
 					</a>
 				</SidebarMenuButton>
 			</SidebarHeader>
