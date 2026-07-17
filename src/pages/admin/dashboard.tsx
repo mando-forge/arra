@@ -558,11 +558,11 @@ export default function AdminDashboard() {
         {/* 2. CONTACT INQUIRIES TAB */}
         <TabsContent
           value="inquiries"
-          className="mx-auto max-w-7xl space-y-6 px-4 py-8 focus-visible:outline-none md:px-6 lg:py-10"
+          className="mx-auto w-full max-w-[120rem] space-y-6 px-5 py-8 focus-visible:outline-none sm:px-8 lg:px-9 lg:py-10"
         >
-          <div className="grid gap-6 lg:grid-cols-3">
+          <div className="grid gap-6 lg:grid-cols-12">
             {/* List View */}
-            <div className="space-y-4 lg:col-span-2">
+            <div className="space-y-4 lg:col-span-7 xl:col-span-8">
               <div className="flex flex-col gap-3 sm:flex-row">
                 <div className="relative flex-1">
                   <Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-foreground/40" />
@@ -651,7 +651,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* Inquiry Details Panel */}
-            <div className="border border-border bg-card p-6">
+            <div className="border border-border bg-card p-6 lg:col-span-5 xl:col-span-4">
               <div>
                 {selectedSubmission ? (
                   <div
@@ -761,11 +761,11 @@ export default function AdminDashboard() {
         {/* 3. BLOG CMS TAB */}
         <TabsContent
           value="cms"
-          className="mx-auto max-w-7xl space-y-6 px-4 py-8 focus-visible:outline-none md:px-6 lg:py-10"
+          className="mx-auto w-full max-w-[120rem] space-y-6 px-5 py-8 focus-visible:outline-none sm:px-8 lg:px-9 lg:py-10"
         >
-          <div className="grid animate-in gap-6 duration-300 fade-in lg:grid-cols-3">
+          <div className="grid animate-in gap-6 duration-300 fade-in lg:grid-cols-12">
             {/* Form Column */}
-            <div className="space-y-4 border border-border bg-card p-6 lg:col-span-1">
+            <div className="space-y-4 border border-border bg-card p-6 lg:col-span-5 xl:col-span-4">
               <div>
                 <h3 className="font-serif text-2xl text-foreground">
                   {editingPost ? "Edit field note" : "Create field note"}
@@ -902,7 +902,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* List Column */}
-            <div className="space-y-4 border border-border bg-card p-6 lg:col-span-2">
+            <div className="space-y-4 border border-border bg-card p-6 lg:col-span-7 xl:col-span-8">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
                   <h3 className="font-serif text-2xl text-foreground">
@@ -995,11 +995,11 @@ export default function AdminDashboard() {
         {/* 4. KNOWLEDGE NET TAB */}
         <TabsContent
           value="knowledge"
-          className="mx-auto max-w-7xl space-y-6 px-4 py-8 focus-visible:outline-none md:px-6 lg:py-10"
+          className="mx-auto w-full max-w-[120rem] space-y-6 px-5 py-8 focus-visible:outline-none sm:px-8 lg:px-9 lg:py-10"
         >
-          <div className="grid gap-6 md:grid-cols-3">
+          <div className="grid gap-6 lg:grid-cols-12">
             {/* Form Column */}
-            <div className="space-y-4 border border-border bg-card p-6 md:col-span-1">
+            <div className="space-y-4 border border-border bg-card p-6 lg:col-span-5 xl:col-span-4">
               <div>
                 <h3 className="font-serif text-2xl text-foreground">
                   Add a source
@@ -1077,7 +1077,7 @@ export default function AdminDashboard() {
             </div>
 
             {/* List Column */}
-            <div className="space-y-4 border border-border bg-card p-6 md:col-span-2">
+            <div className="space-y-4 border border-border bg-card p-6 lg:col-span-7 xl:col-span-8">
               <div className="flex items-center justify-between border-b border-border pb-3">
                 <div>
                   <h3 className="font-serif text-2xl text-foreground">
@@ -1169,7 +1169,7 @@ export default function AdminDashboard() {
         {/* 5. SYSTEM SETTINGS TAB */}
         <TabsContent
           value="settings"
-          className="mx-auto max-w-7xl space-y-6 px-4 py-8 focus-visible:outline-none md:px-6 lg:py-10"
+          className="mx-auto w-full max-w-[120rem] space-y-6 px-5 py-8 focus-visible:outline-none sm:px-8 lg:px-9 lg:py-10"
         >
           <AdminSettings
             inquiryCount={submissions.length}
@@ -1181,7 +1181,7 @@ export default function AdminDashboard() {
         {/* 6. SUPPORT & GUIDE TAB */}
         <TabsContent
           value="support"
-          className="mx-auto max-w-7xl space-y-6 px-4 py-8 focus-visible:outline-none md:px-6 lg:py-10"
+          className="mx-auto w-full max-w-[120rem] space-y-6 px-5 py-8 focus-visible:outline-none sm:px-8 lg:px-9 lg:py-10"
         >
           <div className="animate-in space-y-6 overflow-hidden border border-border bg-card p-6">
             <div className="flex items-center gap-2 border-b border-border/20 pb-3">

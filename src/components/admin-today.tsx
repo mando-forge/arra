@@ -7,6 +7,7 @@ import {
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
+import { TiltCard } from "@/components/ui/tilt-card"
 
 type DashboardSubmission = {
   id: string
@@ -142,54 +143,59 @@ export function AdminToday({
           aria-hidden="true"
         />
 
-        <div className="mt-12 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(17rem,22rem)]">
-          <div>
-            <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
-              Latest update
-            </p>
-            <h2 className="mt-7 max-w-2xl font-serif text-3xl leading-[1.08] text-primary sm:text-4xl">
-              {featuredPost?.title ?? "Prepare the first ARRA-CORE update"}
-            </h2>
-            <p className="mt-5 font-mono text-[10px] tracking-[0.1em] text-muted-foreground uppercase">
-              {featuredPost
-                ? `${featuredPost.status} · Last updated ${new Date(featuredPost.updated_at ?? featuredPost.created_at).toLocaleDateString("en-IN")}`
-                : "Updates · Ready for a first draft"}
-            </p>
-            <p className="mt-6 max-w-xl text-[15px] leading-7 text-muted-foreground">
-              {featuredPost?.excerpt ||
-                "Document an observation, add the regional context, and shape it into a measured public note when the evidence is ready."}
-            </p>
-            <div className="mt-8 flex flex-wrap items-center gap-6">
-              <Button
-                onClick={() => {
-                  if (featuredPost && onEditPost) {
-                    onEditPost(featuredPost)
-                  } else {
-                    onNavigate("cms")
-                  }
-                }}
-                className="h-12 rounded-none bg-primary px-6 text-primary-foreground hover:bg-primary/90"
-              >
-                <ArrowRight className="mr-2 size-4" />
-                {featuredPost ? "Continue latest draft" : "Create an update"}
-              </Button>
-              <button
-                type="button"
-                onClick={() => onNavigate("cms")}
-                className="inline-flex items-center gap-3 border-b border-primary pb-1 text-sm text-primary hover:opacity-65"
-              >
-                Open updates <ArrowRight className="size-4" />
-              </button>
+        <TiltCard className="mt-12">
+          <div className="grid items-center gap-8 border border-border bg-card p-8 shadow-sm lg:grid-cols-[minmax(0,1fr)_minmax(17rem,22rem)]">
+            <div style={{ transform: "translateZ(30px)" }}>
+              <p className="font-mono text-[10px] tracking-[0.18em] text-muted-foreground uppercase">
+                Latest update
+              </p>
+              <h2 className="mt-7 max-w-2xl font-serif text-3xl leading-[1.08] text-primary sm:text-4xl">
+                {featuredPost?.title ?? "Prepare the first ARRA-CORE update"}
+              </h2>
+              <p className="mt-5 font-mono text-[10px] tracking-[0.1em] text-muted-foreground uppercase">
+                {featuredPost
+                  ? `${featuredPost.status} · Last updated ${new Date(featuredPost.updated_at ?? featuredPost.created_at).toLocaleDateString("en-IN")}`
+                  : "Updates · Ready for a first draft"}
+              </p>
+              <p className="mt-6 max-w-xl text-[15px] leading-7 text-muted-foreground">
+                {featuredPost?.excerpt ||
+                  "Document an observation, add the regional context, and shape it into a measured public note when the evidence is ready."}
+              </p>
+              <div className="mt-8 flex flex-wrap items-center gap-6">
+                <Button
+                  onClick={() => {
+                    if (featuredPost && onEditPost) {
+                      onEditPost(featuredPost)
+                    } else {
+                      onNavigate("cms")
+                    }
+                  }}
+                  className="h-12 rounded-none bg-primary px-6 text-primary-foreground hover:bg-primary/90"
+                >
+                  <ArrowRight className="mr-2 size-4" />
+                  {featuredPost ? "Continue latest draft" : "Create an update"}
+                </Button>
+                <button
+                  type="button"
+                  onClick={() => onNavigate("cms")}
+                  className="inline-flex items-center gap-3 border-b border-primary pb-1 text-sm text-primary hover:opacity-65"
+                >
+                  Open updates <ArrowRight className="size-4" />
+                </button>
+              </div>
             </div>
+            <figure 
+              className="overflow-hidden bg-muted"
+              style={{ transform: "translateZ(15px)" }}
+            >
+              <img
+                src="/images/arra-cel-regional-terrain-v3.png"
+                alt="Layered mountains, water, vegetation, and two homes rendered as a restrained landscape illustration"
+                className="aspect-[1.04/1] h-full w-full object-cover opacity-80"
+              />
+            </figure>
           </div>
-          <figure className="overflow-hidden bg-muted">
-            <img
-              src="/images/arra-cel-regional-terrain-v3.png"
-              alt="Layered mountains, water, vegetation, and two homes rendered as a restrained landscape illustration"
-              className="aspect-[1.04/1] h-full w-full object-cover opacity-80"
-            />
-          </figure>
-        </div>
+        </TiltCard>
 
         <div className="mt-14">
           <div className="flex items-center justify-between border-b border-border pb-4">

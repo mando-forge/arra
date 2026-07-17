@@ -4,6 +4,7 @@ import { useLocation } from "react-router-dom"
 import { NavUser } from "@/components/nav-user"
 import { AnimatedThemeToggler } from "@/components/ui/animated-theme-toggler"
 import { Button } from "@/components/ui/button"
+import { Magnetic } from "@/components/ui/magnetic"
 import {
   Sheet,
   SheetClose,
@@ -45,18 +46,19 @@ export function AppHeader() {
           {navigation.map((item) => {
             const active = currentHash === item.hash
             return (
-              <a
-                key={item.hash}
-                href={item.hash}
-                aria-current={active ? "page" : undefined}
-                className={cn(
-                  "relative flex h-full items-center text-sm text-muted-foreground transition-colors hover:text-foreground",
-                  active &&
-                    "text-primary after:absolute after:bottom-[1.7rem] after:left-0 after:h-px after:w-full after:bg-primary"
-                )}
-              >
-                {item.label}
-              </a>
+              <Magnetic key={item.hash} strength={0.2}>
+                <a
+                  href={item.hash}
+                  aria-current={active ? "page" : undefined}
+                  className={cn(
+                    "relative flex h-full items-center text-sm text-muted-foreground transition-colors hover:text-foreground",
+                    active &&
+                      "text-primary after:absolute after:bottom-[1.7rem] after:left-0 after:h-px after:w-full after:bg-primary"
+                  )}
+                >
+                  {item.label}
+                </a>
+              </Magnetic>
             )
           })}
         </nav>
